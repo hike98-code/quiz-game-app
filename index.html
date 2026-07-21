@@ -1,0 +1,4689 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧠 상식 퀴즈</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --color-primary:    #1a237e;
+      --color-accent:     #ffc107;
+      --color-correct:    #4caf50;
+      --color-wrong:      #f44336;
+      --color-bg:         #f5f5f5;
+      --color-card:       #ffffff;
+      --color-text:       #212121;
+      --color-text-sub:   #757575;
+      --color-border:     #e0e0e0;
+
+      --radius-card:  16px;
+      --radius-btn:   12px;
+      --shadow-card:  0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition:   0.25s ease;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ul, ol { list-style: none; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Layout ── */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      padding: 24px 16px 40px;
+    }
+
+    .screen.visible {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--color-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 24px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: var(--radius-btn);
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(26, 35, 126, 0.35);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(26, 35, 126, 0.45);
+    }
+
+    .btn-secondary {
+      background: var(--color-card);
+      color: var(--color-primary);
+      border: 2px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-primary);
+    }
+
+    /* ════════════════════════════════
+       #home-screen
+    ════════════════════════════════ */
+    #home-screen {
+      background: linear-gradient(160deg, #1a237e 0%, #283593 55%, #f5f5f5 55%);
+    }
+
+    .home-header {
+      width: 100%;
+      max-width: 480px;
+      padding: 48px 0 40px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .home-title {
+      font-size: 2.6rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .home-subtitle {
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0.85;
+      letter-spacing: 0.3px;
+    }
+
+    .home-badge {
+      display: inline-block;
+      background: var(--color-accent);
+      color: var(--color-primary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* 버튼 영역 */
+    .home-actions {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    /* 게임 방법 카드 */
+    .how-to-card {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .how-to-card h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .how-to-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .how-to-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .how-to-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--color-bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .how-to-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .how-to-text p {
+      font-size: 0.82rem;
+      color: var(--color-text-sub);
+    }
+
+    /* ════════════════════════════════
+       #profile-screen
+    ════════════════════════════════ */
+    .profile-header {
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 0 28px;
+      text-align: center;
+    }
+    .profile-header h2 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+    .profile-header p {
+      font-size: 0.9rem;
+      color: var(--color-text-sub);
+    }
+
+    .profile-grid {
+      width: 100%;
+      max-width: 480px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .profile-card {
+      background: var(--color-card);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 24px 12px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .profile-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+    }
+    .profile-card.selected {
+      border-color: var(--color-primary);
+      background: #e8eaff;
+      box-shadow: 0 0 0 3px rgba(26,35,126,0.15);
+    }
+    .profile-icon  { font-size: 2.4rem; line-height: 1; }
+    .profile-label { font-size: 1rem;   font-weight: 700; color: var(--color-text); }
+    .profile-age   { font-size: 0.78rem; color: var(--color-text-sub); font-weight: 500; }
+    .profile-note  { font-size: 0.72rem; color: var(--color-text-sub); line-height: 1.4; margin-top: 2px; }
+
+    .profile-actions {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ════════════════════════════════
+       #category-screen
+    ════════════════════════════════ */
+    .cat-header {
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 0 28px;
+      text-align: center;
+    }
+
+    .cat-header h2 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+
+    .cat-header p {
+      font-size: 0.85rem;
+      color: var(--color-text-sub);
+    }
+
+    /* 2×2 카테고리 그리드 */
+    .cat-grid {
+      width: 100%;
+      max-width: 480px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .cat-card {
+      background: var(--color-card);
+      border: 2.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 28px 16px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition:
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+      user-select: none;
+    }
+
+    .cat-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 6px 24px rgba(26, 35, 126, 0.14);
+    }
+
+    .cat-card:active {
+      transform: scale(0.96);
+    }
+
+    .cat-card.selected {
+      border-color: var(--color-primary);
+      background: #e8eaf6;
+      transform: scale(1.03);
+      box-shadow: 0 6px 24px rgba(26, 35, 126, 0.2);
+    }
+
+    .cat-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+
+    .cat-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .cat-count {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--color-text-sub);
+      background: var(--color-bg);
+      padding: 2px 10px;
+      border-radius: 100px;
+    }
+
+    /* 전체 도전 구분선 */
+    .cat-divider {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: var(--color-text-sub);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .cat-divider::before,
+    .cat-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    /* 전체 도전 버튼 */
+    .btn-all {
+      background: linear-gradient(135deg, var(--color-accent) 0%, #ffb300 100%);
+      color: var(--color-primary);
+      box-shadow: 0 4px 14px rgba(255, 193, 7, 0.4);
+    }
+
+    .btn-all:hover {
+      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.55);
+    }
+
+    /* 카테고리 하단 버튼 묶음 */
+    .cat-actions {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 게임 모드 선택 그리드 */
+    .mode-grid {
+      width: 100%;
+      max-width: 480px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .mode-card {
+      background: var(--color-card);
+      border: 2.5px solid var(--color-border);
+      border-radius: 14px;
+      padding: 16px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+      user-select: none;
+    }
+
+    .mode-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 16px rgba(26, 35, 126, 0.12);
+    }
+
+    .mode-card:active {
+      transform: scale(0.96);
+    }
+
+    .mode-card.selected {
+      border-color: var(--color-primary);
+      background: #e8eaf6;
+      box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.15);
+    }
+
+    .mode-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .mode-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text);
+      text-align: center;
+    }
+
+    .mode-desc {
+      font-size: 0.72rem;
+      color: var(--color-text-sub);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* 카테고리 선택 섹션 (모드=category일 때만 표시) */
+    .cat-section {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .cat-section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .mode-grid { grid-template-columns: 1fr; }
+      .mode-card { flex-direction: row; padding: 14px 16px; justify-content: flex-start; gap: 12px; }
+      .mode-icon { font-size: 1.5rem; }
+      .mode-desc { text-align: left; }
+    }
+
+    /* ════════════════════════════════
+       #quiz-screen
+    ════════════════════════════════ */
+    #quiz-screen {
+      background: var(--color-bg);
+    }
+
+    /* 상단 헤더 */
+    .quiz-header {
+      width: 100%;
+      max-width: 480px;
+      padding: 28px 0 20px;
+    }
+
+    .quiz-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .quiz-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 100px;
+    }
+
+    .quiz-counter {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+    }
+
+    .quiz-counter span {
+      color: var(--color-primary);
+      font-size: 1rem;
+    }
+
+    /* 진행 바 */
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), #5c6bc0);
+      border-radius: 100px;
+      transition: width 0.4s ease;
+    }
+
+    /* 문제 카드 */
+    .quiz-question-card {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 16px;
+    }
+
+    .quiz-q-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .quiz-q-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.55;
+      color: var(--color-text);
+    }
+
+    /* 선택지 버튼 목록 */
+    .quiz-options {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .opt-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--color-card);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-btn);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text);
+      text-align: left;
+      cursor: pointer;
+      transition:
+        border-color var(--transition),
+        background var(--transition),
+        color var(--transition),
+        opacity var(--transition);
+      box-shadow: var(--shadow-card);
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      border-color: var(--color-primary);
+      background: #e8eaf6;
+    }
+
+    .opt-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .opt-prefix {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* 정답 상태 */
+    .opt-btn.correct {
+      border-color: var(--color-correct);
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    .opt-btn.correct .opt-prefix {
+      background: var(--color-correct);
+      color: #fff;
+    }
+
+    /* 오답 상태 */
+    .opt-btn.wrong {
+      border-color: var(--color-wrong);
+      background: #ffebee;
+      color: #b71c1c;
+    }
+
+    .opt-btn.wrong .opt-prefix {
+      background: var(--color-wrong);
+      color: #fff;
+    }
+
+    /* 선택 후 나머지 버튼 dim */
+    .opt-btn.dim {
+      opacity: 0.38;
+    }
+
+    /* disabled 공통 */
+    .opt-btn:disabled {
+      cursor: default;
+    }
+
+    /* TTS 현재 읽는 보기 하이라이트 */
+    .quiz-options .opt-btn.tts-reading {
+      border-color: var(--color-accent) !important;
+      background-color: #dde8ff !important;
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.3) !important;
+      transform: translateY(-2px) scale(1.01);
+    }
+    .quiz-options .opt-btn.tts-reading .opt-prefix {
+      background-color: var(--color-accent) !important;
+      color: #fff !important;
+    }
+
+    /* 피드백 박스 */
+    .quiz-feedback {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .quiz-feedback.show {
+      display: flex;
+    }
+
+    .feedback-result {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: var(--radius-btn);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .feedback-result.correct {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 2px solid var(--color-correct);
+    }
+
+    .feedback-result.wrong {
+      background: #ffebee;
+      color: #c62828;
+      border: 2px solid var(--color-wrong);
+    }
+
+    .feedback-explanation {
+      background: var(--color-card);
+      border-radius: var(--radius-btn);
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      color: var(--color-text-sub);
+      line-height: 1.65;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* 실시간 점수 + 콤보 바 */
+    .quiz-score-bar {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 4px;
+      margin-bottom: 6px;
+    }
+
+    .quiz-score-text {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+    }
+
+    .quiz-score-text span {
+      color: var(--color-primary);
+      font-size: 1rem;
+    }
+
+    .quiz-combo-text {
+      font-size: 0.88rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 100px;
+      display: none;
+    }
+
+    .quiz-combo-text.show { display: block; }
+
+    .quiz-combo-text.combo-orange { background: #fff3e0; color: #e65100; }
+    .quiz-combo-text.combo-red    { background: #ffebee; color: #b71c1c; }
+    .quiz-combo-text.combo-purple {
+      background: #f3e5f5; color: #6a1b9a;
+      animation: pulse-combo 0.7s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-combo {
+      from { transform: scale(1);    opacity: 1; }
+      to   { transform: scale(1.08); opacity: 0.85; }
+    }
+
+    /* 타이머 (스피드 모드) */
+    .quiz-timer {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    .quiz-timer.show { display: block; }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+    }
+
+    .timer-seconds {
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--color-text);
+    }
+
+    .timer-track {
+      width: 100%;
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .timer-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s linear, background 0.5s;
+      background: #43a047;
+    }
+
+    .timer-fill.orange { background: #fb8c00; }
+    .timer-fill.red    { background: #e53935; }
+
+    .timer-fill.blink {
+      animation: blink-timer 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes blink-timer {
+      from { opacity: 1; }
+      to   { opacity: 0.35; }
+    }
+
+    /* 힌트 영역 */
+    .hint-row {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 10px;
+    }
+
+    .btn-hint {
+      background: none;
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius-btn);
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .btn-hint:hover:not(:disabled) {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .btn-hint:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .hint-text {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: #fffde7;
+      border: 1.5px solid #f9a825;
+      border-radius: var(--radius-btn);
+      font-size: 0.85rem;
+      color: #5d4037;
+      line-height: 1.55;
+    }
+
+    .hint-text.show { display: block; }
+
+    /* TTS (음성 읽기) - 미취학아동 전용 */
+    .tts-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 10px;
+    }
+    .tts-row.show { display: flex; }
+
+    .btn-tts {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-btn);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .btn-tts:hover { opacity: 0.88; }
+    .btn-tts:active { transform: scale(0.96); }
+    .btn-tts.speaking {
+      background: #f59e0b;
+    }
+    .btn-tts.speaking::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      margin-right: 2px;
+      animation: tts-pulse 0.8s ease-in-out infinite;
+    }
+    @keyframes tts-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+    }
+
+    /* 점수 내역 */
+    .score-breakdown {
+      display: none;
+      padding: 10px 14px;
+      background: var(--color-bg);
+      border-radius: var(--radius-btn);
+      font-size: 0.82rem;
+      color: var(--color-text-sub);
+      line-height: 1.7;
+    }
+
+    .score-breakdown.show { display: block; }
+
+    .score-breakdown-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .score-breakdown-item {
+      padding: 1px 7px;
+      border-radius: 100px;
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    .score-breakdown-total {
+      margin-top: 5px;
+      font-weight: 800;
+      color: var(--color-primary);
+      font-size: 0.9rem;
+    }
+
+    /* ════════════════════════════════
+       #result-screen
+    ════════════════════════════════ */
+    #result-screen {
+      background: var(--color-bg);
+    }
+
+    .result-header {
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 0 20px;
+      text-align: center;
+    }
+
+    .result-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── 등급 카드 ── */
+    .grade-card {
+      width: 100%;
+      max-width: 480px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 32px 24px;
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grade-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.07;
+      background: radial-gradient(circle at 70% 30%, #fff 0%, transparent 70%);
+    }
+
+    .grade-card.grade-s { background: linear-gradient(135deg, #6a1b9a, #ab47bc); color: #fff; }
+    .grade-card.grade-a { background: linear-gradient(135deg, #1565c0, #42a5f5); color: #fff; }
+    .grade-card.grade-b { background: linear-gradient(135deg, #2e7d32, #66bb6a); color: #fff; }
+    .grade-card.grade-c { background: linear-gradient(135deg, #e65100, #ffa726); color: #fff; }
+    .grade-card.grade-d { background: linear-gradient(135deg, #424242, #9e9e9e); color: #fff; }
+
+    .grade-emoji  { font-size: 3rem; margin-bottom: 8px; }
+    .grade-letter {
+      font-size: 4.5rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 10px;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.2);
+    }
+    .grade-msg {
+      font-size: 0.95rem;
+      font-weight: 500;
+      opacity: 0.92;
+    }
+
+    /* ── 모드 뱃지 ── */
+    .res-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      align-self: flex-start;
+    }
+
+    /* ── 점수 요약 카드 ── */
+    .score-card {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 14px;
+    }
+
+    .score-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .score-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .score-value {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    .score-value small {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--color-text-sub);
+    }
+
+    .score-rate {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-primary);
+    }
+
+    /* 정답률 바 */
+    .score-bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--color-border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--color-primary), #5c6bc0);
+      transition: width 0.8s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── 점수 카드 추가 정보 ── */
+    .res-extra {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-top: 1px solid var(--color-border);
+      margin-top: 10px;
+    }
+
+    .res-extra-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .res-extra-value {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+
+    .score-summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      border-top: 1px solid var(--color-border);
+      padding-top: 4px;
+    }
+
+    .score-summary-table th {
+      text-align: center;
+      color: var(--color-text-sub);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 8px 2px 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .score-summary-table td {
+      text-align: center;
+      padding: 4px 2px;
+      font-weight: 800;
+      color: var(--color-primary);
+      font-size: 0.88rem;
+    }
+
+    /* ── 카테고리별 분석 ── */
+    .analysis-card {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 14px;
+    }
+
+    .analysis-card h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+    }
+
+    .analysis-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .analysis-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .analysis-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .analysis-cat-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .analysis-crown { font-size: 0.9rem; }
+
+    .analysis-score-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .analysis-bar-track {
+      width: 100%;
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .analysis-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--color-primary), #5c6bc0);
+      transition: width 0.7s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── 닉네임 등록 ── */
+    .register-card {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 14px;
+    }
+
+    .register-card h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
+
+    .register-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .name-input {
+      flex: 1;
+      padding: 13px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-btn);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text);
+      background: var(--color-bg);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .name-input:focus { border-color: var(--color-primary); }
+    .name-input::placeholder { color: var(--color-text-sub); }
+
+    .btn-register {
+      flex-shrink: 0;
+      padding: 13px 20px;
+      background: var(--color-primary);
+      color: #fff;
+      border-radius: var(--radius-btn);
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: opacity var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-register:hover  { opacity: 0.88; }
+    .btn-register:active { transform: scale(0.97); }
+    .btn-register:disabled {
+      background: var(--color-border);
+      color: var(--color-text-sub);
+      cursor: default;
+    }
+
+    .register-done {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-correct);
+    }
+
+    .register-done.show { display: flex; }
+
+    /* ── 하단 버튼 ── */
+    .result-actions {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ════════════════════════════════
+       화면 전환 fade-in
+    ════════════════════════════════ */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen.visible {
+      animation: fadeIn 0.3s ease both;
+    }
+
+    /* ════════════════════════════════
+       #ranking-screen
+    ════════════════════════════════ */
+    #ranking-screen {
+      background: var(--color-bg);
+    }
+
+    /* 헤더 */
+    .rank-header {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 20px;
+    }
+
+    .rank-header h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--color-primary);
+    }
+
+    .btn-home-sm {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      padding: 8px 14px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-btn);
+      background: var(--color-card);
+      transition: border-color var(--transition), color var(--transition);
+      min-height: 44px;
+    }
+
+    .btn-home-sm:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+    /* 탭 필터 */
+    .rank-tabs {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .rank-tab {
+      padding: 8px 14px;
+      border: 2px solid var(--color-border);
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      background: var(--color-card);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      min-height: 44px;
+    }
+
+    .rank-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+
+    /* 순위 테이블 카드 */
+    .rank-table-card {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 14px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .rank-table thead th {
+      padding: 12px 14px;
+      background: #f5f6ff;
+      color: var(--color-text-sub);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .rank-table thead th:last-child { text-align: right; }
+
+    .rank-table tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background var(--transition);
+    }
+
+    .rank-table tbody tr:last-child { border-bottom: none; }
+    .rank-table tbody tr:hover { background: #fafafa; }
+
+    /* 1~3위 강조 */
+    .rank-table tbody tr.rank-gold   { background: #fffde7; }
+    .rank-table tbody tr.rank-silver { background: #f5f5f5; }
+    .rank-table tbody tr.rank-bronze { background: #fbe9e7; }
+
+    .rank-table td {
+      padding: 13px 14px;
+      vertical-align: middle;
+    }
+
+    .rank-table td:last-child { text-align: right; }
+
+    .rank-num {
+      font-size: 1.1rem;
+      font-weight: 900;
+      width: 36px;
+    }
+
+    .rank-name {
+      font-weight: 700;
+      max-width: 90px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .rank-score { font-weight: 700; color: var(--color-primary); }
+
+    .rank-rate {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+    }
+
+    .rank-cat {
+      font-size: 0.78rem;
+      color: var(--color-text-sub);
+      white-space: nowrap;
+    }
+
+    .rank-combo {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      white-space: nowrap;
+    }
+
+    .rank-mode-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    .rank-date {
+      font-size: 0.75rem;
+      color: var(--color-text-sub);
+      white-space: nowrap;
+    }
+
+    /* 기간 탭: 모드 탭과의 간격 좁힘 */
+    .rank-tabs-period { margin-bottom: 8px; }
+    .rank-tabs-mode   { margin-bottom: 20px; }
+
+    /* 내 최고기록 카드 */
+    .rank-my-best-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      border-radius: var(--radius-card);
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+      border: 1.5px solid var(--color-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    .rank-my-best-card strong {
+      color: var(--color-primary);
+      font-weight: 900;
+    }
+
+    /* 빈 상태 */
+    .rank-empty {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--color-text-sub);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    /* 초기화 버튼 */
+    .btn-clear {
+      width: 100%;
+      max-width: 480px;
+      padding: 13px;
+      border: 2px solid #ffcdd2;
+      border-radius: var(--radius-btn);
+      background: #fff;
+      color: var(--color-wrong);
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: background var(--transition), border-color var(--transition);
+      min-height: 44px;
+    }
+
+    .btn-clear:hover { background: #ffebee; border-color: var(--color-wrong); }
+
+    /* ════════════════════════════════════
+       대시보드 화면 (Phase G)
+    ════════════════════════════════════ */
+    .dash-header {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 20px;
+    }
+
+    .dash-header h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--color-primary);
+    }
+
+    .dash-empty {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--color-text-sub);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .dash-section-title {
+      width: 100%;
+      max-width: 480px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--color-text-sub);
+      margin: 0 0 8px;
+    }
+
+    /* ① 종합 요약 2×2 그리드 */
+    .dash-summary-grid {
+      width: 100%;
+      max-width: 480px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .dash-stat-card {
+      padding: 18px 16px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      text-align: center;
+    }
+
+    .dash-stat-value {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1.2;
+    }
+
+    .dash-stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      margin-top: 5px;
+    }
+
+    /* ② 최고 기록 카드 */
+    .dash-best-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 4px 20px;
+      margin-bottom: 18px;
+    }
+
+    .dash-best-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+    }
+
+    .dash-best-row + .dash-best-row { border-top: 1px solid var(--color-border); }
+
+    .dash-best-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    .dash-best-value {
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--color-primary);
+    }
+
+    .dash-best-date {
+      font-size: 0.75rem;
+      color: var(--color-text-sub);
+      margin-left: 6px;
+      font-weight: 500;
+    }
+
+    /* ③ 카테고리 바 차트 */
+    .dash-cat-wrap {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 18px;
+    }
+
+    .dash-cat-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .dash-cat-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .dash-cat-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .dash-cat-stat {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    .dash-bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--color-bg);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .dash-bar-fill {
+      height: 100%;
+      width: 0;
+      background: var(--color-primary);
+      border-radius: 100px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dash-cat-hint {
+      font-size: 0.73rem;
+      color: var(--color-text-sub);
+      margin-top: 3px;
+    }
+
+    /* ④ 모드별 통계 3열 */
+    .dash-mode-wrap {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 18px;
+    }
+
+    .dash-mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .dash-mode-card {
+      padding: 16px 10px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      text-align: center;
+    }
+
+    .dash-mode-icon  { font-size: 1.4rem; margin-bottom: 5px; }
+
+    .dash-mode-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--color-text-sub);
+      margin-bottom: 8px;
+    }
+
+    .dash-mode-games {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--color-text);
+    }
+
+    .dash-mode-games span {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    .dash-mode-best {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-top: 3px;
+    }
+
+    /* ⑤ 최근 10게임 테이블 */
+    .dash-history-wrap {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 18px;
+    }
+
+    .dash-history-card {
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .dash-history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .dash-history-table thead th {
+      padding: 10px 12px;
+      background: #f5f6ff;
+      color: var(--color-text-sub);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .dash-history-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .dash-history-table tbody tr:last-child { border-bottom: none; }
+    .dash-history-table tbody tr.above-avg { background: #f0f7ff; }
+
+    .dash-history-table td { padding: 10px 12px; vertical-align: middle; }
+
+    /* ⑥ 연속 플레이 카드 */
+    .dash-streak-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 18px 20px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--color-text);
+    }
+
+    .dash-streak-card.on-streak {
+      background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+      border-color: #ffc107;
+    }
+
+    /* 전체 삭제 버튼 */
+    .btn-danger {
+      width: 100%;
+      max-width: 480px;
+      padding: 13px;
+      border: 2px solid #ffcdd2;
+      border-radius: var(--radius-btn);
+      background: #fff;
+      color: var(--color-wrong);
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: background var(--transition), border-color var(--transition);
+      min-height: 44px;
+    }
+
+    .btn-danger:hover { background: #ffebee; border-color: var(--color-wrong); }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .home-title      { font-size: 2.1rem; }
+      .screen          { padding: 20px 12px 32px; }
+      .cat-grid        { gap: 10px; }
+      .cat-card        { padding: 22px 12px 18px; }
+      .cat-icon        { font-size: 2rem; }
+      .quiz-q-text     { font-size: 1.05rem; }
+      .opt-btn         { padding: 12px 14px; font-size: 0.9rem; }
+      .rank-table      { font-size: 0.8rem; }
+      .rank-table td   { padding: 11px 10px; }
+      .rank-name       { max-width: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ① 홈 화면 -->
+  <section id="home-screen" class="screen visible">
+
+    <header class="home-header">
+      <span class="home-badge">QUIZ GAME</span>
+      <h1 class="home-title">🧠 상식 퀴즈</h1>
+      <p class="home-subtitle">4개 카테고리 · 40문제 · 랜덤 출제</p>
+    </header>
+
+    <div class="home-actions">
+      <button class="btn btn-primary" onclick="showScreen('profile-screen')">
+        ✏️ 퀴즈 시작하기
+      </button>
+      <button class="btn btn-secondary" onclick="showScreen('ranking-screen')">
+        🏆 순위 기록 보기
+      </button>
+      <button class="btn btn-secondary" onclick="showScreen('dashboard-screen')">
+        📊 내 통계 보기
+      </button>
+    </div>
+
+    <div class="card how-to-card">
+      <h3>게임 방법</h3>
+      <ul class="how-to-list">
+        <li class="how-to-item">
+          <div class="how-to-icon">🗂️</div>
+          <div class="how-to-text">
+            <strong>카테고리 선택</strong>
+            <p>과학, 역사, 스포츠, 문화 중 원하는 분야를 골라요.</p>
+          </div>
+        </li>
+        <li class="how-to-item">
+          <div class="how-to-icon">⏱️</div>
+          <div class="how-to-text">
+            <strong>제한 시간 안에 풀기</strong>
+            <p>문제당 15초 이내로 4지선다 중 정답을 선택하세요.</p>
+          </div>
+        </li>
+        <li class="how-to-item">
+          <div class="how-to-icon">📊</div>
+          <div class="how-to-text">
+            <strong>결과 & 순위 확인</strong>
+            <p>최종 점수를 확인하고 내 기록을 랭킹에 올려보세요.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ② 프로필 선택 화면 -->
+  <section id="profile-screen" class="screen">
+
+    <header class="profile-header">
+      <h2>프로필을 선택하세요</h2>
+      <p>나이에 맞는 문제로 퀴즈를 즐겨보세요</p>
+    </header>
+
+    <div class="profile-grid" id="profile-grid">
+      <!-- initProfile()이 동적으로 카드 삽입 -->
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn btn-primary" id="btn-profile-next" disabled onclick="onProfileConfirm()">
+        다음 →
+      </button>
+      <button class="btn btn-secondary" onclick="showScreen('home-screen')">
+        ← 홈으로
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ③ 카테고리 선택 화면 -->
+  <section id="category-screen" class="screen">
+
+    <header class="cat-header">
+      <h2>게임 모드를 선택하세요</h2>
+      <p>원하는 방식으로 퀴즈를 즐겨보세요</p>
+    </header>
+
+    <!-- 게임 모드 그리드 -->
+    <div class="mode-grid" id="mode-grid">
+      <!-- initCategory()가 동적으로 카드 삽입 -->
+    </div>
+
+    <!-- 카테고리 선택 섹션 (모드=category일 때만 표시) -->
+    <div class="cat-section" id="cat-section" style="display:none">
+      <p class="cat-section-label">카테고리 선택</p>
+      <div class="cat-grid" id="cat-grid">
+        <!-- initCategory()가 동적으로 카드 삽입 -->
+      </div>
+    </div>
+
+    <div class="cat-actions">
+      <button class="btn btn-primary" id="btn-start" disabled onclick="startGame()">
+        ▶ 시작하기
+      </button>
+      <button class="btn btn-secondary" onclick="showScreen('home-screen')">
+        ← 홈으로
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ③ 퀴즈 진행 화면 -->
+  <section id="quiz-screen" class="screen">
+
+    <!-- 상단 헤더 -->
+    <header class="quiz-header">
+      <div class="quiz-top-row">
+        <span class="quiz-badge" id="quiz-badge">🏛️ 세계사</span>
+        <span class="quiz-counter"><span id="quiz-current">1</span> / <span id="quiz-total">10</span></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="quiz-progress" style="width: 0%"></div>
+      </div>
+    </header>
+
+    <!-- 실시간 점수 + 콤보 바 -->
+    <div class="quiz-score-bar">
+      <span class="quiz-score-text">점수: <span id="live-score">0</span>점</span>
+      <span class="quiz-combo-text" id="live-combo"></span>
+    </div>
+
+    <!-- 타이머 (스피드 모드만 표시) -->
+    <div class="quiz-timer" id="quiz-timer">
+      <div class="timer-row">
+        <span>남은 시간</span>
+        <span class="timer-seconds" id="timer-seconds">15</span>
+      </div>
+      <div class="timer-track">
+        <div class="timer-fill" id="timer-fill" style="width:100%"></div>
+      </div>
+    </div>
+
+    <!-- 문제 카드 -->
+    <div class="card quiz-question-card">
+      <p class="quiz-q-num" id="quiz-q-num">Q1.</p>
+      <p class="quiz-q-text" id="quiz-q-text"></p>
+    </div>
+
+    <!-- TTS 음성 읽기 버튼 (미취학아동 전용) -->
+    <div class="tts-row" id="tts-row">
+      <button class="btn-tts" id="btn-tts" onclick="readQuestionAloud()">🔊 다시 듣기</button>
+    </div>
+
+    <!-- 힌트 영역 -->
+    <div class="hint-row" id="hint-row">
+      <button class="btn-hint" id="btn-hint" onclick="showHint()">💡 힌트 보기</button>
+      <div class="hint-text" id="hint-text"></div>
+    </div>
+
+    <!-- 선택지 -->
+    <div class="quiz-options" id="quiz-options">
+      <!-- renderQuestion()이 동적 생성 -->
+    </div>
+
+    <!-- 피드백 (선택 후 표시) -->
+    <div class="quiz-feedback" id="quiz-feedback">
+      <div class="feedback-result" id="feedback-result"></div>
+      <div class="score-breakdown" id="score-breakdown"></div>
+      <div class="feedback-explanation" id="feedback-explanation"></div>
+      <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()">
+        다음 문제 →
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ④ 결과 화면 -->
+  <section id="result-screen" class="screen">
+
+    <header class="result-header">
+      <h2>퀴즈 결과</h2>
+    </header>
+
+    <!-- 게임 모드 뱃지 -->
+    <div class="res-mode-badge" id="res-mode-badge"></div>
+
+    <!-- 등급 카드 (동적 렌더) -->
+    <div id="grade-card" class="grade-card grade-b">
+      <div class="grade-emoji" id="grade-emoji">🥈</div>
+      <div class="grade-letter" id="grade-letter">B</div>
+      <div class="grade-msg"   id="grade-msg">양호! 탄탄한 상식을 갖고 있습니다</div>
+    </div>
+
+    <!-- 점수 요약 카드 -->
+    <div class="card score-card">
+      <div class="score-main">
+        <div>
+          <div class="score-label">최종 점수</div>
+          <div class="score-value">
+            <span id="res-score">0</span><small>점</small>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="score-label">정답률</div>
+          <div class="score-rate" id="res-rate">0%</div>
+        </div>
+      </div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill" id="score-bar" style="width:0%"></div>
+      </div>
+      <!-- 정답 수 -->
+      <div class="res-extra">
+        <span class="res-extra-label">정답 수</span>
+        <span class="res-extra-value">
+          <span id="res-correct">0</span> / <span id="res-total">10</span>
+        </span>
+      </div>
+      <!-- 최대 콤보 -->
+      <div class="res-extra">
+        <span class="res-extra-label">최대 콤보</span>
+        <span class="res-extra-value" id="res-max-combo">-</span>
+      </div>
+      <!-- 점수 구성 요약 -->
+      <table class="score-summary-table">
+        <thead>
+          <tr>
+            <th>기본</th>
+            <th>난이도</th>
+            <th>시간</th>
+            <th>힌트</th>
+            <th>콤보</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="bd-base">-</td>
+            <td id="bd-difficulty">-</td>
+            <td id="bd-time">-</td>
+            <td id="bd-hint">-</td>
+            <td id="bd-combo">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 카테고리별 분석 (전체 도전 시만 표시) -->
+    <div class="card analysis-card" id="analysis-card">
+      <h3>카테고리별 분석</h3>
+      <ul class="analysis-list" id="analysis-list"></ul>
+    </div>
+
+    <!-- 닉네임 등록 -->
+    <div class="card register-card">
+      <h3>순위 등록</h3>
+      <div class="register-row">
+        <input
+          type="text"
+          class="name-input"
+          id="name-input"
+          maxlength="12"
+          placeholder="닉네임을 입력하세요"
+        />
+        <button class="btn-register" id="btn-register" onclick="registerScore()">
+          등록
+        </button>
+      </div>
+      <div class="register-done" id="register-done">
+        ✅ 등록되었습니다!
+      </div>
+    </div>
+
+    <!-- 하단 버튼 -->
+    <div class="result-actions">
+      <button class="btn btn-primary" id="btn-retry" onclick="retryQuiz()">
+        🔄 같은 모드로 다시 도전
+      </button>
+      <button class="btn btn-secondary" onclick="showScreen('category-screen')">
+        🗂️ 카테고리 선택으로
+      </button>
+      <button class="btn btn-secondary" onclick="showScreen('home-screen')">
+        🏠 홈으로
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ⑤ 순위 기록 화면 -->
+  <section id="ranking-screen" class="screen">
+
+    <div class="rank-header">
+      <h2>🏆 리더보드</h2>
+      <button class="btn-home-sm" onclick="showScreen('home-screen')">← 홈으로</button>
+    </div>
+
+    <!-- 기간 필터 탭 (동적 생성) -->
+    <div class="rank-tabs rank-tabs-period" id="rank-tabs-period"></div>
+
+    <!-- 모드 필터 탭 (동적 생성) -->
+    <div class="rank-tabs rank-tabs-mode" id="rank-tabs-mode"></div>
+
+    <!-- 순위 목록 (동적 렌더) -->
+    <div id="rank-body"></div>
+
+    <!-- 내 최고기록 카드 (동적 렌더) -->
+    <div id="rank-my-best"></div>
+
+    <!-- 리더보드 초기화 -->
+    <button class="btn-clear" id="btn-clear" onclick="clearRanking()">
+      🗑️ 리더보드 초기화
+    </button>
+
+  </section>
+
+  <!-- ⑥ 대시보드 화면 -->
+  <section id="dashboard-screen" class="screen">
+
+    <div class="dash-header">
+      <h2>📊 내 통계</h2>
+      <button class="btn-home-sm" onclick="showScreen('home-screen')">← 홈으로</button>
+    </div>
+
+    <!-- 콘텐츠 (동적 렌더) -->
+    <div id="dash-body"></div>
+
+    <!-- 전체 삭제 버튼 -->
+    <button class="btn-danger" id="btn-clear-all" onclick="clearAllData()" style="display:none">
+      🗑️ 내 기록 전체 삭제
+    </button>
+
+  </section>
+
+  <script>
+    /* ─────────────────────────────────────
+       점수 설정 상수
+    ───────────────────────────────────── */
+    const SCORE_CONFIG = {
+      base: 10,
+      difficultyMultiplier: { easy: 1, medium: 1.5, hard: 2 },
+      timeBonus: { threshold: 10, point: 3 },
+      hintBonus: 2,
+      combo: { 3: 2, 5: 5, 10: 20 },
+    };
+
+    let timerInterval = null;  // 스피드 타이머 전역 핸들
+
+    /* ─────────────────────────────────────
+       문제 데이터 (40문제)
+    ───────────────────────────────────── */
+    const QUESTIONS = [
+
+      /* ════════ 세계사 (history) 10문제  easy 3 / medium 5 / hard 2 ════════ */
+      {
+        id: 'WH-001',
+        category: 'history',
+        difficulty: 'easy',
+        question: '프랑스 혁명이 시작된 연도는?',
+        options: ['1776년', '1804년', '1815년', '1789년'],
+        answer: 3,
+        hint: '프랑스 혁명이 일어난 세기와 바스티유 감옥을 떠올려보세요.',
+        explanation: '프랑스 혁명은 1789년 바스티유 감옥 습격을 계기로 시작되었습니다. 1776년은 미국 독립선언, 1804년은 나폴레옹 황제 즉위 연도입니다.',
+      },
+      {
+        id: 'WH-002',
+        category: 'history',
+        difficulty: 'easy',
+        question: '로마 제국의 초대 황제는 누구인가?',
+        options: ['율리우스 카이사르', '네로', '콘스탄티누스', '아우구스투스'],
+        answer: 3,
+        hint: '카이사르의 양아들로, 기원전 27년 로마의 공화정을 제정으로 바꾼 인물입니다.',
+        explanation: '아우구스투스(옥타비아누스)는 기원전 27년 로마의 초대 황제가 되었습니다. 율리우스 카이사르는 황제가 아닌 독재관이었습니다.',
+      },
+      {
+        id: 'WH-003',
+        category: 'history',
+        difficulty: 'medium',
+        question: '제1차 세계대전을 직접 촉발한 사건은?',
+        options: ['오스트리아 황태자 암살', '독일의 폴란드 침공', '러시아 혁명 발발', '오스만 제국의 붕괴'],
+        answer: 0,
+        hint: '1914년 보스니아 사라예보에서 벌어진 암살 사건이 도화선이 되었습니다.',
+        explanation: '1914년 사라예보에서 오스트리아-헝가리 제국의 황태자 프란츠 페르디난트가 암살되어 제1차 세계대전이 시작되었습니다.',
+      },
+      {
+        id: 'WH-004',
+        category: 'history',
+        difficulty: 'hard',
+        question: '냉전의 도래를 알린 "철의 장막" 연설을 한 인물은?',
+        options: ['해리 트루먼', '드와이트 아이젠하워', '샤를 드골', '윈스턴 처칠'],
+        answer: 3,
+        hint: '영국의 전시 총리 출신으로, 1946년 미국 미주리 주에서 이 유명한 연설을 했습니다.',
+        explanation: '1946년 윈스턴 처칠이 미국 미주리 주 풀턴에서 "철의 장막" 연설을 하며 동서 진영의 분열을 경고했습니다.',
+      },
+      {
+        id: 'WH-005',
+        category: 'history',
+        difficulty: 'medium',
+        question: '오스만 제국의 수도는 어디였는가?',
+        options: ['앙카라', '카이로', '콘스탄티노플', '바그다드'],
+        answer: 2,
+        hint: '현재 터키의 최대 도시이자 유럽과 아시아를 잇는 해협에 위치한 도시입니다.',
+        explanation: '오스만 제국은 1453년 비잔티움 제국을 멸망시키고 콘스탄티노플(현재의 이스탄불)을 수도로 삼았습니다.',
+      },
+      {
+        id: 'WH-006',
+        category: 'history',
+        difficulty: 'easy',
+        question: '미국 독립선언서가 서명된 연도는?',
+        options: ['1775년', '1783년', '1787년', '1776년'],
+        answer: 3,
+        hint: '미국 독립기념일(7월 4일)이 속한 해를 생각해보세요.',
+        explanation: '미국 독립선언서는 1776년 7월 4일에 서명되었으며, 이 날이 미국의 독립기념일(Independence Day)입니다.',
+      },
+      {
+        id: 'WH-007',
+        category: 'history',
+        difficulty: 'medium',
+        question: '역사상 가장 넓은 연속 영토를 가진 제국을 건설한 인물은?',
+        options: ['알렉산더 대왕', '칭기즈칸', '나폴레옹', '티무르'],
+        answer: 1,
+        hint: '13세기 유목민 출신으로, 말을 타고 아시아부터 유럽까지 정복한 지도자입니다.',
+        explanation: '칭기즈칸의 몽골 제국은 약 2,400만 km²의 연속 영토로 역사상 가장 넓었습니다. 비연속 영토까지 합산하면 대영제국이 더 넓었지만, 연속 육상 제국 기준으로는 몽골 제국이 압도적입니다.',
+      },
+      {
+        id: 'WH-008',
+        category: 'history',
+        difficulty: 'medium',
+        question: '산업혁명이 처음 시작된 나라는?',
+        options: ['프랑스', '독일', '영국', '미국'],
+        answer: 2,
+        hint: '증기기관을 가장 먼저 실용화하고 공장제 생산을 도입한 섬나라입니다.',
+        explanation: '18세기 중반 영국에서 증기기관 발명을 계기로 산업혁명이 시작되었고, 이후 유럽 전역으로 확산되었습니다.',
+      },
+      {
+        id: 'WH-009',
+        category: 'history',
+        difficulty: 'medium',
+        question: '베를린 장벽이 무너진 연도는?',
+        options: ['1987년', '1991년', '1993년', '1989년'],
+        answer: 3,
+        hint: '소련 붕괴(1991년) 직전, 냉전이 끝나가던 시기입니다.',
+        explanation: '베를린 장벽은 1989년 11월 9일에 붕괴되었으며, 이는 독일 통일과 냉전 종식의 상징적 사건이었습니다.',
+      },
+      {
+        id: 'WH-010',
+        category: 'history',
+        difficulty: 'hard',
+        question: '중세 실크로드의 서쪽 주요 종착지이자 동서 무역의 중심이 된 도시는?',
+        options: ['콘스탄티노플', '로마', '바그다드', '알렉산드리아'],
+        answer: 0,
+        hint: '동로마(비잔티움) 제국의 수도였던 이 도시는 오늘날 터키의 최대 도시입니다.',
+        explanation: '중세(7~15세기) 실크로드의 서쪽 주요 종착지는 콘스탄티노플(현 이스탄불)이었습니다. 동로마(비잔티움) 제국의 수도로 동서 무역의 핵심 거점이었으며, 고대 로마 시대에는 로마까지 이어졌으나 중세 기준으로는 콘스탄티노플이 대표적입니다.',
+      },
+      {
+        id: 'WH-011',
+        category: 'history',
+        difficulty: 'medium',
+        question: '인도 독립운동에서 \'비폭력·불복종 운동\'을 이끈 지도자는?',
+        options: ['자와할랄 네루', '마하트마 간디', '수바스 찬드라 보스', '발 강가다르 틸라크'],
+        answer: 1,
+        hint: '1930년 소금 행진을 이끌었으며, 영국 식민 지배에 맞서 무기 없이 저항한 인물로 "인도의 아버지"라 불립니다.',
+        explanation: '마하트마 간디는 영국 식민지 시대 인도에서 비폭력·불복종 운동을 이끌며 인도 독립(1947년)에 결정적으로 기여했습니다. 자와할랄 네루는 독립 후 인도 초대 총리이며, 수바스 찬드라 보스는 무장투쟁 노선을 선택한 독립운동가입니다.',
+      },
+
+      /* ════════ 과학 (science) 10문제  easy 3 / medium 5 / hard 2 ════════ */
+      {
+        id: 'SC-001',
+        category: 'science',
+        difficulty: 'easy',
+        question: '물의 화학식은 무엇인가?',
+        options: ['H₂O₂', 'HO', 'H₂O', 'H₃O'],
+        answer: 2,
+        hint: '수소(H) 원자 2개와 산소(O) 원자 1개로 이루어진 분자입니다.',
+        explanation: '물은 수소 원자 2개와 산소 원자 1개로 이루어져 있어 화학식은 H₂O입니다. H₂O₂는 과산화수소입니다.',
+      },
+      {
+        id: 'SC-002',
+        category: 'science',
+        difficulty: 'easy',
+        question: '진공에서 빛의 속도는 초당 약 얼마인가?',
+        options: ['약 30만 km', '약 3만 km', '약 300만 km', '약 3,000 km'],
+        answer: 0,
+        hint: '1초에 지구를 약 7.5바퀴 돌 수 있는 속도입니다.',
+        explanation: '진공에서 빛의 속도는 초당 약 299,792 km(약 30만 km)입니다. 이 값은 물리학의 기본 상수 c로 표기됩니다.',
+      },
+      {
+        id: 'SC-003',
+        category: 'science',
+        difficulty: 'medium',
+        question: 'DNA의 이중나선 구조를 밝혀낸 과학자들은?',
+        options: ['왓슨과 크릭', '아인슈타인과 보어', '다윈과 멘델', '퀴리와 러더퍼드'],
+        answer: 0,
+        hint: '1953년 네이처 지에 이중나선 논문을 발표한 두 과학자의 성을 떠올려보세요.',
+        explanation: '1953년 제임스 왓슨과 프랜시스 크릭이 DNA의 이중나선 구조를 발표하여 분자생물학의 새 시대를 열었습니다.',
+      },
+      {
+        id: 'SC-004',
+        category: 'science',
+        difficulty: 'easy',
+        question: '태양계에서 가장 큰 행성은?',
+        options: ['토성', '목성', '천왕성', '해왕성'],
+        answer: 1,
+        hint: '태양계의 "왕"이라 불리며 대적점(붉은 점)으로 유명한 행성입니다.',
+        explanation: '목성은 태양계에서 가장 큰 행성으로, 질량이 지구의 약 318배에 달합니다.',
+      },
+      {
+        id: 'SC-005',
+        category: 'science',
+        difficulty: 'medium',
+        question: '원소 주기율표를 처음 만든 과학자는?',
+        options: ['앙투안 라부아지에', '드미트리 멘델레예프', '존 돌턴', '어니스트 러더퍼드'],
+        answer: 1,
+        hint: '1869년 러시아 화학자로, 원소를 원자량 순으로 배열하고 미발견 원소까지 예측했습니다.',
+        explanation: '러시아 화학자 멘델레예프는 1869년 원소를 원자량 순으로 배열한 주기율표를 발표하고 미발견 원소까지 예측했습니다.',
+      },
+      {
+        id: 'SC-006',
+        category: 'science',
+        difficulty: 'medium',
+        question: '특수상대성 이론과 일반상대성 이론을 발표한 과학자는?',
+        options: ['아이작 뉴턴', '알베르트 아인슈타인', '막스 플랑크', '닐스 보어'],
+        answer: 1,
+        hint: 'E=mc²으로 유명하며, 1905년과 1915년에 두 이론을 각각 발표했습니다.',
+        explanation: '아인슈타인은 1905년 특수상대성 이론, 1915년 일반상대성 이론을 발표하여 현대 물리학의 패러다임을 바꿨습니다.',
+      },
+      {
+        id: 'SC-007',
+        category: 'science',
+        difficulty: 'medium',
+        question: '식물의 광합성에 필요하지 않은 것은?',
+        options: ['이산화탄소', '물', '산소', '빛'],
+        answer: 2,
+        hint: '광합성의 부산물(결과물)로 방출되는 기체를 떠올려보세요.',
+        explanation: '광합성은 빛·이산화탄소·물을 이용해 포도당을 합성하는 과정입니다. 산소는 광합성의 부산물로 방출됩니다.',
+      },
+      {
+        id: 'SC-008',
+        category: 'science',
+        difficulty: 'medium',
+        question: '지구 대기에서 가장 많은 비율을 차지하는 기체는?',
+        options: ['산소(O₂)', '이산화탄소(CO₂)', '질소(N₂)', '아르곤(Ar)'],
+        answer: 2,
+        hint: '공기의 약 78%를 차지하며, 우리가 숨 쉬는 산소(21%)보다 훨씬 많습니다.',
+        explanation: '지구 대기의 약 78%는 질소(N₂)로 이루어져 있으며, 산소는 약 21%를 차지합니다.',
+      },
+      {
+        id: 'SC-009',
+        category: 'science',
+        difficulty: 'hard',
+        question: '빛의 입자를 가리키는 용어는?',
+        options: ['전자', '광자', '중성자', '양성자'],
+        answer: 1,
+        hint: '"photo-"(빛)로 시작하는 이 입자는 아인슈타인의 광전효과 설명으로 등장했습니다.',
+        explanation: '빛은 파동과 입자의 이중성을 가지며, 빛의 에너지 입자를 "광자(photon)"라 합니다. 아인슈타인은 광전효과로 이를 증명했습니다.',
+      },
+      {
+        id: 'SC-010',
+        category: 'science',
+        difficulty: 'hard',
+        question: '인체에서 가장 큰 내부 기관은?',
+        options: ['간', '폐', '심장', '뇌'],
+        answer: 0,
+        hint: '성인 기준 약 1.5 kg으로, 해독·대사·소화 등 500가지 이상의 기능을 수행합니다.',
+        explanation: '간은 성인 기준 약 1.5 kg으로 인체 내부 기관 중 가장 크며, 해독·대사·소화 등 500가지 이상의 기능을 수행합니다.',
+      },
+      {
+        id: 'SC-011',
+        category: 'science',
+        difficulty: 'hard',
+        question: '양성자와 중성자를 구성하는 기본 입자는?',
+        options: ['렙톤', '중성미자', '보손', '쿼크'],
+        answer: 3,
+        hint: '입자물리학 표준 모형에서 강한 상호작용(강력)으로 결합하며, 양성자는 이 입자 3개(uud)로 이루어져 있습니다.',
+        explanation: '쿼크(Quark)는 강한 상호작용(강력)에 의해 결합되어 양성자(uud)와 중성자(udd)를 이루는 기본 입자입니다. 렙톤은 전자·중성미자 등 강한 상호작용에 참여하지 않는 입자군이며, 보손은 힘을 전달하는 매개 입자로 물질을 직접 구성하지 않습니다.',
+      },
+
+      /* ════════ 지리 (geo) 10문제  easy 3 / medium 5 / hard 2 ════════ */
+      {
+        id: 'GE-001',
+        category: 'geo',
+        difficulty: 'medium',
+        question: '세계에서 가장 긴 강은?',
+        options: ['아마존 강', '나일 강', '미시시피 강', '양쯔 강'],
+        answer: 1,
+        hint: '아프리카 북동부를 흘러 지중해로 유입되며, 고대 이집트 문명의 젖줄이었습니다.',
+        explanation: '나일 강(약 6,650 km)은 통상적으로 세계에서 가장 긴 강으로 인정받으며, 아프리카 북동부를 흘러 지중해로 유입됩니다. 다만 측정 기준에 따라 아마존 강(약 6,400 km)과 길이 논쟁이 있으며, 주류 지리학계는 나일 강을 세계 최장으로 봅니다.',
+      },
+      {
+        id: 'GE-002',
+        category: 'geo',
+        difficulty: 'easy',
+        question: '해발고도(해수면 기준) 세계에서 가장 높은 산은?',
+        options: ['K2', '에베레스트', '칸첸중가', '마칼루'],
+        answer: 1,
+        hint: '히말라야 산맥에 있으며 네팔과 티베트(중국) 국경에 위치한 산입니다.',
+        explanation: '히말라야 산맥의 에베레스트는 해발 8,849 m로 해수면 기준 세계 최고봉입니다. 지구 중심으로부터의 거리 기준으로는 에콰도르의 침보라소 산이 더 멀지만, 통상적으로 에베레스트를 세계에서 가장 높은 산으로 봅니다.',
+      },
+      {
+        id: 'GE-003',
+        category: 'geo',
+        difficulty: 'medium',
+        question: '브라질의 수도는 어디인가?',
+        options: ['상파울루', '리우데자네이루', '브라질리아', '살바도르'],
+        answer: 2,
+        hint: '상파울루도 리우도 아닌, 1960년에 계획적으로 건설된 도시입니다.',
+        explanation: '브라질의 수도는 1960년 계획적으로 건설된 브라질리아입니다. 상파울루는 최대 도시이지만 수도가 아닙니다.',
+      },
+      {
+        id: 'GE-004',
+        category: 'geo',
+        difficulty: 'medium',
+        question: '아프리카에서 면적이 가장 큰 나라는?',
+        options: ['수단', '콩고 민주공화국', '알제리', '리비아'],
+        answer: 2,
+        hint: '사하라 사막의 상당 부분을 차지하는 북아프리카 국가입니다.',
+        explanation: '알제리는 면적 약 238만 km²로 아프리카에서 가장 큰 나라이며, 세계 10위권의 영토 대국입니다.',
+      },
+      {
+        id: 'GE-005',
+        category: 'geo',
+        difficulty: 'hard',
+        question: '강수량 기준 "사막"으로 분류할 때, 면적이 세계에서 가장 큰 사막은?',
+        options: ['사하라 사막', '고비 사막', '남극 사막', '아라비아 사막'],
+        answer: 2,
+        hint: '사막의 조건은 모래가 아니라 극히 적은 강수량임을 기억하세요.',
+        explanation: '사막은 연간 강수량 250 mm 미만인 지역을 의미하며, 이 기준으로 면적이 가장 큰 사막은 남극 사막(약 1,420만 km²)입니다. 모래·자갈로 이루어진 열사막 중 가장 큰 것은 사하라(약 900만 km²)입니다.',
+      },
+      {
+        id: 'GE-006',
+        category: 'geo',
+        difficulty: 'medium',
+        question: '유럽에서 가장 긴 강은?',
+        options: ['라인 강', '다뉴브 강', '볼가 강', '템스 강'],
+        answer: 2,
+        hint: '러시아를 흘러 카스피해로 유입되며, 러시아인들이 "어머니 강"이라 부릅니다.',
+        explanation: '볼가 강은 길이 약 3,531 km로 유럽 최장 강이며, 러시아를 흘러 카스피해로 유입됩니다.',
+      },
+      {
+        id: 'GE-007',
+        category: 'geo',
+        difficulty: 'medium',
+        question: '캐나다의 수도는 어디인가?',
+        options: ['토론토', '밴쿠버', '오타와', '몬트리올'],
+        answer: 2,
+        hint: '토론토도 밴쿠버도 아닌, 온타리오 주에 위치한 도시입니다.',
+        explanation: '캐나다의 수도는 오타와입니다. 토론토는 캐나다 최대 도시이지만 수도가 아닙니다.',
+      },
+      {
+        id: 'GE-008',
+        category: 'geo',
+        difficulty: 'hard',
+        question: '세계에서 가장 깊은 호수는?',
+        options: ['카스피해', '슈피리어 호', '바이칼 호', '탕가니카 호'],
+        answer: 2,
+        hint: '시베리아에 위치하며 세계 담수량의 약 20%를 담고 있는 호수입니다.',
+        explanation: '러시아 시베리아의 바이칼 호는 최대 수심 1,642 m로 세계에서 가장 깊은 호수이며, 세계 담수의 약 20%를 담고 있습니다.',
+      },
+      {
+        id: 'GE-009',
+        category: 'geo',
+        difficulty: 'easy',
+        question: '오세아니아에서 가장 큰 나라는?',
+        options: ['뉴질랜드', '파푸아뉴기니', '오스트레일리아', '인도네시아'],
+        answer: 2,
+        hint: '한 나라가 대륙 전체를 차지하는 세계 유일의 나라입니다.',
+        explanation: '오스트레일리아는 면적 약 769만 km²로 오세아니아에서 가장 크며, 세계에서 6번째로 넓은 나라입니다.',
+      },
+      {
+        id: 'GE-010',
+        category: 'geo',
+        difficulty: 'easy',
+        question: '세계에서 영토 면적이 가장 넓은 나라는?',
+        options: ['중국', '캐나다', '미국', '러시아'],
+        answer: 3,
+        hint: '유럽과 아시아 두 대륙에 걸쳐 있으며 면적이 약 1,709만 km²인 나라입니다.',
+        explanation: '러시아는 면적 약 1,709만 km²로 세계에서 가장 넓은 나라이며, 유럽과 아시아 두 대륙에 걸쳐 있습니다.',
+      },
+      {
+        id: 'GE-011',
+        category: 'geo',
+        difficulty: 'easy',
+        question: '일본의 수도는?',
+        options: ['도쿄', '오사카', '교토', '나고야'],
+        answer: 0,
+        hint: '혼슈 동쪽에 위치하며, 1869년부터 일본의 수도 역할을 해온 세계 최대 규모의 도시권 중 하나입니다.',
+        explanation: '도쿄는 1869년 메이지 유신 이후 일본의 수도가 되었습니다. 오사카는 경제·문화 중심지, 교토는 794년부터 1869년까지 과거 수도였으며, 나고야는 아이치현의 중심 도시입니다.',
+      },
+
+      /* ════════ 일반상식 (general) 10문제  easy 3 / medium 5 / hard 2 ════════ */
+      {
+        id: 'GN-001',
+        category: 'general',
+        difficulty: 'easy',
+        question: '올림픽 경기의 발상지 국가는?',
+        options: ['이탈리아', '그리스', '프랑스', '영국'],
+        answer: 1,
+        hint: '고대 올림피아 신전이 있던 나라로, 근대 올림픽도 이 나라 수도에서 처음 열렸습니다.',
+        explanation: '올림픽은 고대 그리스 올림피아에서 기원전 776년에 처음 열렸으며, 근대 올림픽은 1896년 아테네에서 부활했습니다.',
+      },
+      {
+        id: 'GN-002',
+        category: 'general',
+        difficulty: 'medium',
+        question: '노벨상이 수여되지 않는 분야는?',
+        options: ['경제학', '수학', '화학', '평화'],
+        answer: 1,
+        hint: '이 분야의 권위상은 "필즈상"이라 불립니다.',
+        explanation: '노벨상은 물리학·화학·생리의학·문학·평화·경제학 6개 분야에 수여됩니다. 수학은 해당하지 않으며, 수학계의 권위상은 "필즈상"입니다.',
+      },
+      {
+        id: 'GN-003',
+        category: 'general',
+        difficulty: 'medium',
+        question: 'UNESCO의 주요 목적은?',
+        options: ['세계 무역 촉진', '교육·과학·문화 진흥', '국제 분쟁 조정', '세계 보건 향상'],
+        answer: 1,
+        hint: 'UNESCO라는 이름 자체에 목적이 담겨 있습니다 (Educational, Scientific and Cultural).',
+        explanation: 'UNESCO는 유엔 교육과학문화기구로, 교육·과학·문화 분야의 국제 협력을 통해 세계 평화에 기여하는 기관입니다.',
+      },
+      {
+        id: 'GN-004',
+        category: 'general',
+        difficulty: 'easy',
+        question: 'FIFA 월드컵은 몇 년마다 개최되는가?',
+        options: ['2년', '3년', '4년', '5년'],
+        answer: 2,
+        hint: '올림픽과 같은 주기로 개최되며, 두 대회는 2년 간격으로 엇갈려 열립니다.',
+        explanation: 'FIFA 월드컵은 4년마다 개최됩니다. 1930년 우루과이에서 처음 열렸으며, 여자 월드컵도 4년 주기로 진행됩니다.',
+      },
+      {
+        id: 'GN-005',
+        category: 'general',
+        difficulty: 'medium',
+        question: '셰익스피어의 4대 비극에 속하지 않는 작품은?',
+        options: ['햄릿', '오셀로', '한여름 밤의 꿈', '리어왕'],
+        answer: 2,
+        hint: '4대 비극은 모두 주인공이 비극적 죽음을 맞이하는 작품들입니다.',
+        explanation: '셰익스피어의 4대 비극은 햄릿·오셀로·리어왕·맥베스입니다. "한여름 밤의 꿈"은 희극 작품입니다.',
+      },
+      {
+        id: 'GN-006',
+        category: 'general',
+        difficulty: 'medium',
+        question: '모국어 사용자 수 기준으로 세계에서 가장 많이 쓰이는 언어는?',
+        options: ['영어', '스페인어', '중국어(만다린)', '힌디어'],
+        answer: 2,
+        hint: '14억 인구를 가진 나라의 표준 공용어를 떠올려보세요.',
+        explanation: '모국어 기준으로 중국어(만다린)는 약 9억 명 이상이 사용하여 세계 1위입니다. 영어는 제2언어 포함 총 사용자 수에서 1위입니다.',
+      },
+      {
+        id: 'GN-007',
+        category: 'general',
+        difficulty: 'hard',
+        question: '국제 적십자위원회를 창립한 인물은?',
+        options: ['알베르트 슈바이처', '앙리 뒤낭', '플로렌스 나이팅게일', '루이 파스퇴르'],
+        answer: 1,
+        hint: '1859년 솔페리노 전투의 참상을 목격한 스위스인으로, 첫 노벨 평화상을 받았습니다.',
+        explanation: '스위스인 앙리 뒤낭은 1863년 국제 적십자위원회를 창설했으며, 1901년 첫 노벨 평화상을 수상했습니다.',
+      },
+      {
+        id: 'GN-008',
+        category: 'general',
+        difficulty: 'easy',
+        question: '영어 알파벳은 총 몇 글자인가?',
+        options: ['24글자', '25글자', '26글자', '27글자'],
+        answer: 2,
+        hint: 'A부터 Z까지 차례로 세어보면 알 수 있습니다.',
+        explanation: '영어 알파벳은 A부터 Z까지 총 26글자로 구성됩니다.',
+      },
+      {
+        id: 'GN-009',
+        category: 'general',
+        difficulty: 'hard',
+        question: 'EU 회원국이지만 유로(€)를 사용하지 않는 나라는?',
+        options: ['프랑스', '스웨덴', '독일', '스페인'],
+        answer: 1,
+        hint: '스칸디나비아 반도에 위치한 나라로, 자국 통화인 크로나(SEK)를 유지하고 있습니다.',
+        explanation: '스웨덴은 EU 회원국이지만 유로 도입을 거부하고 자국 통화인 스웨덴 크로나(SEK)를 계속 사용하고 있습니다.',
+      },
+      {
+        id: 'GN-010',
+        category: 'general',
+        difficulty: 'medium',
+        question: '월드 와이드 웹(WWW)을 발명한 인물은?',
+        options: ['빌 게이츠', '팀 버너스리', '스티브 잡스', '빈트 서프'],
+        answer: 1,
+        hint: '1989년 CERN에서 근무하던 영국 컴퓨터 과학자가 최초 제안했습니다.',
+        explanation: '영국 컴퓨터 과학자 팀 버너스리는 1989년 월드 와이드 웹(WWW)을 발명하여 현대 인터넷의 기반을 마련했습니다.',
+      },
+      {
+        id: 'GN-011',
+        category: 'general',
+        difficulty: 'medium',
+        question: '유엔(UN)의 공식 언어는 총 몇 가지인가?',
+        options: ['4가지', '5가지', '7가지', '6가지'],
+        answer: 3,
+        hint: '아랍어·중국어·영어·프랑스어·러시아어·스페인어가 이에 해당합니다.',
+        explanation: '유엔(UN)의 공식 언어는 아랍어·중국어·영어·프랑스어·러시아어·스페인어 총 6가지입니다. 이 언어들은 유엔 총회, 안전보장이사회 등 주요 기관에서 공식적으로 사용됩니다.',
+      },
+
+      /* ════════ 미취학아동 (preschool) 20문제 ════════ */
+      {
+        id: 'PS-001', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '사과의 색깔로 가장 흔한 것은 무엇인가요?',
+        options: ['노란색', '파란색', '빨간색', '보라색'],
+        answer: 2,
+        hint: '맛있는 빨간 과일을 떠올려보세요.',
+        explanation: '사과는 가장 흔하게 빨간색입니다. 노란 사과나 초록 사과도 있지만, 가장 대표적인 색은 빨간색이에요.',
+      },
+      {
+        id: 'PS-002', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '맑은 낮에 하늘은 무슨 색인가요?',
+        options: ['초록색', '파란색', '노란색', '빨간색'],
+        answer: 1,
+        hint: '구름이 없는 맑은 날 하늘을 올려다보세요.',
+        explanation: '맑은 날 낮 하늘은 파란색입니다. 햇빛이 공기를 통과하면서 파란빛이 더 많이 퍼지기 때문이에요.',
+      },
+      {
+        id: 'PS-003', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '강아지는 어떻게 짖을까요?',
+        options: ['야옹야옹', '꿀꿀꿀', '음메음메', '멍멍멍'],
+        answer: 3,
+        hint: '귀여운 강아지 소리를 떠올려보세요.',
+        explanation: '강아지는 "멍멍멍" 하고 짖어요. 고양이는 "야옹", 돼지는 "꿀꿀", 소는 "음메"라고 울어요.',
+      },
+      {
+        id: 'PS-004', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '비가 온 뒤 하늘에 나타나는 예쁜 것은?',
+        options: ['무지개', '별', '번개', '안개'],
+        answer: 0,
+        hint: '여러 가지 색깔이 하늘에 활처럼 걸리는 것이에요.',
+        explanation: '비가 온 뒤 햇빛이 빗방울을 통과하면 무지개가 나타납니다. 무지개는 빨·주·노·초·파·남·보 7가지 색이에요.',
+      },
+      {
+        id: 'PS-005', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '1 더하기 1은 얼마일까요?',
+        options: ['2', '3', '4', '1'],
+        answer: 0,
+        hint: '손가락 하나를 내밀고 또 하나를 더 내밀어 보세요.',
+        explanation: '1 더하기 1은 2입니다. 손가락 1개와 손가락 1개를 합치면 2개가 되는 것과 같아요.',
+      },
+      {
+        id: 'PS-006', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '하늘을 날 수 있는 동물은 무엇인가요?',
+        options: ['개구리', '강아지', '새', '물고기'],
+        answer: 2,
+        hint: '날개가 있어서 하늘을 자유롭게 날아다니는 동물이에요.',
+        explanation: '새는 날개가 있어서 하늘을 날 수 있어요. 개구리·강아지·물고기는 날 수 없어요.',
+      },
+      {
+        id: 'PS-007', profile: 'preschool', category: 'geo', difficulty: 'easy',
+        question: '우리가 살고 있는 별의 이름은 무엇인가요?',
+        options: ['지구', '태양', '화성', '달'],
+        answer: 0,
+        hint: '우리가 매일 걷고, 뛰고, 잠을 자는 이 커다란 별이에요.',
+        explanation: '우리는 지구라는 별에서 살고 있어요. 달은 지구 주위를 도는 위성이고, 태양은 빛과 따뜻함을 주는 별이에요.',
+      },
+      {
+        id: 'PS-008', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '겨울에 하늘에서 내리는 하얀 것은 무엇인가요?',
+        options: ['비', '눈', '우박', '안개'],
+        answer: 1,
+        hint: '손 위에 받으면 금방 녹아 없어지는 하얀 결정이에요.',
+        explanation: '겨울에 하늘에서 내리는 하얀 것은 눈(雪)입니다. 눈은 구름 속 작은 물방울이 얼어서 만들어져요.',
+      },
+      {
+        id: 'PS-009', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '꽃과 나무가 자라려면 무엇이 필요할까요?',
+        options: ['어둠과 소금', '얼음과 눈', '햇빛과 물', '모래와 바람'],
+        answer: 2,
+        hint: '화분에 심은 꽃에게 해야 하는 두 가지를 떠올려보세요.',
+        explanation: '식물은 햇빛과 물이 있어야 자랄 수 있어요. 햇빛으로 에너지를 만들고, 물로 영양분을 흡수해요.',
+      },
+      {
+        id: 'PS-010', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '고양이는 어떻게 울까요?',
+        options: ['멍멍', '야옹', '음메', '꿀꿀'],
+        answer: 1,
+        hint: '고양이가 배가 고플 때 내는 소리를 떠올려보세요.',
+        explanation: '고양이는 "야옹"이라고 울어요. 강아지는 "멍멍", 소는 "음메", 돼지는 "꿀꿀"이라고 울어요.',
+      },
+      {
+        id: 'PS-011', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '바나나는 무슨 색인가요?',
+        options: ['빨간색', '초록색', '노란색', '파란색'],
+        answer: 2,
+        hint: '원숭이가 좋아하는 길쭉한 과일의 색깔이에요.',
+        explanation: '바나나는 익으면 노란색이 됩니다. 덜 익었을 때는 초록색이고, 너무 익으면 검은 점이 생겨요.',
+      },
+      {
+        id: 'PS-012', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '한 손에는 손가락이 몇 개인가요?',
+        options: ['3개', '4개', '6개', '5개'],
+        answer: 3,
+        hint: '한쪽 손의 손가락을 하나씩 세어보세요.',
+        explanation: '한 손의 손가락은 5개입니다. 엄지·검지·중지·약지·새끼손가락이고, 양손을 합치면 10개가 됩니다.',
+      },
+      {
+        id: 'PS-013', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '새가 하늘을 날 때 쓰는 것은?',
+        options: ['발', '날개', '꼬리', '부리'],
+        answer: 1,
+        hint: '새의 몸 양쪽에 달려 있어 하늘을 날게 해주는 부위예요.',
+        explanation: '새는 날개를 펄럭여 하늘을 납니다. 날개 깃털이 공기를 밀어내며 위로 뜰 수 있게 해 주어요.',
+      },
+      {
+        id: 'PS-014', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '물고기는 어디서 살까요?',
+        options: ['물속', '땅 위', '나무 위', '하늘'],
+        answer: 0,
+        hint: '강이나 바다에 사는 물고기는 어디 있어야 숨을 쉴 수 있을까요?',
+        explanation: '물고기는 물속에서 아가미로 숨을 쉬며 삽니다. 물 밖에서는 숨을 쉴 수 없어요.',
+      },
+      {
+        id: 'PS-015', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '빨간색과 파란색 물감을 섞으면 무슨 색이 될까요?',
+        options: ['보라색', '초록색', '노란색', '주황색'],
+        answer: 0,
+        hint: '크레파스로 두 색을 함께 칠해보면 생기는 색이에요.',
+        explanation: '빨간색과 파란색 물감을 섞으면 보라색이 됩니다. 보라색은 포도나 제비꽃에서도 볼 수 있어요.',
+      },
+      {
+        id: 'PS-016', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '딸기는 무슨 색인가요?',
+        options: ['파란색', '빨간색', '노란색', '초록색'],
+        answer: 1,
+        hint: '빨갛고 달콤한 맛이 나는 작은 과일이에요.',
+        explanation: '익은 딸기는 빨간색입니다. 딸기는 달콤하고 새콤한 맛이 나는 봄철 과일이에요.',
+      },
+      {
+        id: 'PS-017', profile: 'preschool', category: 'geo', difficulty: 'easy',
+        question: '해는 어느 쪽에서 뜨나요?',
+        options: ['북쪽', '서쪽', '남쪽', '동쪽'],
+        answer: 3,
+        hint: '아침에 해가 처음 보이는 방향이에요.',
+        explanation: '해는 동쪽에서 떠서 서쪽으로 집니다. 동쪽 하늘이 밝아지면 아침이 오는 거예요.',
+      },
+      {
+        id: 'PS-018', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '동물원에서 목이 매우 긴 동물은?',
+        options: ['코끼리', '사자', '기린', '펭귄'],
+        answer: 2,
+        hint: '키가 아주 크고 목이 길어서 높은 나뭇가지 잎도 먹을 수 있어요.',
+        explanation: '기린은 목 길이가 약 1.8m나 되어 높은 나무 잎도 먹을 수 있습니다. 지구상에서 키가 가장 큰 동물이에요.',
+      },
+      {
+        id: 'PS-019', profile: 'preschool', category: 'general', difficulty: 'easy',
+        question: '하루는 몇 시간인가요?',
+        options: ['12시간', '48시간', '36시간', '24시간'],
+        answer: 3,
+        hint: '자고 일어나서 다시 잘 때까지가 하루예요.',
+        explanation: '하루는 24시간입니다. 낮 12시간과 밤 12시간으로 이루어져 있어요.',
+      },
+      {
+        id: 'PS-020', profile: 'preschool', category: 'science', difficulty: 'easy',
+        question: '하얀 눈이 따뜻한 곳에 있으면 어떻게 될까요?',
+        options: ['얼음이 된다', '더 커진다', '색이 변한다', '녹아서 물이 된다'],
+        answer: 3,
+        hint: '겨울에 손 위에 눈을 올려놓으면 금방 사라지는 이유가 뭘까요?',
+        explanation: '눈은 따뜻하면 녹아서 물이 됩니다. 물이 얼면 얼음이나 눈이 되고, 녹으면 다시 물이 돼요.',
+      },
+
+      /* ════════ 초등학생 (elementary) 20문제 ════════ */
+      {
+        id: 'EL-001', profile: 'elementary', category: 'geo', difficulty: 'easy',
+        question: '대한민국의 수도는 어디인가?',
+        options: ['서울', '부산', '대구', '인천'],
+        answer: 0,
+        hint: '청와대·경복궁·한강이 있는 우리나라의 중심 도시입니다.',
+        explanation: '대한민국의 수도는 서울입니다. 조선 시대부터 수도였으며, 인구 약 1,000만 명이 살고 있는 대도시입니다.',
+      },
+      {
+        id: 'EL-002', profile: 'elementary', category: 'history', difficulty: 'easy',
+        question: '한글을 창제한 조선의 왕은?',
+        options: ['세종대왕', '영조', '선조', '태종'],
+        answer: 0,
+        hint: '1443년에 우리 고유의 문자를 만든 조선의 네 번째 왕입니다.',
+        explanation: '세종대왕(조선 4대 왕)은 1443년 훈민정음(한글)을 창제하여 백성들이 쉽게 글자를 배울 수 있게 했습니다.',
+      },
+      {
+        id: 'EL-003', profile: 'elementary', category: 'science', difficulty: 'easy',
+        question: '지구 주위를 돌고 있는 위성은?',
+        options: ['달', '태양', '화성', '금성'],
+        answer: 0,
+        hint: '밤하늘에 빛나며 모양이 매달 바뀌는 천체입니다.',
+        explanation: '달은 지구 주위를 약 27.3일에 한 바퀴 도는 지구의 유일한 위성입니다. 스스로 빛을 내지 않고 태양 빛을 반사해 빛납니다.',
+      },
+      {
+        id: 'EL-004', profile: 'elementary', category: 'general', difficulty: 'easy',
+        question: '1년은 총 몇 달인가?',
+        options: ['12달', '10달', '11달', '13달'],
+        answer: 0,
+        hint: '1월부터 12월까지 세어보세요.',
+        explanation: '1년은 12달(1월~12월)로 이루어지며, 총 365일(윤년은 366일)입니다.',
+      },
+      {
+        id: 'EL-005', profile: 'elementary', category: 'geo', difficulty: 'medium',
+        question: '대한민국에서 가장 큰 섬은?',
+        options: ['독도', '강화도', '울릉도', '제주도'],
+        answer: 3,
+        hint: '한라산이 있으며 유네스코 세계 자연유산으로 등재된 섬입니다.',
+        explanation: '제주도는 면적 약 1,849km²로 우리나라에서 가장 큰 섬입니다. 한라산·성산일출봉·거문오름 등이 유명합니다.',
+      },
+      {
+        id: 'EL-006', profile: 'elementary', category: 'science', difficulty: 'easy',
+        question: '무지개는 몇 가지 색으로 이루어져 있는가?',
+        options: ['7가지', '6가지', '5가지', '8가지'],
+        answer: 0,
+        hint: '빨·주·노·초·파·남·보를 모두 세어보세요.',
+        explanation: '무지개는 빨강·주황·노랑·초록·파랑·남색·보라 총 7가지 색으로 이루어집니다. 빛이 빗방울을 통과할 때 분산되어 생깁니다.',
+      },
+      {
+        id: 'EL-007', profile: 'elementary', category: 'history', difficulty: 'medium',
+        question: '3·1 독립운동이 일어난 연도는?',
+        options: ['1910년', '1919년', '1945년', '1950년'],
+        answer: 1,
+        hint: '3월 1일 "대한 독립 만세!"를 외친 그 해를 떠올려보세요.',
+        explanation: '3·1 운동은 1919년 3월 1일, 일본의 식민 지배에 맞서 전국 각지에서 "독립 만세"를 외친 독립운동입니다.',
+      },
+      {
+        id: 'EL-008', profile: 'elementary', category: 'science', difficulty: 'medium',
+        question: '지구에서 가장 큰 동물은?',
+        options: ['아프리카코끼리', '기린', '흰수염고래', '백상아리'],
+        answer: 2,
+        hint: '바다에 사는 포유류로 몸길이가 30m에 달하기도 합니다.',
+        explanation: '흰수염고래(대왕고래)는 몸길이 최대 33m, 몸무게 최대 190t으로 지구 역사상 가장 큰 동물입니다.',
+      },
+      {
+        id: 'EL-009', profile: 'elementary', category: 'geo', difficulty: 'easy',
+        question: '중국의 수도는 어디인가?',
+        options: ['상하이', '베이징', '홍콩', '광저우'],
+        answer: 1,
+        hint: '자금성(고궁)과 천안문 광장이 있는 도시입니다.',
+        explanation: '중국의 수도는 베이징(北京)입니다. 명·청 왕조 때부터 수도였으며, 2008년 하계 올림픽이 열린 도시이기도 합니다.',
+      },
+      {
+        id: 'EL-010', profile: 'elementary', category: 'general', difficulty: 'medium',
+        question: '태권도의 발상지는 어느 나라인가?',
+        options: ['중국', '일본', '미국', '한국'],
+        answer: 3,
+        hint: '우리 고유의 무술로, 2000년 시드니 올림픽부터 정식 종목이 되었습니다.',
+        explanation: '태권도는 한국의 전통 무술에서 발전한 격투 스포츠입니다. 세계태권도연맹(WT)의 공식 종목으로, 전 세계 약 210개국에서 수련합니다.',
+      },
+      {
+        id: 'EL-011', profile: 'elementary', category: 'history', difficulty: 'easy',
+        question: '우리나라 국기의 이름은?',
+        options: ['무궁화기', '태극기', '한국기', '대한기'],
+        answer: 1,
+        hint: '가운데에 태극 문양이 있고, 네 모서리에 4개의 괘가 그려져 있어요.',
+        explanation: '우리나라 국기는 태극기(太極旗)입니다. 흰 바탕에 빨강·파랑 태극 문양과 4괘(건·곤·감·리)로 구성됩니다.',
+      },
+      {
+        id: 'EL-012', profile: 'elementary', category: 'science', difficulty: 'easy',
+        question: '태양계 행성 중 태양에서 가장 가까운 행성은?',
+        options: ['금성', '화성', '지구', '수성'],
+        answer: 3,
+        hint: '태양계 8개 행성 중 태양과 제일 가까이 붙어 있는 작은 행성이에요.',
+        explanation: '수성은 태양에서 평균 약 5,800만 km 거리에 있어 가장 가까운 행성입니다. 표면 온도가 낮에는 430℃까지 올라갑니다.',
+      },
+      {
+        id: 'EL-013', profile: 'elementary', category: 'science', difficulty: 'medium',
+        question: '식물이 광합성을 할 때 필요하지 않은 것은?',
+        options: ['햇빛', '이산화탄소', '물', '소금'],
+        answer: 3,
+        hint: '광합성에는 햇빛·물·공기 중 기체 세 가지가 필요합니다.',
+        explanation: '광합성에는 햇빛, 물(H₂O), 이산화탄소(CO₂)가 필요합니다. 소금은 광합성과 관련 없습니다. 광합성 결과 포도당과 산소가 만들어집니다.',
+      },
+      {
+        id: 'EL-014', profile: 'elementary', category: 'history', difficulty: 'easy',
+        question: '이순신 장군이 만든 철갑선의 이름은?',
+        options: ['판옥선', '거북선', '전함', '쾌선'],
+        answer: 1,
+        hint: '등이 철판으로 덮여 있고 모양이 거북이를 닮은 배예요.',
+        explanation: '거북선(龜船)은 이순신 장군이 임진왜란 때 만든 철갑 군함입니다. 등 부분에 쇠 덮개를 얹어 화살·총탄을 막았습니다.',
+      },
+      {
+        id: 'EL-015', profile: 'elementary', category: 'geo', difficulty: 'easy',
+        question: '대한민국 동쪽에 있는 바다의 이름은?',
+        options: ['황해', '남해', '동해', '서해'],
+        answer: 2,
+        hint: '우리나라와 일본 사이에 있는 바다예요.',
+        explanation: '동해(東海)는 대한민국 동쪽에 위치한 바다입니다. 독도가 동해에 있으며, 서쪽 바다는 황해(서해), 남쪽은 남해입니다.',
+      },
+      {
+        id: 'EL-016', profile: 'elementary', category: 'science', difficulty: 'medium',
+        question: '식물이 햇빛을 이용해 스스로 양분을 만드는 과정은?',
+        options: ['증산 작용', '호흡 작용', '광합성', '분해 작용'],
+        answer: 2,
+        hint: '빛(光)을 이용해 합성(合成)한다는 뜻의 생물학 용어예요.',
+        explanation: '광합성(光合成)은 식물이 햇빛·이산화탄소·물을 이용해 포도당을 만드는 과정입니다. 이때 산소가 부산물로 발생합니다.',
+      },
+      {
+        id: 'EL-017', profile: 'elementary', category: 'geo', difficulty: 'medium',
+        question: '대한민국(남한)에서 가장 높은 산은?',
+        options: ['설악산', '지리산', '북한산', '한라산'],
+        answer: 3,
+        hint: '제주도에 있으며 높이는 약 1,947m입니다.',
+        explanation: '한라산은 높이 1,947m로 남한에서 가장 높은 산입니다. 제주도의 중심부에 위치하며 유네스코 세계 자연유산으로 등재되어 있습니다.',
+      },
+      {
+        id: 'EL-018', profile: 'elementary', category: 'history', difficulty: 'medium',
+        question: '조선 왕조가 세워진 연도는?',
+        options: ['1388년', '1392년', '1400년', '1418년'],
+        answer: 1,
+        hint: '이성계가 고려를 무너뜨리고 조선을 세운 해입니다.',
+        explanation: '조선은 1392년 이성계(태조)가 건국하였습니다. 1388년은 이성계의 위화도 회군, 1418년은 세종대왕의 즉위 연도입니다.',
+      },
+      {
+        id: 'EL-019', profile: 'elementary', category: 'science', difficulty: 'easy',
+        question: '물을 이루는 두 가지 원소는?',
+        options: ['수소와 질소', '산소와 탄소', '수소와 산소', '탄소와 질소'],
+        answer: 2,
+        hint: '물의 화학식 H₂O에서 H와 O를 한국어로 말해보세요.',
+        explanation: '물(H₂O)은 수소(H) 2개와 산소(O) 1개로 이루어집니다. 수소는 가장 가벼운 원소이며, 산소는 우리가 숨 쉬는 기체입니다.',
+      },
+      {
+        id: 'EL-020', profile: 'elementary', category: 'geo', difficulty: 'medium',
+        question: '지구에서 가장 높은 산은?',
+        options: ['백두산', '킬리만자로', '에베레스트', '후지산'],
+        answer: 2,
+        hint: '히말라야 산맥에 있으며 높이가 약 8,849m입니다.',
+        explanation: '에베레스트(Everest)는 높이 약 8,849m로 지구에서 가장 높은 산입니다. 네팔과 중국(티베트) 국경에 위치합니다.',
+      },
+
+      /* ════════ 초등학생 (elementary) 태권도 20문제 ════════ */
+      {
+        id: 'EL-021', profile: 'elementary', category: 'taekwondo', difficulty: 'easy',
+        question: '태권도는 어느 나라에서 만들어진 무술인가요?',
+        options: ['대한민국', '중국', '일본', '미국'],
+        answer: 0,
+        hint: '우리나라 고유의 무술로, 발차기 기술이 특히 발달했습니다.',
+        explanation: '태권도는 대한민국에서 만들어진 무술입니다. 현재 전 세계 200여 개국에 보급되어 있으며 올림픽 정식 종목입니다.',
+      },
+      {
+        id: 'EL-022', profile: 'elementary', category: 'taekwondo', difficulty: 'easy',
+        question: '태권도에서 경기 시작과 끝에 상대에게 하는 인사는 무엇인가요?',
+        options: ['악수', '허리 숙여 인사(경례)', '하이파이브', '박수'],
+        answer: 1,
+        hint: '예의를 중요시하는 태권도에서 상대에 대한 존중을 표현하는 방법입니다.',
+        explanation: '태권도에서는 경기 시작과 끝에 허리를 숙여 인사(경례)합니다. 예의를 중요시하는 무도 정신의 표현입니다.',
+      },
+      {
+        id: 'EL-023', profile: 'elementary', category: 'taekwondo', difficulty: 'easy',
+        question: '태권도를 배우는 장소를 무엇이라고 부르나요?',
+        options: ['체육관', '경기장', '도장', '훈련원'],
+        answer: 2,
+        hint: '무술·무도를 수련하는 곳을 이렇게 부릅니다.',
+        explanation: '태권도를 비롯한 무도를 수련하는 장소를 도장(道場)이라고 합니다. 도장에는 사범이 있어 기술을 가르쳐 줍니다.',
+      },
+      {
+        id: 'EL-024', profile: 'elementary', category: 'taekwondo', difficulty: 'easy',
+        question: '태권도 수련복(도복)은 주로 어떤 색깔인가요?',
+        options: ['파란색', '검은색', '빨간색', '흰색'],
+        answer: 3,
+        hint: '청결과 새로운 시작을 상징하는 색깔입니다.',
+        explanation: '태권도 도복은 주로 흰색입니다. 흰색은 순결과 시작을 상징하며, 띠의 색깔로 수련 단계를 구분합니다.',
+      },
+      {
+        id: 'EL-025', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도가 올림픽 정식 종목으로 채택된 연도는?',
+        options: ['2000년', '1988년', '1992년', '1996년'],
+        answer: 0,
+        hint: '호주 시드니에서 열린 올림픽부터 정식 종목이 되었습니다.',
+        explanation: '태권도는 2000년 시드니 올림픽부터 정식 종목이 되었습니다. 1988년 서울과 1992년 바르셀로나 올림픽에서는 시범 종목이었습니다.',
+      },
+      {
+        id: 'EL-026', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도에서 공격·방어 기술을 정해진 순서대로 혼자 연습하는 동작을 무엇이라고 하나요?',
+        options: ['겨루기', '품새', '격파', '수련'],
+        answer: 1,
+        hint: '마치 무술 동작을 연속으로 춤추듯 혼자 연습하는 기술 모음입니다.',
+        explanation: '품새란 공격과 방어 기술을 정해진 순서대로 수련하는 동작입니다. 기본 동작을 몸에 익힐 수 있도록 도와줍니다.',
+      },
+      {
+        id: 'EL-027', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도에서 흰띠 다음에 받는 띠의 색깔은?',
+        options: ['빨간띠', '파란띠', '노란띠', '검은띠'],
+        answer: 2,
+        hint: '봄에 새싹이 돋아나는 색깔과 비슷합니다.',
+        explanation: '태권도 띠는 흰색→노란색→초록색→파란색→빨간색→검은색 순으로 높아집니다. 노란띠는 흰띠 다음 단계입니다.',
+      },
+      {
+        id: 'EL-028', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도 겨루기 경기에서 상대 머리를 발로 차면 몇 점을 얻나요?',
+        options: ['1점', '4점', '2점', '3점'],
+        answer: 3,
+        hint: '몸통 공격보다 어렵기 때문에 더 높은 점수를 줍니다.',
+        explanation: '세계태권도연맹(WT) 규정에서 머리(두부) 발차기는 3점입니다. 몸통 발차기는 2점(전자호구 기준), 몸통 주먹 공격은 1점입니다.',
+      },
+      {
+        id: 'EL-029', profile: 'elementary', category: 'taekwondo', difficulty: 'easy',
+        question: '태권도에서 나무판·벽돌 등을 손이나 발로 깨는 시연을 무엇이라고 하나요?',
+        options: ['격파', '겨루기', '품새', '발차기'],
+        answer: 0,
+        hint: '태권도의 강한 힘을 보여주기 위해 딱딱한 물체를 부수는 시연입니다.',
+        explanation: '격파(擊破)는 태권도의 기술과 힘을 보여주기 위해 나무판·기와·벽돌 등을 발이나 손으로 부수는 시연입니다. 승단 심사나 시범 행사에서 자주 볼 수 있습니다.',
+      },
+      {
+        id: 'EL-030', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '세계 태권도의 총본산인 국기원이 위치한 도시는?',
+        options: ['부산', '서울', '인천', '대전'],
+        answer: 1,
+        hint: '대한민국의 수도에 있습니다.',
+        explanation: '국기원(Kukkiwon)은 서울 강남구에 위치한 세계 태권도의 총본산입니다. 단증 발급과 품새 규정 등 태권도 전반을 관장합니다.',
+      },
+      {
+        id: 'EL-031', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도에서 검은 띠를 딴 뒤의 등급 체계를 무엇이라고 하나요?',
+        options: ['급(級)', '계급', '단(段)', '품(品)'],
+        answer: 2,
+        hint: '검은 띠부터 1단, 2단, 3단… 으로 높아집니다.',
+        explanation: '태권도에서 검은 띠 이후의 등급을 단(段)이라고 합니다. 1단부터 9단까지 있으며, 숫자가 클수록 높은 경지를 나타냅니다.',
+      },
+      {
+        id: 'EL-032', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도 겨루기 경기에서 반칙 행위에 부과되는 벌점을 무엇이라고 하나요?',
+        options: ['경고', '실격', '페널티', '감점(감챔)'],
+        answer: 3,
+        hint: '영어로는 "Gam-jeom"이라고 하며, 상대방에게 점수를 줍니다.',
+        explanation: '태권도 경기에서 반칙을 하면 감점(감챔, Gam-jeom)이 부과됩니다. 감점 1개는 상대방에게 1점을 주는 것과 같으며, 5개가 누적되면 실격 패합니다.',
+      },
+      {
+        id: 'EL-033', profile: 'elementary', category: 'taekwondo', difficulty: 'hard',
+        question: '태권도가 처음 올림픽 시범 종목으로 채택된 올림픽은?',
+        options: ['1988년 서울 올림픽', '1984년 LA 올림픽', '1992년 바르셀로나 올림픽', '1980년 모스크바 올림픽'],
+        answer: 0,
+        hint: '우리나라에서 열린 올림픽에서 처음 시범 종목으로 소개되었습니다.',
+        explanation: '태권도는 1988년 서울 올림픽에서 처음 올림픽 시범 종목으로 채택되었습니다. 이후 1992년에도 시범 종목이었고, 2000년 시드니부터 정식 종목이 되었습니다.',
+      },
+      {
+        id: 'EL-034', profile: 'elementary', category: 'taekwondo', difficulty: 'hard',
+        question: '태권도를 국제적으로 관장하는 세계 기구의 이름은?',
+        options: ['국제올림픽위원회(IOC)', '세계태권도연맹(WT)', '국제무도연맹(IMA)', '아시아태권도연맹(ATA)'],
+        answer: 1,
+        hint: '"World Taekwondo"의 약자이며, 서울에 본부를 두고 있습니다.',
+        explanation: '세계태권도연맹(WT, World Taekwondo)은 태권도를 국제적으로 관장하는 기구로 서울에 본부를 두고 있습니다. 과거 WTF로 불리다 2017년 WT로 명칭을 변경했습니다.',
+      },
+      {
+        id: 'EL-035', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도 겨루기 경기에서 파란색 보호대(호구)를 착용하는 선수를 무엇이라고 하나요?',
+        options: ['홍(紅) 선수', '백(白) 선수', '청(靑) 선수', '남(藍) 선수'],
+        answer: 2,
+        hint: '파란색을 한자로 무엇이라고 할까요?',
+        explanation: '태권도 경기에서는 청(靑, 파란색)과 홍(紅, 빨간색) 두 선수로 구분합니다. 파란색 호구를 착용한 선수를 청 선수라고 부릅니다.',
+      },
+      {
+        id: 'EL-036', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도 겨루기 경기는 총 몇 라운드로 진행되나요?',
+        options: ['1라운드', '4라운드', '5라운드', '3라운드'],
+        answer: 3,
+        hint: '각 라운드는 2분씩 진행됩니다.',
+        explanation: '태권도 겨루기는 총 3라운드로 진행되며, 각 라운드는 2분입니다. 라운드 사이에는 1분의 휴식 시간이 있습니다.',
+      },
+      {
+        id: 'EL-037', profile: 'elementary', category: 'taekwondo', difficulty: 'easy',
+        question: '태권도에서 가장 높은 단계를 상징하는 띠의 색깔은?',
+        options: ['검은띠', '빨간띠', '파란띠', '노란띠'],
+        answer: 0,
+        hint: '밤하늘처럼 어두운 색으로, 많은 노력과 수련을 상징합니다.',
+        explanation: '태권도에서 검은 띠는 가장 높은 단계를 나타냅니다. 검은색은 어둠을 두려워하지 않는 성숙함을 상징하며, 검은 띠 이후에는 단(段) 체계로 이어집니다.',
+      },
+      {
+        id: 'EL-038', profile: 'elementary', category: 'taekwondo', difficulty: 'medium',
+        question: '태권도 겨루기에서 라운드와 라운드 사이 휴식 시간은 몇 분인가요?',
+        options: ['30초', '1분', '2분', '3분'],
+        answer: 1,
+        hint: '선수들이 숨을 고르고 코치에게 작전을 들을 수 있는 시간입니다.',
+        explanation: '태권도 겨루기에서 라운드 사이 휴식 시간은 1분입니다. 이 시간 동안 코치가 작전을 조언하고 선수는 수분을 보충할 수 있습니다.',
+      },
+      {
+        id: 'EL-039', profile: 'elementary', category: 'taekwondo', difficulty: 'hard',
+        question: '태권도(跆拳道)에서 한자 "권(拳)"의 뜻은?',
+        options: ['발로 차다', '도(道, 길)', '주먹', '몸'],
+        answer: 2,
+        hint: '태권도의 손 기술과 관련된 글자입니다.',
+        explanation: '태권도(跆拳道)에서 태(跆)는 "발로 차다", 권(拳)은 "주먹", 도(道)는 "길·정신"을 의미합니다. 즉 태권도는 "발과 주먹을 사용하는 무술의 도"입니다.',
+      },
+      {
+        id: 'EL-040', profile: 'elementary', category: 'taekwondo', difficulty: 'hard',
+        question: '태권도 겨루기 경기에서 한 라운드의 경기 시간은?',
+        options: ['30초', '1분', '1분 30초', '2분'],
+        answer: 3,
+        hint: '총 3라운드로 진행되며, 각 라운드 길이는 모두 동일합니다.',
+        explanation: '태권도 겨루기는 각 2분짜리 3라운드로 진행됩니다. 동점이면 골든라운드(1분)로 최종 승자를 가립니다.',
+      },
+
+      /* ════════ 중학생 (middle) 20문제 ════════ */
+      {
+        id: 'MS-001', profile: 'middle', category: 'history', difficulty: 'medium',
+        question: '조선을 건국한 인물은?',
+        options: ['이성계', '이순신', '왕건', '광개토대왕'],
+        answer: 0,
+        hint: '1392년 고려를 무너뜨리고 새 나라 조선을 세운 무장 출신 왕입니다.',
+        explanation: '이성계는 1392년 고려 왕조를 폐하고 조선을 건국하여 태조가 되었습니다. 왕건은 고려의 건국자, 광개토대왕은 고구려의 왕입니다.',
+      },
+      {
+        id: 'MS-002', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: '세포 내에서 에너지(ATP)를 생산하는 소기관은?',
+        options: ['핵', '세포막', '리보솜', '미토콘드리아'],
+        answer: 3,
+        hint: '"세포의 발전소"라 불리며, 산소를 이용해 포도당을 분해합니다.',
+        explanation: '미토콘드리아는 세포 호흡을 통해 ATP(에너지)를 생산하는 소기관입니다. 리보솜은 단백질 합성, 핵은 유전 정보를 담당합니다.',
+      },
+      {
+        id: 'MS-003', profile: 'middle', category: 'history', difficulty: 'medium',
+        question: '임진왜란이 일어난 해는?',
+        options: ['1592년', '1392년', '1636년', '1894년'],
+        answer: 0,
+        hint: '조선 선조 때 일본이 침략한 전쟁으로, 이순신 장군이 활약했습니다.',
+        explanation: '임진왜란은 1592년(선조 25년) 일본 도요토미 히데요시가 조선을 침략해 시작된 전쟁입니다. 1636년은 병자호란, 1894년은 동학 농민 운동이 발발한 해입니다.',
+      },
+      {
+        id: 'MS-004', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: "원소 기호 'Na'가 나타내는 원소는?",
+        options: ['금(Gold)', '철(Iron)', '나트륨(Sodium)', '칼슘(Calcium)'],
+        answer: 2,
+        hint: '소금(NaCl)의 구성 원소 중 하나로, 라틴어 Natrium에서 기호를 따왔습니다.',
+        explanation: 'Na는 나트륨(Sodium)을 나타냅니다. 금은 Au, 철은 Fe, 칼슘은 Ca입니다. 나트륨은 우리 몸의 전해질 균형에 중요한 역할을 합니다.',
+      },
+      {
+        id: 'MS-005', profile: 'middle', category: 'geo', difficulty: 'medium',
+        question: '세계에서 인구가 가장 많은 대륙은?',
+        options: ['아시아', '유럽', '아프리카', '아메리카'],
+        answer: 0,
+        hint: '중국·인도·한국·일본 등이 속한 대륙입니다.',
+        explanation: '아시아는 세계 인구의 약 60%인 47억 명 이상이 거주하는 가장 인구가 많은 대륙입니다. 면적도 세계 최대입니다.',
+      },
+      {
+        id: 'MS-006', profile: 'middle', category: 'history', difficulty: 'hard',
+        question: '동학 농민 운동이 일어난 해는?',
+        options: ['1884년', '1894년', '1904년', '1919년'],
+        answer: 1,
+        hint: '갑오년(甲午年)에 일어나 갑오 농민 운동이라고도 불립니다.',
+        explanation: '동학 농민 운동은 1894년(고종 31년) 전봉준을 중심으로 일어난 반봉건·반외세 농민 봉기입니다. 1884년은 갑신정변, 1919년은 3·1 운동이 일어난 해입니다.',
+      },
+      {
+        id: 'MS-007', profile: 'middle', category: 'science', difficulty: 'hard',
+        question: '빛의 삼원색을 올바르게 나타낸 것은?',
+        options: ['빨강·노랑·파랑', '빨강·초록·파랑', '노랑·초록·보라', '시안·마젠타·노랑'],
+        answer: 1,
+        hint: '세 색을 모두 합치면 흰색이 되는 가산 혼합의 삼원색입니다.',
+        explanation: '빛의 삼원색은 빨강(Red)·초록(Green)·파랑(Blue), 즉 RGB입니다. 세 가지를 합치면 흰 빛이 됩니다. 시안·마젠타·노랑은 인쇄용 색료(CMYK)의 삼원색입니다.',
+      },
+      {
+        id: 'MS-008', profile: 'middle', category: 'general', difficulty: 'medium',
+        question: '삼권분립의 세 가지 권력이 아닌 것은?',
+        options: ['입법권', '외교권', '사법권', '행정권'],
+        answer: 1,
+        hint: '삼권분립은 국가 권력을 세 기관으로 나누어 견제와 균형을 이루는 원리입니다.',
+        explanation: '삼권분립은 입법권(국회)·사법권(법원)·행정권(정부)을 분리하는 제도입니다. 외교권은 행정부(정부)의 권한에 포함되며 독립된 권력이 아닙니다.',
+      },
+      {
+        id: 'MS-009', profile: 'middle', category: 'geo', difficulty: 'medium',
+        question: '세계에서 가장 넓은 바다는?',
+        options: ['대서양', '인도양', '북극해', '태평양'],
+        answer: 3,
+        hint: '아시아·오세아니아·아메리카·남극을 둘러싸고 있으며, 지구 표면의 약 1/3을 차지합니다.',
+        explanation: '태평양은 면적 약 1억 6,525만 km²로 세계에서 가장 넓은 바다입니다. 지구상 모든 육지를 합친 면적보다도 더 큽니다.',
+      },
+      {
+        id: 'MS-010', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: '지구가 태양 주위를 한 바퀴 도는 데 걸리는 시간은?',
+        options: ['약 365일', '약 28일', '약 24시간', '약 10년'],
+        answer: 0,
+        hint: '이 주기가 바로 "1년"의 길이를 결정합니다.',
+        explanation: '지구는 태양 주위를 약 365.25일(1년)에 한 바퀴 공전합니다. 약 24시간은 지구 자전 주기(하루)이고, 약 28일은 달의 공전 주기입니다.',
+      },
+      {
+        id: 'MS-011', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: '식물의 광합성 결과 생성되는 두 물질은?',
+        options: ['포도당과 이산화탄소', '포도당과 물', '물과 산소', '포도당과 산소'],
+        answer: 3,
+        hint: '6CO₂ + 6H₂O → C₆H₁₂O₆ + ?O₂ 반응식의 생성물입니다.',
+        explanation: '광합성의 반응식: 6CO₂ + 6H₂O → C₆H₁₂O₆(포도당) + 6O₂(산소). 포도당은 에너지원, 산소는 대기로 방출됩니다.',
+      },
+      {
+        id: 'MS-012', profile: 'middle', category: 'history', difficulty: 'medium',
+        question: '삼국을 통일한 신라의 왕은?',
+        options: ['문무왕', '선덕여왕', '진흥왕', '경덕왕'],
+        answer: 0,
+        hint: '고구려(668년)를 멸망시켜 삼국 통일을 완성한 신라 30대 왕입니다.',
+        explanation: '문무왕(661~681 재위)은 당나라와 연합하여 백제(660년)·고구려(668년)를 차례로 멸망시키고 삼국 통일을 이루었습니다.',
+      },
+      {
+        id: 'MS-013', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: '지구 대기의 약 78%를 차지하는 기체는?',
+        options: ['산소(O₂)', '이산화탄소(CO₂)', '아르곤(Ar)', '질소(N₂)'],
+        answer: 3,
+        hint: '공기의 주성분으로, 비료의 원료가 되기도 하는 기체입니다.',
+        explanation: '지구 대기는 질소(N₂) 약 78%, 산소(O₂) 약 21%, 아르곤 약 0.9%, 이산화탄소 약 0.04% 순으로 구성됩니다.',
+      },
+      {
+        id: 'MS-014', profile: 'middle', category: 'history', difficulty: 'easy',
+        question: '고조선을 세운 인물은?',
+        options: ['주몽', '온조', '박혁거세', '단군왕검'],
+        answer: 3,
+        hint: '기원전 2333년 우리 민족 최초의 국가를 건국한 인물입니다.',
+        explanation: '단군왕검은 기원전 2333년 아사달을 수도로 고조선을 건국했습니다. 주몽은 고구려, 온조는 백제, 박혁거세는 신라의 시조입니다.',
+      },
+      {
+        id: 'MS-015', profile: 'middle', category: 'general', difficulty: 'hard',
+        question: '대한민국 헌법 제1조 1항의 내용은?',
+        options: ['대한민국의 주권은 국민에게 있다', '대한민국은 민주공화국이다', '모든 국민은 법 앞에 평등하다', '국민의 자유와 권리는 헌법이 보장한다'],
+        answer: 1,
+        hint: '우리나라가 어떤 형태의 국가인지를 선언하는 첫 번째 조항입니다.',
+        explanation: '헌법 제1조 1항: "대한민국은 민주공화국이다." 2항: "대한민국의 주권은 국민에게 있고, 모든 권력은 국민으로부터 나온다."',
+      },
+      {
+        id: 'MS-016', profile: 'middle', category: 'science', difficulty: 'hard',
+        question: 'DNA의 이중나선 구조를 처음 밝힌 과학자는?',
+        options: ['아인슈타인과 보어', '멘델과 다윈', '왓슨과 크릭', '퀴리와 파스퇴르'],
+        answer: 2,
+        hint: '1953년 네이처(Nature)에 논문을 발표하여 1962년 노벨 생리의학상을 수상했습니다.',
+        explanation: '제임스 왓슨(Watson)과 프랜시스 크릭(Crick)은 1953년 DNA의 이중나선 구조를 규명했습니다. 로절린드 프랭클린의 X선 회절 데이터도 결정적으로 기여했습니다.',
+      },
+      {
+        id: 'MS-017', profile: 'middle', category: 'history', difficulty: 'hard',
+        question: '김옥균 등 개화파가 일으킨 갑신정변이 발생한 연도는?',
+        options: ['1876년', '1882년', '1884년', '1894년'],
+        answer: 2,
+        hint: '"갑신년(甲申年)"에 일어났으며 3일 만에 실패로 끝난 근대 개혁 운동입니다.',
+        explanation: '갑신정변은 1884년(갑신년) 김옥균·박영효 등 급진 개화파가 우정국 낙성연을 기회로 일으킨 정변입니다. 1882년은 임오군란, 1894년은 동학 농민 운동이 발생한 해입니다.',
+      },
+      {
+        id: 'MS-018', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: '빛이 진공 속에서 1초에 이동하는 거리는 약 몇 km인가?',
+        options: ['약 3만 km', '약 30만 km', '약 300만 km', '약 3천 km'],
+        answer: 1,
+        hint: '지구 둘레(약 4만 km)를 1초에 7.5바퀴 도는 속도입니다.',
+        explanation: '빛의 속도는 진공 속에서 약 30만 km/s(정확히는 299,792,458 m/s)입니다. 아인슈타인의 상대성 이론에 따르면 이 속도가 우주에서 가장 빠릅니다.',
+      },
+      {
+        id: 'MS-019', profile: 'middle', category: 'history', difficulty: 'medium',
+        question: '삼국 시대(고구려·백제·신라) 국가가 아닌 것은?',
+        options: ['고구려', '신라', '발해', '백제'],
+        answer: 2,
+        hint: '통일신라가 멸망한 이후 세워진 나라로, 고구려 유민이 건국했습니다.',
+        explanation: '발해(698~926)는 대조영이 고구려 유민과 말갈족을 이끌어 세운 나라로, 삼국 시대(~676년)보다 후대에 해당합니다. 삼국은 고구려·백제·신라입니다.',
+      },
+      {
+        id: 'MS-020', profile: 'middle', category: 'science', difficulty: 'medium',
+        question: '지구 내부를 바깥쪽에서 안쪽 순서로 올바르게 나열한 것은?',
+        options: ['맨틀-지각-내핵-외핵', '지각-외핵-맨틀-내핵', '지각-맨틀-외핵-내핵', '내핵-외핵-맨틀-지각'],
+        answer: 2,
+        hint: '지구 표면 아래로 파고들수록 온도와 압력이 높아집니다.',
+        explanation: '지구 내부는 바깥부터 지각(두께 5~70km)→맨틀(약 2,900km)→외핵(액체, 약 2,200km)→내핵(고체, 반경 약 1,300km) 순으로 구성됩니다.',
+      },
+    ];
+
+    /* ─────────────────────────────────────
+       게임 상태 객체
+    ───────────────────────────────────── */
+    const gameState = {
+      currentScreen: 'home-screen',
+      category:      null,          // 선택된 카테고리 id
+      questions:     [],            // 현재 게임에 사용될 문제 배열
+      currentIndex:  0,             // 현재 문제 인덱스
+      score:         0,             // 누적 점수 (Phase A 이후: calculateScore() 결과 합산)
+      answers:       [],            // 사용자 응답 기록 [{ questionId, chosen, correct }]
+      playerName:    '',            // 플레이어 이름
+      profile:       null,          // 'preschool' | 'elementary' | 'middle' | 'general'
+      // ── Phase A 추가 필드 ──
+      mode:          null,          // 'all' | 'category' | 'speed'
+      combo:         0,             // 현재 연속 정답 수
+      maxCombo:      0,             // 최대 콤보
+      hintUsed:      false,         // 현재 문제 힌트 사용 여부
+      startTime:     null,          // 현재 문제 시작 시각 (Date.now())
+      gameStartTime: null,          // 게임 전체 시작 시각 (duration 계산용)
+    };
+
+    /* ─────────────────────────────────────
+       화면 전환
+    ───────────────────────────────────── */
+    function showScreen(screenId) {
+      // 화면 전환 시 타이머·음성 항상 정지
+      clearInterval(timerInterval);
+      timerInterval = null;
+      if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+
+      const current = document.querySelector('.screen.visible');
+      if (current) current.classList.remove('visible');
+
+      const next = document.getElementById(screenId);
+      if (!next) return;
+      next.classList.add('visible');
+
+      // 스크롤 상단 초기화
+      next.scrollTo({ top: 0 });
+      window.scrollTo({ top: 0 });
+
+      gameState.currentScreen = screenId;
+
+      switch (screenId) {
+        case 'home-screen':      initHome();      break;
+        case 'profile-screen':   initProfile();   break;
+        case 'category-screen':  initCategory();  break;
+        case 'quiz-screen':      initQuiz();      break;
+        case 'result-screen':    initResult();    break;
+        case 'ranking-screen':   initRanking();   break;
+        case 'dashboard-screen': initDashboard(); break;
+      }
+    }
+
+    /* ─────────────────────────────────────
+       홈 초기화 (정적 화면)
+    ───────────────────────────────────── */
+    function initHome() {}
+
+    /* ─────────────────────────────────────
+       프로필 데이터
+    ───────────────────────────────────── */
+    const PROFILES = [
+      { id: 'preschool',  icon: '🎈', label: '미취학아동', age: '7세 이하',  note: '동물·색깔·숫자 등 쉬운 문제' },
+      { id: 'elementary', icon: '📚', label: '초등학생',   age: '8~13세',   note: '기초 상식·한국 지리·자연 과학·태권도' },
+      { id: 'middle',     icon: '🏫', label: '중학생',     age: '13~15세',  note: '세계사·과학 개념·지리' },
+      { id: 'general',    icon: '🌍', label: '일반',       age: '성인',     note: '기존 상식 퀴즈 (기본 모드)' },
+    ];
+
+    /* 프로필에 따른 문제 풀 반환 */
+    function getQuestionPool() {
+      const p = gameState.profile;
+      if (!p || p === 'general') {
+        return QUESTIONS.filter(q => !q.profile); // 기존 문제 (profile 필드 없음)
+      }
+      return QUESTIONS.filter(q => q.profile === p);
+    }
+
+    function initProfile() {
+      gameState.profile = null;
+      document.getElementById('btn-profile-next').disabled = true;
+
+      const grid = document.getElementById('profile-grid');
+      grid.innerHTML = '';
+
+      PROFILES.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'profile-card';
+        card.dataset.id = p.id;
+        card.innerHTML = `
+          <span class="profile-icon">${p.icon}</span>
+          <span class="profile-label">${p.label}</span>
+          <span class="profile-age">${p.age}</span>
+          <span class="profile-note">${p.note}</span>
+        `;
+        card.addEventListener('click', () => {
+          grid.querySelectorAll('.profile-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          gameState.profile = p.id;
+          document.getElementById('btn-profile-next').disabled = false;
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function onProfileConfirm() {
+      if (!gameState.profile) return;
+      showScreen('category-screen');
+    }
+
+    /* ─────────────────────────────────────
+       게임 모드 데이터
+    ───────────────────────────────────── */
+    const MODES = [
+      { id: 'all',      icon: '🌟', label: '전체 도전',    desc: '40문제 전부' },
+      { id: 'category', icon: '🗂️', label: '카테고리별',   desc: '분야 선택' },
+      { id: 'speed',    icon: '⚡', label: '스피드 퀴즈',  desc: '20문제 랜덤' },
+    ];
+
+    /* ─────────────────────────────────────
+       카테고리 데이터
+    ───────────────────────────────────── */
+    const CATEGORIES = [
+      { id: 'history',   label: '세계사',   icon: '🏛️', count: 10 },
+      { id: 'science',   label: '과학',     icon: '🔬', count: 10 },
+      { id: 'geo',       label: '지리',     icon: '🌍', count: 10 },
+      { id: 'general',   label: '일반상식', icon: '💡', count: 10 },
+      { id: 'taekwondo', label: '태권도',   icon: '🥋', count: 20 },
+    ];
+
+    function initCategory() {
+      // 상태 초기화
+      gameState.mode     = null;
+      gameState.category = null;
+
+      // 프로필별 문제 풀 계산
+      const pool = getQuestionPool();
+      const speedCount = Math.min(20, pool.length);
+      const allCount   = pool.length;
+
+      // 모드 카드 렌더링 (문제 수 동적 반영)
+      const modeGrid = document.getElementById('mode-grid');
+      modeGrid.innerHTML = '';
+      MODES.forEach(m => {
+        let desc = m.desc;
+        if (m.id === 'all')   desc = `${allCount}문제 전부`;
+        if (m.id === 'speed') desc = `${speedCount}문제 랜덤`;
+        const card = document.createElement('div');
+        card.className = 'mode-card';
+        card.dataset.id = m.id;
+        card.innerHTML = `
+          <span class="mode-icon">${m.icon}</span>
+          <span class="mode-label">${m.label}</span>
+          <span class="mode-desc">${desc}</span>
+        `;
+        card.addEventListener('click', () => onModeSelect(m.id));
+        modeGrid.appendChild(card);
+      });
+
+      // 카테고리 카드 렌더링 (프로필별 count 계산)
+      const catGrid = document.getElementById('cat-grid');
+      catGrid.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const count = pool.filter(q => q.category === cat.id).length;
+        if (count === 0) return; // 문제 없는 카테고리 숨김
+        const card = document.createElement('div');
+        card.className = 'cat-card';
+        card.dataset.id = cat.id;
+        card.innerHTML = `
+          <span class="cat-icon">${cat.icon}</span>
+          <span class="cat-label">${cat.label}</span>
+          <span class="cat-count">${count}문제</span>
+        `;
+        card.addEventListener('click', () => {
+          catGrid.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          gameState.category = cat.id;
+          updateStartBtn();
+        });
+        catGrid.appendChild(card);
+      });
+
+      // 카테고리 섹션 숨김, 시작 버튼 비활성
+      document.getElementById('cat-section').style.display = 'none';
+      updateStartBtn();
+    }
+
+    function onModeSelect(mode) {
+      gameState.mode     = mode;
+      gameState.category = null;
+
+      // 모드 카드 선택 표시
+      document.getElementById('mode-grid')
+        .querySelectorAll('.mode-card')
+        .forEach(c => c.classList.toggle('selected', c.dataset.id === mode));
+
+      // 카테고리 섹션: category 모드일 때만 표시
+      const catSection = document.getElementById('cat-section');
+      if (mode === 'category') {
+        catSection.style.display = '';
+        // 카테고리 선택 초기화
+        document.getElementById('cat-grid')
+          .querySelectorAll('.cat-card')
+          .forEach(c => c.classList.remove('selected'));
+      } else {
+        catSection.style.display = 'none';
+        gameState.category = mode === 'all' ? 'all' : null;
+      }
+
+      updateStartBtn();
+    }
+
+    function updateStartBtn() {
+      const btn = document.getElementById('btn-start');
+      const ready = gameState.mode === 'all'
+        || gameState.mode === 'speed'
+        || (gameState.mode === 'category' && gameState.category !== null);
+      btn.disabled = !ready;
+    }
+
+    function startGame() {
+      showScreen('quiz-screen');
+    }
+
+    /* ─────────────────────────────────────
+       Fisher-Yates 셔플
+    ───────────────────────────────────── */
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    /* ─────────────────────────────────────
+       퀴즈 초기화
+    ───────────────────────────────────── */
+    function initQuiz() {
+      const { mode, category } = gameState;
+
+      // 프로필 기반 문제 풀 먼저 선택
+      const basePool = getQuestionPool();
+
+      // 문제 풀 선택 (mode 기반)
+      let pool;
+      if (mode === 'speed') {
+        pool = shuffle(basePool).slice(0, Math.min(20, basePool.length));
+      } else if (mode === 'category') {
+        pool = basePool.filter(q => q.category === category);
+      } else {
+        // 'all' 또는 레거시 fallback
+        pool = basePool;
+      }
+
+      // 상태 초기화
+      gameState.questions    = mode === 'speed' ? pool : shuffle(pool);
+      gameState.currentIndex = 0;
+      gameState.score        = 0;
+      gameState.answers      = [];
+      gameState.combo        = 0;
+      gameState.maxCombo     = 0;
+      gameState.hintUsed      = false;
+      gameState.startTime     = Date.now();
+      gameState.gameStartTime = Date.now();
+
+      // 카테고리/모드 뱃지 설정
+      const badge = document.getElementById('quiz-badge');
+      if (mode === 'speed') {
+        badge.textContent = '⚡ 스피드';
+      } else if (mode === 'category') {
+        const cat = CATEGORIES.find(c => c.id === category);
+        badge.textContent = cat ? `${cat.icon} ${cat.label}` : '🗂️ 카테고리';
+      } else {
+        badge.textContent = '🌟 전체';
+      }
+
+      // 총 문제 수 표시
+      document.getElementById('quiz-total').textContent = gameState.questions.length;
+
+      renderQuestion(0);
+    }
+
+    /* ─────────────────────────────────────
+       문제 렌더링
+    ───────────────────────────────────── */
+    const PREFIXES = ['①', '②', '③', '④'];
+
+    /* ─────────────────────────────────────
+       TTS (음성 읽기) — 미취학아동 전용
+       Web Speech API 사용, 한국어 여성 목소리 우선 선택
+    ───────────────────────────────────── */
+    let _ttsVoice = null;
+
+    (function _initTTS() {
+      if (typeof speechSynthesis === 'undefined') return;
+      function _loadVoice() {
+        const voices = speechSynthesis.getVoices();
+        // 한국어 여성 목소리 우선순위: Yuna(Mac) > Heami(Win) > Sora > 기타 여성 > 한국어 아무거나
+        _ttsVoice =
+          voices.find(v => v.lang.startsWith('ko') && /yuna/i.test(v.name))       ||
+          voices.find(v => v.lang.startsWith('ko') && /heami/i.test(v.name))      ||
+          voices.find(v => v.lang.startsWith('ko') && /sora/i.test(v.name))       ||
+          voices.find(v => v.lang.startsWith('ko') && /female|여성/i.test(v.name)) ||
+          voices.find(v => v.lang.startsWith('ko'))                                ||
+          null;
+      }
+      speechSynthesis.addEventListener('voiceschanged', _loadVoice);
+      _loadVoice();
+    })();
+
+    function stopSpeech() {
+      if (typeof speechSynthesis === 'undefined') return;
+      speechSynthesis.cancel();
+      const btn = document.getElementById('btn-tts');
+      if (btn) btn.classList.remove('speaking');
+      // 보기 하이라이트 전체 제거
+      document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('tts-reading'));
+    }
+
+    function speakText(text) {
+      if (typeof speechSynthesis === 'undefined') return;
+      stopSpeech();
+      const utt   = new SpeechSynthesisUtterance(text);
+      utt.lang    = 'ko-KR';
+      utt.rate    = 0.82;   // 아이를 위해 약간 느리게
+      utt.pitch   = 1.15;   // 상냥한 느낌의 높은 음
+      utt.volume  = 1.0;
+      if (_ttsVoice) utt.voice = _ttsVoice;
+
+      const btn = document.getElementById('btn-tts');
+      utt.onstart = () => { if (btn) btn.classList.add('speaking'); };
+      utt.onend   = () => { if (btn) btn.classList.remove('speaking'); };
+      utt.onerror = () => { if (btn) btn.classList.remove('speaking'); };
+      speechSynthesis.speak(utt);
+    }
+
+    function readQuestionAloud() {
+      const q = gameState.questions[gameState.currentIndex];
+      if (!q || typeof speechSynthesis === 'undefined') return;
+
+      stopSpeech();
+
+      const ttsBtnEl = document.getElementById('btn-tts');
+      if (ttsBtnEl) ttsBtnEl.classList.add('speaking');
+
+      function makeUtt(text) {
+        const utt    = new SpeechSynthesisUtterance(text);
+        utt.lang     = 'ko-KR';
+        utt.rate     = 0.82;
+        utt.pitch    = 1.15;
+        utt.volume   = 1.0;
+        if (_ttsVoice) utt.voice = _ttsVoice;
+        return utt;
+      }
+
+      function clearOptHighlight() {
+        document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('tts-reading'));
+      }
+
+      function onFinish() {
+        clearOptHighlight();
+        if (ttsBtnEl) ttsBtnEl.classList.remove('speaking');
+      }
+
+      // onend 체이닝 방식: Chrome에서 큐 방식보다 onstart가 안정적으로 발생
+      const prefixes = ['하나', '둘', '셋', '넷'];
+
+      // 보기 utterance 배열 (역순으로 체이닝)
+      const optUtts = q.options.map((opt, i) => makeUtt(`${prefixes[i]}, ${opt}.`));
+
+      // 마지막 보기 → 완료 처리
+      optUtts[3].onend   = onFinish;
+      optUtts[3].onerror = onFinish;
+
+      // 보기 3, 2, 1, 0 역순으로 onend 체이닝
+      for (let i = 2; i >= 0; i--) {
+        const next = i + 1;
+        optUtts[i].onend = () => {
+          clearOptHighlight();
+          const optBtns = document.querySelectorAll('.opt-btn');
+          if (optBtns[next]) optBtns[next].classList.add('tts-reading');
+          speechSynthesis.speak(optUtts[next]);
+        };
+        optUtts[i].onerror = onFinish;
+      }
+
+      // 문제 utterance → 끝나면 보기 0 시작
+      const qUtt   = makeUtt(q.question + ' 보기.');
+      qUtt.onend   = () => {
+        clearOptHighlight();
+        const optBtns = document.querySelectorAll('.opt-btn');
+        if (optBtns[0]) optBtns[0].classList.add('tts-reading');
+        speechSynthesis.speak(optUtts[0]);
+      };
+      qUtt.onerror = onFinish;
+
+      // 시작
+      speechSynthesis.speak(qUtt);
+    }
+
+    function renderQuestion(index) {
+      // 타이머 항상 먼저 정지
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      const q        = gameState.questions[index];
+      const total    = gameState.questions.length;
+      const progress = ((index) / total) * 100;
+
+      // 문제별 상태 초기화
+      gameState.startTime = Date.now();
+      gameState.hintUsed  = false;
+
+      // 진행 표시
+      document.getElementById('quiz-current').textContent  = index + 1;
+      document.getElementById('quiz-progress').style.width = progress + '%';
+
+      // 문제 텍스트
+      document.getElementById('quiz-q-num').textContent  = `Q${index + 1}.`;
+      document.getElementById('quiz-q-text').textContent = q.question;
+
+      // 선택지 생성
+      const optionsEl = document.getElementById('quiz-options');
+      optionsEl.innerHTML = '';
+      q.options.forEach((text, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerHTML = `<span class="opt-prefix">${PREFIXES[i]}</span>${text}`;
+        btn.addEventListener('click', () => handleAnswer(i));
+        optionsEl.appendChild(btn);
+      });
+
+      // 피드백 초기화
+      document.getElementById('quiz-feedback').classList.remove('show');
+      document.getElementById('score-breakdown').classList.remove('show');
+
+      // 힌트 초기화
+      const btnHint  = document.getElementById('btn-hint');
+      const hintText = document.getElementById('hint-text');
+      btnHint.disabled = false;
+      hintText.textContent = '';
+      hintText.classList.remove('show');
+
+      // 점수/콤보 UI 갱신
+      updateScoreComboUI();
+
+      // 스피드 모드: 타이머 표시 + 시작
+      const timerEl = document.getElementById('quiz-timer');
+      if (gameState.mode === 'speed') {
+        timerEl.classList.add('show');
+        startTimer();
+      } else {
+        timerEl.classList.remove('show');
+      }
+
+      // TTS: 미취학아동이면 버튼 표시 + 자동 읽기
+      const ttsRow = document.getElementById('tts-row');
+      if (gameState.profile === 'preschool') {
+        ttsRow.classList.add('show');
+        setTimeout(readQuestionAloud, 450); // 화면 렌더 후 약간 딜레이
+      } else {
+        ttsRow.classList.remove('show');
+        stopSpeech();
+      }
+    }
+
+    /* ─────────────────────────────────────
+       점수 / 콤보 UI 갱신
+    ───────────────────────────────────── */
+    function updateScoreComboUI() {
+      document.getElementById('live-score').textContent = gameState.score;
+
+      const comboEl  = document.getElementById('live-combo');
+      const combo    = gameState.combo;
+      comboEl.classList.remove('show', 'combo-orange', 'combo-red', 'combo-purple');
+
+      if (combo >= 10) {
+        comboEl.textContent = `🔥 ${combo}콤보`;
+        comboEl.classList.add('show', 'combo-purple');
+      } else if (combo >= 5) {
+        comboEl.textContent = `🔥 ${combo}콤보`;
+        comboEl.classList.add('show', 'combo-red');
+      } else if (combo >= 3) {
+        comboEl.textContent = `🔥 ${combo}콤보`;
+        comboEl.classList.add('show', 'combo-orange');
+      }
+    }
+
+    /* ─────────────────────────────────────
+       스피드 타이머
+    ───────────────────────────────────── */
+    const TIMER_TOTAL = 15;
+
+    function startTimer() {
+      let remaining = TIMER_TOTAL;
+      const fillEl    = document.getElementById('timer-fill');
+      const secondsEl = document.getElementById('timer-seconds');
+
+      function tick() {
+        secondsEl.textContent = remaining;
+        const pct = (remaining / TIMER_TOTAL) * 100;
+        fillEl.style.width = pct + '%';
+
+        // 색상 + 깜박임
+        fillEl.classList.remove('orange', 'red', 'blink');
+        if (remaining <= 5) {
+          fillEl.classList.add('red', 'blink');
+        } else if (remaining <= 10) {
+          fillEl.classList.add('orange');
+        }
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          handleAnswer(-1);  // 시간 초과 → 오답 처리
+        } else {
+          remaining--;
+        }
+      }
+
+      tick();  // 즉시 1회 실행 후 매 초 반복
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    /* ─────────────────────────────────────
+       힌트 표시
+    ───────────────────────────────────── */
+    function showHint() {
+      const q = gameState.questions[gameState.currentIndex];
+      gameState.hintUsed = true;
+      document.getElementById('hint-text').textContent = q.hint;
+      document.getElementById('hint-text').classList.add('show');
+      document.getElementById('btn-hint').disabled = true;
+    }
+
+    /* ─────────────────────────────────────
+       답 선택 처리
+    ───────────────────────────────────── */
+    function vibrate(pattern) {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    }
+
+    function handleAnswer(selectedIndex) {
+      // 타이머 중지
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      const q         = gameState.questions[gameState.currentIndex];
+      const correct   = selectedIndex === q.answer;
+      const timeSpent = (Date.now() - gameState.startTime) / 1000;
+
+      // 점수 계산
+      const result = calculateScore(correct, q.difficulty, timeSpent, gameState.hintUsed, gameState.combo);
+      gameState.score   += result.total;
+      if (correct) {
+        gameState.combo    = result.newCombo;
+        gameState.maxCombo = Math.max(gameState.maxCombo, gameState.combo);
+        vibrate(40);
+      } else {
+        gameState.combo = 0;
+        vibrate([80, 40, 80]);
+      }
+
+      // 상태 기록
+      gameState.answers.push({
+        questionId:   q.id,
+        selected:     selectedIndex,
+        correct,
+        pointsEarned: result.total,
+        breakdown:    result.breakdown,
+      });
+
+      // 점수/콤보 UI 갱신
+      updateScoreComboUI();
+
+      // 버튼 상태 업데이트
+      const buttons = document.querySelectorAll('.opt-btn');
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.answer) {
+          btn.classList.add('correct');
+        } else if (i === selectedIndex && !correct) {
+          btn.classList.add('wrong');
+        } else {
+          btn.classList.add('dim');
+        }
+      });
+
+      // 힌트 버튼 비활성 (선택 이후엔 불필요)
+      document.getElementById('btn-hint').disabled = true;
+
+      // 진행 바: 현재 문제 완료 후 업데이트
+      const total    = gameState.questions.length;
+      const progress = ((gameState.currentIndex + 1) / total) * 100;
+      document.getElementById('quiz-progress').style.width = progress + '%';
+
+      // 피드백 표시
+      const feedbackEl       = document.getElementById('quiz-feedback');
+      const resultEl         = document.getElementById('feedback-result');
+      const breakdownEl      = document.getElementById('score-breakdown');
+      const explanationEl    = document.getElementById('feedback-explanation');
+      const btnNext          = document.getElementById('btn-next');
+
+      resultEl.className   = `feedback-result ${correct ? 'correct' : 'wrong'}`;
+      resultEl.textContent = correct ? '✅ 정답입니다!' : '❌ 오답입니다';
+
+      // 점수 내역 (정답일 때만)
+      if (correct && result.total > 0) {
+        const bd = result.breakdown;
+        const items = [
+          `기본 +${bd.base}`,
+          bd.difficulty > 0 ? `난이도 +${bd.difficulty}` : null,
+          bd.time > 0       ? `시간 +${bd.time}`         : null,
+          bd.hint > 0       ? `힌트 +${bd.hint}`         : null,
+          bd.combo > 0      ? `콤보 +${bd.combo}`        : null,
+        ].filter(Boolean);
+
+        breakdownEl.innerHTML = `
+          <div class="score-breakdown-row">
+            ${items.map(t => `<span class="score-breakdown-item">${t}</span>`).join('')}
+          </div>
+          <div class="score-breakdown-total">→ 이번 획득: +${result.total}점</div>
+        `;
+        breakdownEl.classList.add('show');
+      } else {
+        breakdownEl.classList.remove('show');
+      }
+
+      explanationEl.textContent = q.explanation;
+
+      const isLast = gameState.currentIndex === gameState.questions.length - 1;
+      btnNext.textContent = isLast ? '결과 보기 →' : '다음 문제 →';
+
+      feedbackEl.classList.add('show');
+      feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // TTS: 미취학아동이면 정답/오답 피드백 읽기
+      if (gameState.profile === 'preschool') {
+        const feedbackText = correct
+          ? '정답이에요! 정말 잘 했어요!'
+          : `아쉬워요. 정답은 "${q.options[q.answer]}"이에요.`;
+        setTimeout(() => speakText(feedbackText), 300);
+      }
+    }
+
+    /* ─────────────────────────────────────
+       다음 문제 / 결과 화면
+    ───────────────────────────────────── */
+    function nextQuestion() {
+      const next = gameState.currentIndex + 1;
+      if (next < gameState.questions.length) {
+        gameState.currentIndex = next;
+        renderQuestion(next);
+        // 문제 카드로 스크롤 복귀
+        document.getElementById('quiz-screen').scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        showScreen('result-screen');
+      }
+    }
+
+    /* ─────────────────────────────────────
+       점수 계산
+    ───────────────────────────────────── */
+    function calculateScore(isCorrect, difficulty, timeSpent, hintUsed, currentCombo) {
+      if (!isCorrect) return { total: 0, breakdown: {}, newCombo: 0 };
+
+      const multiplier = SCORE_CONFIG.difficultyMultiplier[difficulty];
+      const breakdown = {
+        base:       SCORE_CONFIG.base,
+        difficulty: Math.round(SCORE_CONFIG.base * multiplier) - SCORE_CONFIG.base,
+        time:       timeSpent < SCORE_CONFIG.timeBonus.threshold ? SCORE_CONFIG.timeBonus.point : 0,
+        hint:       !hintUsed ? SCORE_CONFIG.hintBonus : 0,
+        combo:      SCORE_CONFIG.combo[currentCombo + 1] || 0,
+      };
+      const total = Object.values(breakdown).reduce((a, b) => a + b, 0);
+      return { total, breakdown, newCombo: currentCombo + 1 };
+    }
+
+    /* ─────────────────────────────────────
+       등급 테이블 (10문제 기준 환산)
+    ───────────────────────────────────── */
+    // 40문제 기준 점수 기준 등급표
+    const GRADE_TABLE = [
+      { min: 600, grade: 'S', cls: 'grade-s', emoji: '🏆', msg: '퀴즈 마스터! 완벽한 점수입니다' },
+      { min: 400, grade: 'A', cls: 'grade-a', emoji: '🥇', msg: '우수! 빠르고 정확한 실력입니다' },
+      { min: 250, grade: 'B', cls: 'grade-b', emoji: '🥈', msg: '양호! 탄탄한 상식을 갖고 있습니다' },
+      { min: 100, grade: 'C', cls: 'grade-c', emoji: '🥉', msg: '보통! 조금 더 연습해보세요' },
+      { min:   0, grade: 'D', cls: 'grade-d', emoji: '📚', msg: '분발! 다시 도전해보세요' },
+    ];
+
+    function calcGrade(score, total) {
+      // 40문제 기준으로 환산 후 점수 기준 등급 판정
+      const scaledScore = total > 0 ? Math.round(score * (40 / total)) : 0;
+      return GRADE_TABLE.find(g => scaledScore >= g.min) || GRADE_TABLE[GRADE_TABLE.length - 1];
+    }
+
+    /* ─────────────────────────────────────
+       결과 화면 초기화
+    ───────────────────────────────────── */
+    const MODE_BADGE_LABEL = {
+      all:      '🌟 전체 도전',
+      category: '🗂️ 카테고리별',
+      speed:    '⚡ 스피드 퀴즈',
+    };
+
+    function initResult() {
+      const { score, questions, answers, category, mode, maxCombo } = gameState;
+      const total        = questions.length;
+      const correctCount = answers.filter(a => a.correct).length;
+      const rate         = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+      // ── 모드 뱃지 ──
+      document.getElementById('res-mode-badge').textContent = MODE_BADGE_LABEL[mode] || '';
+
+      // ── 등급 카드 ──
+      const g = calcGrade(score, total);
+      const gradeCard = document.getElementById('grade-card');
+      gradeCard.className = `grade-card ${g.cls}`;
+      document.getElementById('grade-emoji').textContent  = g.emoji;
+      document.getElementById('grade-letter').textContent = g.grade;
+      document.getElementById('grade-msg').textContent    = g.msg;
+
+      // ── 점수 요약 ──
+      document.getElementById('res-score').textContent   = score;
+      document.getElementById('res-correct').textContent = correctCount;
+      document.getElementById('res-total').textContent   = total;
+      document.getElementById('res-rate').textContent    = rate + '%';
+      document.getElementById('res-max-combo').textContent =
+        maxCombo >= 3 ? `🔥 최대 ${maxCombo}콤보`
+        : maxCombo > 0 ? `${maxCombo}콤보`
+        : '-';
+
+      // 정답률 바 애니메이션
+      const bar = document.getElementById('score-bar');
+      bar.style.width = '0%';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { bar.style.width = rate + '%'; });
+      });
+
+      // ── 점수 구성 요약 ──
+      const totalBreakdown = answers.reduce((acc, a) => {
+        if (a.breakdown) {
+          Object.entries(a.breakdown).forEach(([k, v]) => { acc[k] = (acc[k] || 0) + v; });
+        }
+        return acc;
+      }, { base: 0, difficulty: 0, time: 0, hint: 0, combo: 0 });
+
+      ['base', 'difficulty', 'time', 'hint', 'combo'].forEach(k => {
+        const el = document.getElementById(`bd-${k}`);
+        if (el) el.textContent = totalBreakdown[k] > 0 ? `+${totalBreakdown[k]}` : '-';
+      });
+
+      // ── 카테고리별 분석 (전체 도전 · 스피드 모드만) ──
+      const analysisCard = document.getElementById('analysis-card');
+      if (mode === 'all' || mode === 'speed') {
+        analysisCard.style.display = '';
+        renderAnalysis(answers);
+      } else {
+        analysisCard.style.display = 'none';
+      }
+
+      // ── 닉네임 등록 초기화 ──
+      const nameInput   = document.getElementById('name-input');
+      const btnRegister = document.getElementById('btn-register');
+      nameInput.value   = '';
+      btnRegister.disabled = true;
+      document.getElementById('register-done').classList.remove('show');
+
+      const newInput = nameInput.cloneNode(true);
+      nameInput.parentNode.replaceChild(newInput, nameInput);
+      newInput.addEventListener('input', () => {
+        btnRegister.disabled = newInput.value.trim().length === 0;
+      });
+      newInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !btnRegister.disabled) registerScore();
+      });
+    }
+
+    function renderAnalysis(answers) {
+      const list = document.getElementById('analysis-list');
+      list.innerHTML = '';
+
+      // 카테고리별 정답 수 집계
+      const catScores = CATEGORIES.map(cat => {
+        const catAnswers = answers.filter(a => {
+          const q = QUESTIONS.find(q => q.id === a.questionId);
+          return q && q.category === cat.id;
+        });
+        const correct = catAnswers.filter(a => a.correct).length;
+        return { ...cat, correct, tried: catAnswers.length };
+      }).filter(c => c.tried > 0);   // 실제로 푼 카테고리만
+
+      // 최고 점수 카테고리 찾기 (비율 기준)
+      const maxRate = Math.max(...catScores.map(c => c.tried > 0 ? c.correct / c.tried : 0));
+
+      catScores.forEach(c => {
+        const rate    = c.tried > 0 ? Math.round((c.correct / c.tried) * 100) : 0;
+        const isBest  = c.tried > 0 && (c.correct / c.tried) === maxRate;
+        const li = document.createElement('li');
+        li.className = 'analysis-row';
+        li.innerHTML = `
+          <div class="analysis-row-top">
+            <span class="analysis-cat-name">
+              ${c.icon} ${c.label}
+              ${isBest ? '<span class="analysis-crown">👑</span>' : ''}
+            </span>
+            <span class="analysis-score-text">${c.correct} / ${c.tried}</span>
+          </div>
+          <div class="analysis-bar-track">
+            <div class="analysis-bar-fill" style="width:0%" data-target="${rate}"></div>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+
+      // 분석 바 애니메이션
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          list.querySelectorAll('.analysis-bar-fill').forEach(el => {
+            el.style.width = el.dataset.target + '%';
+          });
+        });
+      });
+    }
+
+    /* ─────────────────────────────────────
+       순위 등록 (localStorage)
+    ───────────────────────────────────── */
+    const RANKING_KEY  = 'quizRanking';   // 레거시 키 (마이그레이션 후 삭제)
+    const RANKING_MAX  = 50;
+
+    // Phase E — 확장 스토리지 키
+    const STORAGE_HISTORY     = 'quiz_game_history';
+    const STORAGE_STATS       = 'quiz_player_stats';
+    const STORAGE_LEADERBOARD = 'quiz_leaderboard';
+    const HISTORY_MAX         = 100;
+
+    /* ─────────────────────────────────────
+       Phase E — 데이터 저장 & 통계 함수
+    ───────────────────────────────────── */
+
+    function getGameHistory() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_HISTORY)) || []; }
+      catch (_) { return []; }
+    }
+
+    function getPlayerStats() {
+      const defaults = {
+        totalGames: 0, totalCorrect: 0, totalQuestions: 0,
+        totalScore: 0, bestScore: 0, bestCombo: 0,
+        avgScore: 0, avgRate: 0,
+        categoryStats: {
+          history: { games: 0, correct: 0, total: 0, bestScore: 0 },
+          science: { games: 0, correct: 0, total: 0, bestScore: 0 },
+          geo:     { games: 0, correct: 0, total: 0, bestScore: 0 },
+          general: { games: 0, correct: 0, total: 0, bestScore: 0 },
+        },
+        modeStats: {
+          all:      { games: 0, bestScore: 0 },
+          category: { games: 0, bestScore: 0 },
+          speed:    { games: 0, bestScore: 0 },
+        },
+        recentStreak: 0,
+        lastPlayed:   null,
+      };
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_STATS));
+        return stored ? { ...defaults, ...stored } : defaults;
+      } catch (_) { return defaults; }
+    }
+
+    function getLeaderboard(filter = {}) {
+      let records = [];
+      try { records = JSON.parse(localStorage.getItem(STORAGE_LEADERBOARD)) || []; }
+      catch (_) { records = []; }
+
+      const { period = 'all', mode = null } = filter;
+
+      if (period === 'week') {
+        const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+        records = records.filter(r => r.timestamp >= cutoff);
+      } else if (period === 'day') {
+        const today = new Date().toISOString().slice(0, 10);
+        records = records.filter(r => r.date === today);
+      }
+
+      if (mode !== null) {
+        records = records.filter(r => r.mode === mode);
+      }
+
+      return records.sort((a, b) => b.score !== a.score ? b.score - a.score : b.rate - a.rate).slice(0, 10);
+    }
+
+    function updatePlayerStats(gameData) {
+      const stats = getPlayerStats();
+
+      stats.totalGames      += 1;
+      stats.totalCorrect    += gameData.correct;
+      stats.totalQuestions  += gameData.total;
+      stats.totalScore      += gameData.score;
+      stats.bestScore        = Math.max(stats.bestScore, gameData.score);
+      stats.bestCombo        = Math.max(stats.bestCombo, gameData.maxCombo);
+      stats.avgScore         = Math.round(stats.totalScore / stats.totalGames);
+      stats.avgRate          = stats.totalQuestions > 0
+        ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) : 0;
+      stats.recentStreak     = gameData.rate >= 70 ? stats.recentStreak + 1 : 0;
+      stats.lastPlayed       = gameData.date;
+
+      // 카테고리별 통계 (category 모드일 때만)
+      if (gameData.mode === 'category' && stats.categoryStats[gameData.category]) {
+        const cs = stats.categoryStats[gameData.category];
+        cs.games    += 1;
+        cs.correct  += gameData.correct;
+        cs.total    += gameData.total;
+        cs.bestScore = Math.max(cs.bestScore, gameData.score);
+      }
+
+      // 모드별 통계
+      const modeKey = gameData.mode || 'all';
+      if (stats.modeStats[modeKey]) {
+        stats.modeStats[modeKey].games    += 1;
+        stats.modeStats[modeKey].bestScore = Math.max(stats.modeStats[modeKey].bestScore, gameData.score);
+      }
+
+      try { localStorage.setItem(STORAGE_STATS, JSON.stringify(stats)); } catch (_) {}
+    }
+
+    function saveToLeaderboard(gameData, playerName) {
+      let board = [];
+      try { board = JSON.parse(localStorage.getItem(STORAGE_LEADERBOARD)) || []; }
+      catch (_) { board = []; }
+
+      board.push({
+        id:        gameData.id,
+        name:      playerName,
+        score:     gameData.score,
+        rate:      gameData.rate,
+        maxCombo:  gameData.maxCombo,
+        mode:      gameData.mode,
+        category:  gameData.category,
+        date:      gameData.date,
+        timestamp: gameData.timestamp,
+      });
+
+      board.sort((a, b) => b.score !== a.score ? b.score - a.score : b.rate - a.rate);
+      if (board.length > RANKING_MAX) board.length = RANKING_MAX;
+
+      try { localStorage.setItem(STORAGE_LEADERBOARD, JSON.stringify(board)); } catch (_) {}
+    }
+
+    function saveGameResult(gameData, playerName) {
+      // 게임 이력 저장 (최대 100개)
+      const history = getGameHistory();
+      history.push(gameData);
+      if (history.length > HISTORY_MAX) history.splice(0, history.length - HISTORY_MAX);
+      try { localStorage.setItem(STORAGE_HISTORY, JSON.stringify(history)); } catch (_) {}
+
+      // 누적 통계 업데이트
+      updatePlayerStats(gameData);
+
+      // 리더보드 등록 (이름 있을 때만)
+      if (playerName) saveToLeaderboard(gameData, playerName);
+    }
+
+    function registerScore() {
+      const nameInput = document.getElementById('name-input');
+      const name = nameInput.value.trim();
+      if (!name) return;
+
+      const { score, questions, answers, category, mode, maxCombo, gameStartTime } = gameState;
+      const total    = questions.length;
+      const correct  = answers.filter(a => a.correct).length;
+      const rate     = total > 0 ? Math.round((correct / total) * 100) : 0;
+      const now      = Date.now();
+      const today    = new Date().toISOString().slice(0, 10);
+      const duration = gameStartTime ? Math.round((now - gameStartTime) / 1000) : 0;
+
+      // 문제별 점수 구성 집계
+      const scoreBreakdown = answers.reduce((acc, a) => {
+        if (a.breakdown) {
+          acc.base       += a.breakdown.base       || 0;
+          acc.difficulty += a.breakdown.difficulty || 0;
+          acc.time       += a.breakdown.time       || 0;
+          acc.hint       += a.breakdown.hint       || 0;
+          acc.combo      += a.breakdown.combo      || 0;
+        }
+        return acc;
+      }, { base: 0, difficulty: 0, time: 0, hint: 0, combo: 0 });
+
+      const gameData = {
+        id:             now,
+        date:           today,
+        timestamp:      now,
+        mode:           mode || 'all',
+        category:       mode === 'category' ? category : 'all',
+        score,
+        correct,
+        total,
+        rate,
+        maxCombo:       maxCombo || 0,
+        duration,
+        scoreBreakdown,
+      };
+
+      saveGameResult(gameData, name);
+
+      // UI 피드백
+      document.getElementById('btn-register').disabled = true;
+      document.getElementById('register-done').classList.add('show');
+    }
+
+    /* ─────────────────────────────────────
+       같은 카테고리 다시 도전
+    ───────────────────────────────────── */
+    function retryQuiz() {
+      // category는 gameState에 그대로 유지된 채 initQuiz() 재호출
+      showScreen('quiz-screen');
+    }
+
+    /* ─────────────────────────────────────
+       리더보드 화면 (Phase F)
+    ───────────────────────────────────── */
+    const RANK_MEDALS = ['🥇', '🥈', '🥉'];
+    const RANK_CLS    = ['rank-gold', 'rank-silver', 'rank-bronze'];
+
+    const MODE_RANK_LABEL = { all: '전체도전', category: '카테고리별', speed: '스피드퀴즈' };
+
+    /* 기간 탭 */
+    const RANK_PERIOD_TABS = [
+      { id: 'all',  label: '전체' },
+      { id: 'week', label: '이번 주' },
+      { id: 'day',  label: '오늘' },
+    ];
+
+    /* 모드 탭 */
+    const RANK_MODE_TABS = [
+      { id: null,       label: '전체' },
+      { id: 'all',      label: '전체도전' },
+      { id: 'category', label: '카테고리별' },
+      { id: 'speed',    label: '스피드퀴즈' },
+    ];
+
+    let rankActivePeriod = 'all';   // 현재 선택된 기간 필터
+    let rankActiveMode   = null;    // 현재 선택된 모드 필터
+
+    function initRanking() {
+      rankActivePeriod = 'all';
+      rankActiveMode   = null;
+
+      // 기간 탭 렌더
+      const periodEl = document.getElementById('rank-tabs-period');
+      periodEl.innerHTML = '';
+      RANK_PERIOD_TABS.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className   = 'rank-tab' + (tab.id === rankActivePeriod ? ' active' : '');
+        btn.textContent = tab.label;
+        btn.addEventListener('click', () => {
+          rankActivePeriod = tab.id;
+          periodEl.querySelectorAll('.rank-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderRankTable();
+        });
+        periodEl.appendChild(btn);
+      });
+
+      // 모드 탭 렌더
+      const modeEl = document.getElementById('rank-tabs-mode');
+      modeEl.innerHTML = '';
+      RANK_MODE_TABS.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className   = 'rank-tab' + (tab.id === rankActiveMode ? ' active' : '');
+        btn.textContent = tab.label;
+        btn.addEventListener('click', () => {
+          rankActiveMode = tab.id;
+          modeEl.querySelectorAll('.rank-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderRankTable();
+        });
+        modeEl.appendChild(btn);
+      });
+
+      renderRankTable();
+    }
+
+    function loadRanking() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_LEADERBOARD)) || [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function renderLeaderboard(records) {
+      const body     = document.getElementById('rank-body');
+      const myBestEl = document.getElementById('rank-my-best');
+      const clearBtn = document.getElementById('btn-clear');
+
+      // 빈 상태
+      if (records.length === 0) {
+        body.innerHTML     = '<div class="rank-empty">해당 기간에 기록이 없습니다 🎯</div>';
+        myBestEl.innerHTML = '';
+        clearBtn.style.display = 'none';
+        return;
+      }
+
+      clearBtn.style.display = '';
+
+      // 테이블
+      const table = document.createElement('table');
+      table.className = 'rank-table';
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>이름</th>
+            <th>점수</th>
+            <th>정답률</th>
+            <th>최대콤보</th>
+            <th>모드</th>
+            <th>날짜</th>
+          </tr>
+        </thead>
+        <tbody id="rank-tbody"></tbody>
+      `;
+
+      const tbody = table.querySelector('#rank-tbody');
+      records.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        if (i < 3) tr.classList.add(RANK_CLS[i]);
+
+        const maxCombo  = r.maxCombo ?? 0;
+        const mode      = r.mode ?? 'all';
+        const comboText = maxCombo >= 3 ? `🔥 ${maxCombo}` : maxCombo > 0 ? `${maxCombo}` : '-';
+        const modeLabel = MODE_RANK_LABEL[mode] || '전체';
+
+        tr.innerHTML = `
+          <td class="rank-num">${i < 3 ? RANK_MEDALS[i] : i + 1}</td>
+          <td class="rank-name">${escHtml(r.name)}</td>
+          <td class="rank-score">${r.score}점</td>
+          <td class="rank-rate">${r.rate}%</td>
+          <td class="rank-combo">${escHtml(comboText)}</td>
+          <td><span class="rank-mode-badge">${escHtml(modeLabel)}</span></td>
+          <td class="rank-date">${escHtml(r.date)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      body.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'card rank-table-card';
+      wrapper.appendChild(table);
+      body.appendChild(wrapper);
+
+      // 내 최고기록 카드
+      const myName = gameState.playerName;
+      if (myName) {
+        const myBest = records.find(r => r.name === myName);
+        if (myBest) {
+          const comboTxt = myBest.maxCombo >= 3
+            ? `🔥 ${myBest.maxCombo}콤보`
+            : `${myBest.maxCombo}콤보`;
+          myBestEl.innerHTML = `
+            <div class="rank-my-best-card">
+              📌 내 최고기록: <strong>${myBest.score}점</strong> · 정답률 ${myBest.rate}% · ${escHtml(comboTxt)}
+            </div>
+          `;
+        } else {
+          myBestEl.innerHTML = '';
+        }
+      } else {
+        myBestEl.innerHTML = '';
+      }
+    }
+
+    function renderRankTable() {
+      const records = getLeaderboard({ period: rankActivePeriod, mode: rankActiveMode });
+      renderLeaderboard(records);
+    }
+
+    function clearRanking() {
+      if (!confirm('리더보드를 초기화하시겠습니까?')) return;
+      try { localStorage.removeItem(STORAGE_LEADERBOARD); } catch (_) {}
+      renderRankTable();
+    }
+
+    /* ─────────────────────────────────────
+       대시보드 화면 (Phase G)
+    ───────────────────────────────────── */
+    const DASH_CATS = [
+      { id: 'history', icon: '🏛️', label: '세계사' },
+      { id: 'science', icon: '🔬', label: '과학' },
+      { id: 'geo',     icon: '🌍', label: '지리' },
+      { id: 'general', icon: '💡', label: '일반상식' },
+    ];
+
+    const DASH_MODES = [
+      { id: 'all',      icon: '🌐', label: '전체도전' },
+      { id: 'category', icon: '📚', label: '카테고리별' },
+      { id: 'speed',    icon: '⚡', label: '스피드퀴즈' },
+    ];
+
+    const DASH_MODE_LABEL = { all: '전체도전', category: '카테고리별', speed: '스피드퀴즈' };
+
+    function initDashboard() {
+      const stats    = getPlayerStats();
+      const history  = getGameHistory();
+      const body     = document.getElementById('dash-body');
+      const clearBtn = document.getElementById('btn-clear-all');
+
+      // 빈 상태
+      if (stats.totalGames === 0) {
+        body.innerHTML        = '<div class="dash-empty">아직 플레이 기록이 없어요 🎮</div>';
+        clearBtn.style.display = 'none';
+        return;
+      }
+
+      clearBtn.style.display = '';
+
+      /* ① 종합 요약 */
+      const summaryHTML = `
+        <p class="dash-section-title">종합 요약</p>
+        <div class="dash-summary-grid">
+          <div class="dash-stat-card">
+            <div class="dash-stat-value">${stats.totalGames}</div>
+            <div class="dash-stat-label">총 게임 수</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-value">${stats.avgScore}</div>
+            <div class="dash-stat-label">평균 점수</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-value">${stats.avgRate}%</div>
+            <div class="dash-stat-label">평균 정답률</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-value">${stats.bestCombo}</div>
+            <div class="dash-stat-label">최고 콤보</div>
+          </div>
+        </div>
+      `;
+
+      /* ② 최고 기록 */
+      const bestScoreGame = history.reduce((b, g) => (!b || g.score > b.score) ? g : b, null);
+      const bestRateGame  = history.reduce((b, g) => (!b || g.rate  > b.rate)  ? g : b, null);
+      const bestRateVal   = bestRateGame ? bestRateGame.rate : 0;
+
+      const bestHTML = `
+        <p class="dash-section-title">최고 기록</p>
+        <div class="card dash-best-card">
+          <div class="dash-best-row">
+            <span class="dash-best-label">🏆 역대 최고 점수</span>
+            <span>
+              <span class="dash-best-value">${stats.bestScore}점</span>
+              ${bestScoreGame ? `<span class="dash-best-date">${escHtml(bestScoreGame.date)}</span>` : ''}
+            </span>
+          </div>
+          <div class="dash-best-row">
+            <span class="dash-best-label">🎯 역대 최고 정답률</span>
+            <span>
+              <span class="dash-best-value">${bestRateVal}%</span>
+              ${bestRateGame ? `<span class="dash-best-date">${escHtml(bestRateGame.date)}</span>` : ''}
+            </span>
+          </div>
+        </div>
+      `;
+
+      /* ③ 카테고리별 바 차트 */
+      const catData = DASH_CATS.map(c => {
+        const cs   = stats.categoryStats[c.id];
+        const rate = cs.total > 0 ? Math.round((cs.correct / cs.total) * 100) : 0;
+        return { ...c, ...cs, rate };
+      }).filter(c => c.games > 0);
+
+      let catInner = '';
+      if (catData.length > 0) {
+        const maxRate = Math.max(...catData.map(c => c.rate));
+        const minRate = Math.min(...catData.map(c => c.rate));
+        catData.forEach(c => {
+          const isTop    = c.rate === maxRate;
+          const isBottom = c.rate === minRate && catData.length > 1;
+          catInner += `
+            <div class="dash-cat-item">
+              <div class="dash-cat-meta">
+                <span class="dash-cat-name">${c.icon} ${c.label}${isTop ? ' 👑' : ''}</span>
+                <span class="dash-cat-stat">${c.rate}%&nbsp;(${c.correct}/${c.total}문제)</span>
+              </div>
+              <div class="dash-bar-track">
+                <div class="dash-bar-fill" data-target="${c.rate}"></div>
+              </div>
+              ${isBottom ? '<div class="dash-cat-hint">💪 더 연습이 필요해요</div>' : ''}
+            </div>
+          `;
+        });
+      } else {
+        catInner = '<div style="padding:16px 0;color:var(--color-text-sub);font-size:0.88rem">카테고리 모드 기록이 없어요</div>';
+      }
+
+      const catHTML = `
+        <p class="dash-section-title">카테고리별 정답률</p>
+        <div class="dash-cat-wrap">
+          <div class="dash-cat-list">${catInner}</div>
+        </div>
+      `;
+
+      /* ④ 모드별 통계 */
+      const modeCards = DASH_MODES.map(m => {
+        const ms = stats.modeStats[m.id];
+        return `
+          <div class="dash-mode-card">
+            <div class="dash-mode-icon">${m.icon}</div>
+            <div class="dash-mode-label">${m.label}</div>
+            <div class="dash-mode-games">${ms.games}<span>회</span></div>
+            <div class="dash-mode-best">${ms.games > 0 ? `최고 ${ms.bestScore}점` : '-'}</div>
+          </div>
+        `;
+      }).join('');
+
+      const modeHTML = `
+        <p class="dash-section-title">게임 모드별 통계</p>
+        <div class="dash-mode-wrap">
+          <div class="dash-mode-grid">${modeCards}</div>
+        </div>
+      `;
+
+      /* ⑤ 최근 10게임 테이블 */
+      const recent = [...history].reverse().slice(0, 10);
+      const rows   = recent.map(g => {
+        const aboveAvg  = g.score >= stats.avgScore;
+        const modeLabel = DASH_MODE_LABEL[g.mode] || g.mode;
+        const comboText = g.maxCombo >= 3 ? `🔥${g.maxCombo}` : String(g.maxCombo);
+        return `
+          <tr${aboveAvg ? ' class="above-avg"' : ''}>
+            <td>${escHtml(g.date)}</td>
+            <td>${escHtml(modeLabel)}</td>
+            <td><strong>${g.score}점</strong></td>
+            <td>${g.rate}%</td>
+            <td>${escHtml(comboText)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const histHTML = `
+        <p class="dash-section-title">최근 10게임</p>
+        <div class="dash-history-wrap">
+          <div class="dash-history-card">
+            <table class="dash-history-table">
+              <thead>
+                <tr>
+                  <th>날짜</th><th>모드</th><th>점수</th><th>정답률</th><th>콤보</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      /* ⑥ 연속 플레이 현황 */
+      const streak    = stats.recentStreak;
+      const streakHTML = `
+        <div class="dash-streak-card${streak > 0 ? ' on-streak' : ''}">
+          ${streak > 0
+            ? `🔥 최근 ${streak}게임 연속 70% 이상 달성 중!`
+            : '마지막 게임 정답률이 70% 미만이에요. 다시 도전!'}
+        </div>
+      `;
+
+      body.innerHTML = summaryHTML + bestHTML + catHTML + modeHTML + histHTML + streakHTML;
+
+      // 바 차트 애니메이션
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          body.querySelectorAll('.dash-bar-fill').forEach(el => {
+            el.style.width = (el.dataset.target || 0) + '%';
+          });
+        });
+      });
+    }
+
+    function clearAllData() {
+      if (!confirm('모든 플레이 기록, 통계, 리더보드를 삭제하시겠습니까?')) return;
+      try {
+        localStorage.removeItem(STORAGE_HISTORY);
+        localStorage.removeItem(STORAGE_STATS);
+        localStorage.removeItem(STORAGE_LEADERBOARD);
+      } catch (_) {}
+      showScreen('home-screen');
+    }
+
+    /* XSS 방지용 이스케이프 */
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /* ─────────────────────────────────────
+       레거시 'quizRanking' → 'quiz_leaderboard' 마이그레이션
+    ───────────────────────────────────── */
+    (function migrateQuizRanking() {
+      try {
+        const legacy = localStorage.getItem(RANKING_KEY);
+        if (!legacy) return;
+
+        const old = JSON.parse(legacy) || [];
+        if (!old.length) { localStorage.removeItem(RANKING_KEY); return; }
+
+        let board = [];
+        try { board = JSON.parse(localStorage.getItem(STORAGE_LEADERBOARD)) || []; }
+        catch (_) { board = []; }
+
+        const existingIds = new Set(board.map(r => r.id));
+
+        old.forEach((entry, idx) => {
+          // 레거시 항목에는 id/timestamp 없을 수 있음 → 인덱스 기반 고유값 생성
+          const ts = entry.id || (Date.now() - (old.length - idx) * 1000);
+          if (existingIds.has(ts)) return;
+          board.push({
+            id:        ts,
+            name:      entry.name      || '익명',
+            score:     entry.score     || 0,
+            rate:      entry.rate      || 0,
+            maxCombo:  entry.maxCombo  || 0,
+            mode:      entry.mode      || 'all',
+            category:  entry.category  || 'all',
+            date:      entry.date      || '',
+            timestamp: ts,
+          });
+          existingIds.add(ts);
+        });
+
+        board.sort((a, b) => b.score !== a.score ? b.score - a.score : b.rate - a.rate);
+        if (board.length > RANKING_MAX) board.length = RANKING_MAX;
+
+        localStorage.setItem(STORAGE_LEADERBOARD, JSON.stringify(board));
+        localStorage.removeItem(RANKING_KEY);
+      } catch (_) {}
+    })();
+  </script>
+</body>
+</html>

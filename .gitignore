@@ -1,0 +1,8 @@
+# 백업 파일
+index.backup.*.html
+
+# 선생님 리포트 (생성 파일)
+teacher-report-*.html
+
+# Claude 로컬 설정
+.claude/settings.local.json
