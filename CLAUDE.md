@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 단일 파일(`index.html`, 약 4,700줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
 
 백업 파일 명명 규칙: `index.backup.YYYYMMDD.html` (예: `index.backup.20260704.html`)
+선생님 모드 출력 파일: `teacher-report-YYYYMMDD.html` (프로젝트 루트에 생성)
 
 ## 개발 및 실행
 
@@ -14,8 +15,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # MCP 브라우저 도구 사용 시 (file:// 접근 불가) — 로컬 서버 필요
-python -m http.server 8080
-# → http://localhost:8080 에서 확인
+# .claude/settings.local.json에 사전 허가된 포트: 8765
+python -m http.server 8765
+# → http://localhost:8765 에서 확인
+
+# 8080도 사용 가능하나 권한 승인 필요
+# python -m http.server 8080
 ```
 
 ## 아키텍처
@@ -87,7 +92,7 @@ python -m http.server 8080
 
 ### 주요 전역 상수
 
-파일 내 선언 순서: `SCORE_CONFIG` → `QUESTIONS` → `PREFIXES` → `PROFILES`/`MODES`/`CATEGORIES` → `GRADE_TABLE` → `STORAGE_*`
+파일 내 선언 순서: `SCORE_CONFIG` → `QUESTIONS` → `PROFILES`/`MODES`/`CATEGORIES` → `PREFIXES` → `GRADE_TABLE` → `STORAGE_*`
 
 > **주의**: `index.html` 내부의 `/* 문제 데이터 (40문제) */` 주석은 stale — 실제 문제 수는 124개.
 
@@ -115,7 +120,7 @@ python -m http.server 8080
 **저장 진입점**: 결과 화면에서 `registerScore()` → `saveGameResult(gameData, playerName)` 호출.  
 내부에서 `getGameHistory()` → `updatePlayerStats()` → `saveToLeaderboard()` 순으로 처리.
 
-**리더보드 조회**: `getLeaderboard({ period, mode })` — period: `'all'|'week'|'day'`, mode: `'all'|'speed'|'category'|null`
+**리더보드 조회**: `getLeaderboard({ period, mode })` — period: `'all'|'week'|'day'`, mode: `'all'|'speed'|'category'|null`. 저장은 최대 50건(`RANKING_MAX`)이지만 조회 결과는 항상 상위 10건으로 잘려 반환됨(`slice(0, 10)`).
 
 **데이터 초기화**:
 - `clearRanking()` — 리더보드만 삭제 (`STORAGE_LEADERBOARD`)
