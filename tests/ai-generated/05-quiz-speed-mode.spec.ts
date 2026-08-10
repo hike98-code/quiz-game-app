@@ -95,7 +95,9 @@ test.describe('퀴즈 진행 - 스피드 모드 (Quiz Screen & Speed Mode)', () 
     await startSpeedMode(page);
 
     // 1. 스피드 모드 퀴즈 진행 중 브라우저 뒤로 가기 또는 JavaScript로 showScreen('home-screen')을 호출한다. 이후 다시 순위 화면이나 대시보드 화면으로 이동한다
-    await page.evaluate('showScreen("home-screen")');
+    // 참고: page.evaluate에 문자열을 넘기면 표현식으로만 평가되어 화살표 함수가 실제로 호출되지 않는다.
+    // 함수를 직접 전달해야 showScreen이 정상적으로 실행된다.
+    await page.evaluate(() => { (window as any).showScreen('home-screen'); });
 
     // expect: 타이머가 백그라운드에서 계속 동작하지 않는다
     await expect(page.locator('#timer-seconds')).not.toBeVisible();

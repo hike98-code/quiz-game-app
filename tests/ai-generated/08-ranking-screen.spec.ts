@@ -27,23 +27,28 @@ test.describe('순위 화면', () => {
     await page.getByText('🏛️ 세계사 11문제').click();
     await page.locator('button:has-text("▶ 시작하기")').click();
 
+    // 퀴즈 화면이 렌더링되어 gameState.questions가 채워질 때까지 대기
+    await expect(page.locator('#quiz-screen.visible')).toBeVisible();
+    await expect(page.locator('.opt-btn').first()).toBeVisible();
+
     // 11문제 자동 답변 (page.evaluate 활용 — 게임 내부 상태 접근 필요)
-    // gameState는 index.html 최상위 스크립트의 top-level const라 window에 노출되지 않으므로
-    // 문자열 형태로 evaluate하여 페이지 전역 스코프에서 bare 참조로 접근한다
-    await page.evaluate(`(async function() {
-      const delay = ms => new Promise(r => setTimeout(r, ms));
+    await page.evaluate(async () => {
+      const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 
       // Q1 정답 클릭
+      // 참고: index.html에서 gameState는 최상위 스크립트의 const로 선언되어
+      // window.gameState로는 접근할 수 없다 (전역 렉시컬 스코프 바인딩만 존재).
+      // page.evaluate는 페이지와 동일한 realm에서 실행되므로 식별자를 직접 참조한다.
       const q0 = gameState.questions[0];
       const opts0 = document.querySelectorAll('.opt-btn');
-      opts0[q0.answer]?.click();
+      (opts0[q0.answer] as HTMLElement)?.click();
       await delay(300);
 
       // Q1 → Q2 이동 ('다음 문제 →' 버튼)
       const firstNext = Array.from(document.querySelectorAll('button')).find(b =>
-        b.textContent.includes('다음 문제')
+        b.textContent?.includes('다음 문제')
       );
-      firstNext?.click();
+      (firstNext as HTMLElement)?.click();
       await delay(400);
 
       // Q2 ~ Q11 정답 클릭 및 다음으로 이동
@@ -52,15 +57,15 @@ test.describe('순위 화면', () => {
         const q = questions[i];
         await delay(200);
         const opts = document.querySelectorAll('.opt-btn:not([disabled])');
-        opts[q.answer]?.click();
+        (opts[q.answer] as HTMLElement)?.click();
         await delay(500);
         const nextBtn = Array.from(document.querySelectorAll('button')).find(
-          b => b.textContent.includes('다음 문제') || b.textContent.includes('결과 보기')
+          b => b.textContent?.includes('다음 문제') || b.textContent?.includes('결과 보기')
         );
-        nextBtn?.click();
+        (nextBtn as HTMLElement)?.click();
         await delay(400);
       }
-    })()`);
+    });
 
     // 결과 화면에서 닉네임 입력 후 등록
     await page.getByRole('textbox', { name: '닉네임을 입력하세요' }).fill(nickname);
