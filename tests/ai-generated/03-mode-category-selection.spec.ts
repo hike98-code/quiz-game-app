@@ -134,12 +134,12 @@ test.describe('모드 및 카테고리 선택 화면 (Mode & Category Selection 
     await expect(page.locator('#cat-section').getByText('태권도')).not.toBeVisible();
   });
 
-  test('TC-16: 미취학아동 프로필 전체 도전 모드 (20문제 표시)', async ({ page }) => {
+  test('TC-16: 미취학아동 프로필 전체 도전 모드 (50문제 표시)', async ({ page }) => {
     // 1. 미취학아동 프로필로 모드 선택 화면에서 '전체 도전' 카드를 확인한다
     await navigateToModeScreen(page, 'preschool');
 
-    // expect: 전체 도전 카드에 '20문제 전부' 텍스트가 표시된다
-    await expect(page.getByText('20문제 전부')).toBeVisible();
+    // expect: 전체 도전 카드에 '50문제 전부' 텍스트가 표시된다 (기본 20 + 이웃집 토토로 30)
+    await expect(page.getByText('50문제 전부')).toBeVisible();
   });
 
   test('TC-17: 카테고리별 모드에서 카테고리 미선택 시 시작 불가', async ({ page }) => {
@@ -149,5 +149,29 @@ test.describe('모드 및 카테고리 선택 화면 (Mode & Category Selection 
 
     // expect: '▶ 시작하기' 버튼이 비활성화(disabled) 상태로 유지된다
     await expect(page.getByRole('button', { name: '▶ 시작하기' })).toBeDisabled();
+  });
+
+  test('TC-83: 미취학아동 카테고리별 모드 - 이웃집 토토로 카테고리', async ({ page }) => {
+    await navigateToModeScreen(page, 'preschool');
+
+    // 1. 미취학아동 프로필로 모드 선택 화면에서 '카테고리별'을 선택한다
+    await page.getByText('🗂️ 카테고리별 분야 선택').click();
+
+    // expect: 과학(8), 지리(2), 일반상식(10), 이웃집 토토로(30) 총 4개 카테고리가 표시된다
+    await expect(page.locator('#cat-section .cat-card')).toHaveCount(4);
+    await expect(page.getByText('🔬 과학 8문제')).toBeVisible();
+    await expect(page.getByText('🌍 지리 2문제')).toBeVisible();
+    await expect(page.getByText('💡 일반상식 10문제')).toBeVisible();
+    await expect(page.getByText('🌳 이웃집 토토로 30문제')).toBeVisible();
+
+    // 2. '이웃집 토토로'를 선택하고 시작한다
+    await page.locator('.cat-card[data-id="totoro"]').click();
+    await page.getByRole('button', { name: '▶ 시작하기' }).click();
+
+    // expect: 진행 표시가 '1 / 30'으로 시작되고, 출제 문제가 모두 토토로 문제(PS-021~050)다
+    await expect(page.getByText('1 / 30')).toBeVisible();
+    const ids: string[] = await page.evaluate(() => eval('gameState.questions').map((q: any) => q.id));
+    expect(ids).toHaveLength(30);
+    expect(ids.every(id => /^PS-0(2[1-9]|[34]\d|50)$/.test(id))).toBe(true);
   });
 });

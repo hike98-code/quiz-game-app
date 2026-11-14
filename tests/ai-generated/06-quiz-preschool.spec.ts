@@ -9,7 +9,7 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     await page.getByRole('button', { name: '✏️ 퀴즈 시작하기' }).click();
     await page.locator('.profile-card:first-child').click();
     await page.locator('#btn-profile-next').click();
-    await page.getByText('🌟 전체 도전 20문제 전부').click();
+    await page.getByText('🌟 전체 도전 50문제 전부').click();
     await page.getByRole('button', { name: '▶ 시작하기' }).click();
   }
 
@@ -56,8 +56,8 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     // 1. 미취학아동 프로필로 전체 도전 모드를 시작한다
     await startPreschoolQuiz(page);
 
-    // expect: 진행 표시가 '1 / 20'으로 시작된다 (미취학아동 문제 풀은 20개)
-    await expect(page.getByText('1 / 20')).toBeVisible();
+    // expect: 진행 표시가 '1 / 50'으로 시작된다 (미취학아동 문제 풀은 기본 20 + 이웃집 토토로 30)
+    await expect(page.getByText('1 / 50')).toBeVisible();
   });
 
   test.describe('TTS 음성 안내 (speechSynthesis 모킹)', () => {
@@ -168,7 +168,7 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
         (document.querySelector('#quiz-screen .opt-btn') as HTMLElement).click();
         (document.getElementById('btn-next') as HTMLElement).click();
       });
-      await expect(page.getByText('2 / 20')).toBeVisible();
+      await expect(page.getByText('2 / 50')).toBeVisible();
       const q2 = await currentQuestion(page);
 
       // expect: 다음 문제 읽기가 시작된다
