@@ -23,6 +23,26 @@ python -m http.server 8765
 # python -m http.server 8080
 ```
 
+## 테스트 (Playwright)
+
+```bash
+npm install                 # @playwright/test 설치 (최초 1회)
+npx playwright test         # 전체 스위트 실행
+npx playwright test tests/ai-generated/04-quiz-standard.spec.ts   # 단일 파일 실행
+npx playwright test -g "TC-12"                                    # 이름/TC 번호로 필터
+npm run test:headed         # 헤드풀 모드
+npm run test:ui             # Playwright UI 모드
+```
+
+- `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
+- 테스트 스위트 2벌 공존:
+  - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 75 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+- `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
+- `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
+- `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
+- `specs/quiz-app-test-plan.md`: 화면별 TC 목록과 각 TC의 seed·steps·expect가 정의된 원본 테스트 계획서. 새 TC 추가 시 이 문서를 먼저 갱신.
+
 ## 아키텍처
 
 ### 화면 전환 방식
@@ -172,12 +192,7 @@ python -m http.server 8765
 
 ## 퀴즈 문제 작성 가이드라인
 
-문제 추가·수정 시 확인 사항:
-
-1. **정답이 하나뿐인가?** — 다른 해석 가능 시 조건 명시 (예: 면적 기준, 2026년 기준)
-2. **최상급 표현에 기준이 있는가?** — "가장 큰", "최초의" 등에 측정 기준 명시
-3. **시간과 범위가 명확한가?** — 변할 수 있는 정보는 시점 명시, 지리적·분류적 범위 한정
-4. **교차 검증했는가?** — 의심스러운 정보는 주류 학설 기준, 논란 있는 내용 지양
+문제 추가·수정 시 확인 사항(4항목 검증 체크리스트)은 `.claude/commands/quiz-add.md`의 "Step 3 — 검증" 참고.
 
 문제 객체 형식:
 
