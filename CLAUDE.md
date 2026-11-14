@@ -37,17 +37,18 @@ npm run test:ui             # Playwright UI 모드
 - `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
 - 테스트 스위트 2벌 공존:
   - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
-  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 77 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 82 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
 - `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
 - `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
 - `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
+- TTS 테스트는 실제 음성 대신 `page.addInitScript`로 `window.speechSynthesis`를 모킹해 발화 텍스트를 기록하고 `onend`를 테스트가 직접 발생시킴 (`06-quiz-preschool.spec.ts`의 'TTS 음성 안내' describe 참고). `gameState`는 최상위 `const`라 `window`에 없으므로 `page.evaluate` 안에서 `eval('gameState...')`로 접근.
 - `specs/quiz-app-test-plan.md`: 화면별 TC 목록과 각 TC의 seed·steps·expect가 정의된 원본 테스트 계획서. 새 TC 추가 시 이 문서를 먼저 갱신.
 
 ## 아키텍처
 
 ### 화면 전환 방식
 - 7개의 `<section class="screen">` 존재. `.visible` 클래스 유무로 표시/숨김 처리
-- `showScreen(screenId)` → `clearInterval(timerInterval)` + `speechSynthesis.cancel()` → `.visible` 교체 → `init*()` 호출
+- `showScreen(screenId)` → `clearInterval(timerInterval)` + `stopSpeech()` → `.visible` 교체 → `init*()` 호출
 - **timerInterval은 화면 전환·답안 제출 시 반드시 `clearInterval` 호출**
 
 ### 화면 목록 & 초기화 함수
@@ -149,8 +150,10 @@ npm run test:ui             # Playwright UI 모드
 ### TTS (미취학아동 전용)
 
 - Web Speech API (`SpeechSynthesisUtterance`) 사용. `_ttsVoice`는 IIFE 클로저 `let` 변수 (window에 노출 안 됨).
-- `renderQuestion()` 끝에서 preschool이면 `setTimeout(readQuestionAloud, 450)` 자동 호출.
-- `readQuestionAloud()`: 문제 읽기 → 보기① ~ ④를 **onend 체이닝** 방식으로 순차 재생 (Chrome 큐 방식 onstart 불안정 이슈 회피).
+- `renderQuestion()` 끝에서 preschool이면 `stopSpeech()`로 이전 해설 읽기를 끊은 뒤 `setTimeout(readQuestionAloud, 450)` 예약.
+- `readQuestionAloud()`: 문제 읽기 → 보기를 '일번, {보기}.' ~ '사번, {보기}.'로(`TTS_OPTION_NUMS` — '1번'으로 넘기면 TTS가 '한 번'으로 읽으므로 한글 표기) **onend 체이닝** 방식 순차 재생 (Chrome 큐 방식 onstart 불안정 이슈 회피).
+- `showHint()`: 진행 중인 읽기를 끊고 '힌트예요. {힌트}'를 읽음 (`speakText()`가 내부에서 `stopSpeech()` 호출).
+- `handleAnswer()` 끝: 300ms 후 정답이면 '정답이에요! {해설}', 오답이면 '아쉬워요. 정답은 {일번~사번}, {정답}이에요/예요. {해설}'을 읽음. 조사는 `copulaFor()`가 받침 유무로 결정. 이 예약도 `ttsStartTimer`를 공유해 다음 문제로 넘어가면 취소됨.
 - 현재 읽는 보기에 `.tts-reading` 클래스 추가 → `.quiz-options .opt-btn.tts-reading` 선택자로 하이라이트 (특이성 확보 필수).
 - `stopSpeech()`가 음성 취소 + 하이라이트 제거 + 자동 읽기 예약(`ttsStartTimer`, 450ms `setTimeout`) 취소를 담당. `showScreen()`과 `handleAnswer()`가 항상 호출 → 답 선택 후에는 남은 보기를 읽지 않음.
 

@@ -3583,6 +3583,16 @@
       speechSynthesis.speak(utt);
     }
 
+    /* TTS용 보기 번호 — '1번'은 '한 번'(횟수)으로 읽히므로 한자어 수사를 한글로 직접 표기 */
+    const TTS_OPTION_NUMS = ['일번', '이번', '삼번', '사번'];
+
+    /* 받침 유무에 따른 서술격 조사: 빨간색 → '이에요', 무지개 → '예요' */
+    function copulaFor(word) {
+      const code = String(word).trim().slice(-1).charCodeAt(0) - 0xAC00;
+      if (code < 0 || code > 11171) return '이에요';  // 한글 음절이 아니면 기본값
+      return code % 28 === 0 ? '예요' : '이에요';
+    }
+
     function readQuestionAloud() {
       const q = gameState.questions[gameState.currentIndex];
       if (!q || typeof speechSynthesis === 'undefined') return;
@@ -3612,10 +3622,9 @@
       }
 
       // onend 체이닝 방식: Chrome에서 큐 방식보다 onstart가 안정적으로 발생
-      const prefixes = ['하나', '둘', '셋', '넷'];
 
       // 보기 utterance 배열 (역순으로 체이닝)
-      const optUtts = q.options.map((opt, i) => makeUtt(`${prefixes[i]}, ${opt}.`));
+      const optUtts = q.options.map((opt, i) => makeUtt(`${TTS_OPTION_NUMS[i]}, ${opt}.`));
 
       // 마지막 보기 → 완료 처리
       optUtts[3].onend   = onFinish;
@@ -3706,6 +3715,7 @@
       const ttsRow = document.getElementById('tts-row');
       if (gameState.profile === 'preschool') {
         ttsRow.classList.add('show');
+        stopSpeech();  // 이전 문제 해설 읽기가 450ms 동안 겹치지 않도록 즉시 중단
         ttsStartTimer = setTimeout(readQuestionAloud, 450); // 화면 렌더 후 약간 딜레이
       } else {
         ttsRow.classList.remove('show');
@@ -3780,6 +3790,8 @@
       document.getElementById('hint-text').textContent = q.hint;
       document.getElementById('hint-text').classList.add('show');
       document.getElementById('btn-hint').disabled = true;
+      // TTS: 미취학아동이면 진행 중인 읽기를 끊고 힌트 읽기
+      if (gameState.profile === 'preschool') speakText(`힌트예요. ${q.hint}`);
     }
 
     /* ─────────────────────────────────────
@@ -3885,12 +3897,14 @@
       feedbackEl.classList.add('show');
       feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-      // TTS: 미취학아동이면 정답/오답 피드백 읽기
+      // TTS: 미취학아동이면 정답/오답 안내 + 해설 읽기
       if (gameState.profile === 'preschool') {
+        const answerText = q.options[q.answer];
         const feedbackText = correct
-          ? '정답이에요! 정말 잘 했어요!'
-          : `아쉬워요. 정답은 "${q.options[q.answer]}"이에요.`;
-        setTimeout(() => speakText(feedbackText), 300);
+          ? `정답이에요! ${q.explanation}`
+          : `아쉬워요. 정답은 ${TTS_OPTION_NUMS[q.answer]}, ${answerText}${copulaFor(answerText)}. ${q.explanation}`;
+        // 다음 문제로 넘어가면 stopSpeech()가 이 예약도 취소
+        ttsStartTimer = setTimeout(() => speakText(feedbackText), 300);
       }
     }
 
