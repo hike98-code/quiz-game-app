@@ -2139,9 +2139,10 @@
     };
 
     let timerInterval = null;  // 스피드 타이머 전역 핸들
+    let ttsStartTimer = null;  // 미취학 TTS 자동 읽기 예약 핸들
 
     /* ─────────────────────────────────────
-       문제 데이터 (40문제)
+       문제 데이터 (124문제: 일반 44 + 미취학 20 + 초등 40 + 중등 20)
     ───────────────────────────────────── */
     const QUESTIONS = [
 
@@ -3270,7 +3271,7 @@
       // 화면 전환 시 타이머·음성 항상 정지
       clearInterval(timerInterval);
       timerInterval = null;
-      if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+      stopSpeech();
 
       const current = document.querySelector('.screen.visible');
       if (current) current.classList.remove('visible');
@@ -3555,6 +3556,8 @@
     })();
 
     function stopSpeech() {
+      clearTimeout(ttsStartTimer);  // 아직 시작 전인 자동 읽기 예약도 취소
+      ttsStartTimer = null;
       if (typeof speechSynthesis === 'undefined') return;
       speechSynthesis.cancel();
       const btn = document.getElementById('btn-tts');
@@ -3703,7 +3706,7 @@
       const ttsRow = document.getElementById('tts-row');
       if (gameState.profile === 'preschool') {
         ttsRow.classList.add('show');
-        setTimeout(readQuestionAloud, 450); // 화면 렌더 후 약간 딜레이
+        ttsStartTimer = setTimeout(readQuestionAloud, 450); // 화면 렌더 후 약간 딜레이
       } else {
         ttsRow.classList.remove('show');
         stopSpeech();
@@ -3790,6 +3793,8 @@
       // 타이머 중지
       clearInterval(timerInterval);
       timerInterval = null;
+      // TTS 중지 — 답 선택 후 남은 보기 읽기·하이라이트가 계속되지 않도록
+      stopSpeech();
 
       const q         = gameState.questions[gameState.currentIndex];
       const correct   = selectedIndex === q.answer;
@@ -4126,7 +4131,7 @@
         const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
         records = records.filter(r => r.timestamp >= cutoff);
       } else if (period === 'day') {
-        const today = new Date().toISOString().slice(0, 10);
+        const today = localDateStr();
         records = records.filter(r => r.date === today);
       }
 
@@ -4218,7 +4223,7 @@
       const correct  = answers.filter(a => a.correct).length;
       const rate     = total > 0 ? Math.round((correct / total) * 100) : 0;
       const now      = Date.now();
-      const today    = new Date().toISOString().slice(0, 10);
+      const today    = localDateStr();
       const duration = gameStartTime ? Math.round((now - gameStartTime) / 1000) : 0;
 
       // 문제별 점수 구성 집계
@@ -4631,6 +4636,12 @@
         localStorage.removeItem(STORAGE_LEADERBOARD);
       } catch (_) {}
       showScreen('home-screen');
+    }
+
+    /* 로컬 시간대 기준 'YYYY-MM-DD' — toISOString()은 UTC라 KST 00~09시에 전날 날짜가 됨 */
+    function localDateStr(d = new Date()) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     }
 
     /* XSS 방지용 이스케이프 */

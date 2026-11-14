@@ -778,3 +778,23 @@
   1. 홈 → 프로필 → 모드 선택 순서로 이동한 후, 각 화면의 '← 홈으로' 버튼을 클릭한다
     - expect: 어느 화면에서든 '← 홈으로' 버튼 클릭 시 홈 화면으로 이동한다
     - expect: 홈 화면의 3개 버튼이 모두 정상 표시된다
+
+#### 11.9. TC-76: 로컬 시간대 기준 날짜 기록 (KST 자정~오전 9시)
+
+**File:** `specs/11-edge-cases.spec.ts`
+
+**Steps:**
+  1. 브라우저 시간대를 Asia/Seoul, 현재 시각을 2026-11-14 08:00 KST(= UTC 11-13 23:00)로 고정한 뒤 세계사 카테고리 퀴즈를 완료하고 닉네임을 등록한다
+    - expect: quiz_leaderboard·quiz_game_history에 저장된 date가 UTC 날짜(2026-11-13)가 아닌 로컬 날짜 '2026-11-14'이다
+    - expect: 순위 화면 '오늘' 탭에 방금 등록한 기록이 표시된다
+
+#### 11.10. TC-77: 미취학아동 퀴즈 - 답 선택 시 TTS 읽기 중지
+
+**File:** `specs/11-edge-cases.spec.ts`
+
+**Steps:**
+  1. speechSynthesis를 모킹한 상태로 미취학아동 퀴즈를 시작하고, 문제 읽기가 끝나 보기 ① 읽기(하이라이트)가 시작되게 한다
+    - expect: 보기 ①에 .tts-reading 하이라이트가 표시된다
+  2. 보기를 선택해 답한다
+    - expect: speechSynthesis.cancel()이 호출되어 진행 중이던 읽기가 중단된다
+    - expect: 모든 보기에서 .tts-reading 하이라이트가 제거되고 이후에도 다시 생기지 않는다

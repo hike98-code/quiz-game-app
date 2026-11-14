@@ -238,4 +238,86 @@ test.describe('엣지 케이스 및 유효성 검사 (Edge Cases & Validation)',
     await expect(page.getByRole('button', { name: '🏆 순위 기록 보기' })).toBeVisible();
     await expect(page.getByRole('button', { name: '📊 내 통계 보기' })).toBeVisible();
   });
+
+  test.describe('로컬 시간대(KST) 날짜', () => {
+    test.use({ timezoneId: 'Asia/Seoul' });
+
+    test('TC-76: 로컬 시간대 기준 날짜 기록 (KST 자정~오전 9시)', async ({ page }) => {
+      // 1. 2026-11-14 08:00 KST(= UTC 2026-11-13 23:00)로 시각 고정 후 퀴즈 완료·등록
+      await page.clock.setFixedTime(new Date('2026-11-14T08:00:00+09:00'));
+      await page.goto('/');
+      await clearStorage(page);
+      await completeHistoryQuiz(page);
+      await page.getByRole('textbox', { name: '닉네임을 입력하세요' }).fill('새벽플레이어');
+      await page.getByRole('button', { name: '등록' }).click();
+      await expect(page.getByText('✅ 등록되었습니다!')).toBeVisible();
+
+      // expect: 저장된 date가 UTC 날짜가 아닌 로컬 날짜다
+      const dates = await page.evaluate(() => ({
+        leaderboard: JSON.parse(localStorage.getItem('quiz_leaderboard') || '[]').map((r: any) => r.date),
+        history:     JSON.parse(localStorage.getItem('quiz_game_history') || '[]').map((g: any) => g.date),
+      }));
+      expect(dates.leaderboard).toEqual(['2026-11-14']);
+      expect(dates.history).toEqual(['2026-11-14']);
+
+      // expect: 순위 화면 '오늘' 탭에 방금 기록이 표시된다
+      await page.getByRole('button', { name: '🏠 홈으로' }).click();
+      await page.locator('button:has-text("🏆 순위 기록 보기")').click();
+      await page.getByRole('button', { name: '오늘' }).click();
+      await expect(page.locator('#ranking-screen tbody td').filter({ hasText: '새벽플레이어' })).toBeVisible();
+    });
+  });
+
+  test('TC-77: 미취학아동 퀴즈 - 답 선택 시 TTS 읽기 중지', async ({ page }) => {
+    // speechSynthesis 모킹: speak된 발화를 보관하고, onend는 테스트가 직접 발생시킨다
+    await page.addInitScript(() => {
+      const w = window as any;
+      w.__tts = { log: [] as string[], pending: null as any };
+      const mock = {
+        speak(u: any) { w.__tts.log.push('speak'); w.__tts.pending = u; u.onstart && u.onstart(); },
+        cancel() {
+          w.__tts.log.push('cancel');
+          const u = w.__tts.pending;
+          w.__tts.pending = null;
+          if (u && u.onerror) u.onerror({ error: 'interrupted' });
+        },
+        getVoices: () => [],
+        addEventListener() {},
+      };
+      Object.defineProperty(window, 'speechSynthesis', { value: mock, configurable: true });
+    });
+
+    await page.goto('/');
+    await clearStorage(page);
+    await page.getByRole('button', { name: '✏️ 퀴즈 시작하기' }).click();
+    await page.locator('.profile-card:first-child').click();
+    await page.locator('#btn-profile-next').click();
+    await page.getByText('🌟 전체 도전 20문제 전부').click();
+    await page.getByRole('button', { name: '▶ 시작하기' }).click();
+
+    // 1. 문제 읽기 시작 대기 → 문제 읽기 종료 → 보기 ① 읽기 시작
+    await expect.poll(() => page.evaluate(() => (window as any).__tts.pending !== null)).toBe(true);
+    await page.evaluate(() => { const t = (window as any).__tts; t.pending.onend(); });
+
+    // expect: 보기 ①에 하이라이트가 표시된다
+    const highlighted = page.locator('#quiz-screen .opt-btn.tts-reading');
+    await expect(highlighted).toHaveCount(1);
+    await expect(page.locator('#quiz-screen .opt-btn').first()).toHaveClass(/tts-reading/);
+
+    // 2. 보기를 선택해 답한다
+    await page.locator('#quiz-screen .opt-btn').nth(1).click();
+
+    // expect: cancel()로 진행 중이던 읽기가 중단된다
+    const tts = await page.evaluate(() => {
+      const t = (window as any).__tts;
+      return { last: t.log[t.log.length - 1], pending: t.pending };
+    });
+    expect(tts.last).toBe('cancel');
+    expect(tts.pending).toBeNull();
+
+    // expect: 하이라이트가 모두 제거되고 다시 생기지 않는다
+    await expect(highlighted).toHaveCount(0);
+    await page.waitForTimeout(600);
+    await expect(highlighted).toHaveCount(0);
+  });
 });

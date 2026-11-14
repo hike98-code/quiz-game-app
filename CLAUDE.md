@@ -37,7 +37,7 @@ npm run test:ui             # Playwright UI 모드
 - `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
 - 테스트 스위트 2벌 공존:
   - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
-  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 75 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 77 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
 - `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
 - `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
 - `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
@@ -114,8 +114,6 @@ npm run test:ui             # Playwright UI 모드
 
 파일 내 선언 순서: `SCORE_CONFIG` → `QUESTIONS` → `PROFILES`/`MODES`/`CATEGORIES` → `PREFIXES` → `GRADE_TABLE` → `STORAGE_*`
 
-> **주의**: `index.html` 내부의 `/* 문제 데이터 (40문제) */` 주석은 stale — 실제 문제 수는 124개.
-
 | 상수 | 설명 |
 |---|---|
 | `QUESTIONS` | 문제 배열 총 124개 (일반 44 + preschool 20 + elementary 40 + middle 20) |
@@ -140,6 +138,8 @@ npm run test:ui             # Playwright UI 모드
 **저장 진입점**: 결과 화면에서 `registerScore()` → `saveGameResult(gameData, playerName)` 호출.  
 내부에서 `getGameHistory()` → `updatePlayerStats()` → `saveToLeaderboard()` 순으로 처리.
 
+**날짜**: 기록의 `date`(`YYYY-MM-DD`)와 '오늘' 필터는 `localDateStr()`(로컬 시간대 기준)로 생성. `toISOString()`은 UTC라 KST 00~09시에 전날로 기록되므로 날짜 문자열 생성에 쓰지 말 것.
+
 **리더보드 조회**: `getLeaderboard({ period, mode })` — period: `'all'|'week'|'day'`, mode: `'all'|'speed'|'category'|null`. 저장은 최대 50건(`RANKING_MAX`)이지만 조회 결과는 항상 상위 10건으로 잘려 반환됨(`slice(0, 10)`).
 
 **데이터 초기화**:
@@ -152,7 +152,7 @@ npm run test:ui             # Playwright UI 모드
 - `renderQuestion()` 끝에서 preschool이면 `setTimeout(readQuestionAloud, 450)` 자동 호출.
 - `readQuestionAloud()`: 문제 읽기 → 보기① ~ ④를 **onend 체이닝** 방식으로 순차 재생 (Chrome 큐 방식 onstart 불안정 이슈 회피).
 - 현재 읽는 보기에 `.tts-reading` 클래스 추가 → `.quiz-options .opt-btn.tts-reading` 선택자로 하이라이트 (특이성 확보 필수).
-- `showScreen()` 호출 시 항상 `speechSynthesis.cancel()` 실행.
+- `stopSpeech()`가 음성 취소 + 하이라이트 제거 + 자동 읽기 예약(`ttsStartTimer`, 450ms `setTimeout`) 취소를 담당. `showScreen()`과 `handleAnswer()`가 항상 호출 → 답 선택 후에는 남은 보기를 읽지 않음.
 
 ### 핵심 함수 목록 (퀴즈 흐름)
 
