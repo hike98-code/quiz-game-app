@@ -766,6 +766,19 @@
     - expect: '카테고리 모드 기록이 없어요' 대신 생물·태권도 정답률이 'N% (정답/총문제)'로 표시된다
     - expect: quiz_player_stats.categoryStats에 두 카테고리가 누적된다
 
+#### 9.10. TC-89: 닉네임 등록 없이도 이력·통계 자동 저장, 등록은 순위에만 추가
+
+**File:** `specs/09-dashboard-and-storage.spec.ts`
+
+**Steps:**
+  1. 퀴즈를 완료해 결과 화면에 도달한다 (닉네임 등록 안 함)
+    - expect: quiz_game_history·quiz_player_stats에 1판이 저장되고, quiz_leaderboard는 비어 있다
+    - expect: '기록은 내 통계에 자동으로 저장돼요' 안내 문구가 표시된다
+  2. 닉네임을 입력하고 등록한다
+    - expect: 리더보드에만 1건 추가되고 이력·통계는 중복 집계되지 않는다
+  3. 홈 → '🏆 순위 기록 보기'
+    - expect: '📌 내 최고기록' 카드가 표시된다
+
 ### 10. 데이터 지속성 및 localStorage (Data Persistence)
 
 **Seed:** `tests/seed.spec.ts`

@@ -326,4 +326,34 @@ test.describe('대시보드 화면 및 데이터 지속성 (Dashboard & Data Per
     expect(cs.living).toMatchObject({ games: 1, correct: 12, total: 20 });
     expect(cs.taekwondo).toMatchObject({ games: 1, correct: 9, total: 20 });
   });
+
+  test('TC-89: 닉네임 등록 없이도 이력·통계 자동 저장, 등록은 순위에만 추가', async ({ page }) => {
+    const storage = () => page.evaluate(() => ({
+      history: JSON.parse(localStorage.getItem('quiz_game_history') || '[]').length,
+      games: JSON.parse(localStorage.getItem('quiz_player_stats') || '{}').totalGames ?? 0,
+      board: JSON.parse(localStorage.getItem('quiz_leaderboard') || '[]').length,
+    }));
+
+    // 1. 퀴즈를 완료해 결과 화면에 도달한다 (닉네임 등록 안 함)
+    await completeQuiz(page);
+
+    // expect: 이력·통계는 자동 저장되고, 순위에는 아직 없다
+    expect(await storage()).toEqual({ history: 1, games: 1, board: 0 });
+    // expect: 자동 저장 안내 문구가 표시된다
+    await expect(page.getByText('기록은 내 통계에 자동으로 저장돼요')).toBeVisible();
+
+    // 2. 닉네임을 입력하고 등록한다
+    await page.locator('input[placeholder="닉네임을 입력하세요"]').fill('자동저장테스터');
+    await page.locator('#btn-register').click();
+
+    // expect: 순위에만 추가되고, 이력·통계는 중복 집계되지 않는다
+    expect(await storage()).toEqual({ history: 1, games: 1, board: 1 });
+
+    // 3. 홈 → 순위 기록 보기
+    await page.getByRole('button', { name: '🏠 홈으로' }).click();
+    await page.getByRole('button', { name: '🏆 순위 기록 보기' }).click();
+
+    // expect: 방금 등록한 이름의 '내 최고기록' 카드가 표시된다
+    await expect(page.locator('.rank-my-best-card')).toContainText('내 최고기록');
+  });
 });

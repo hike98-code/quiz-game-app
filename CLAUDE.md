@@ -37,7 +37,7 @@ npm run test:ui             # Playwright UI 모드
 - `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
 - 테스트 스위트 2벌 공존:
   - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
-  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 88 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 89 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
 - `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
 - `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
 - `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
@@ -136,8 +136,9 @@ npm run test:ui             # Playwright UI 모드
 | `STORAGE_STATS` | `quiz_player_stats` | 플레이어 누적 통계 | 1개 객체 |
 | `STORAGE_LEADERBOARD` | `quiz_leaderboard` | 점수 순위표 | 50건 |
 
-**저장 진입점**: 결과 화면에서 `registerScore()` → `saveGameResult(gameData, playerName)` 호출.  
-내부에서 `getGameHistory()` → `updatePlayerStats()` → `saveToLeaderboard()` 순으로 처리.
+**저장 진입점** (2단계):
+- 결과 화면 진입 시 `initResult()` → `buildGameData()` → `saveGameResult(gameData, '')`로 **이력·통계 자동 저장** (닉네임 등록과 무관). `lastSavedGameStart`(= `gameState.gameStartTime`)로 같은 판 중복 저장 방지.
+- '등록' 버튼 → `registerScore()`는 저장해 둔 `currentGameData`로 `saveToLeaderboard()`만 호출하고 `gameState.playerName`을 설정(순위 화면 '내 최고기록' 카드에 사용). 닉네임이 비면 버튼 비활성.
 `quiz_player_stats.categoryStats`는 기본값에 4개(history·science·geo·general)만 있고, 그 외 카테고리는 처음 플레이할 때 `??=`로 생성됨. 대시보드 '카테고리별 정답률'은 `CATEGORIES` 순서로 `games > 0`인 항목만 표시 — 새 카테고리는 `CATEGORIES` 등록만으로 반영됨.
 
 **날짜**: 기록의 `date`(`YYYY-MM-DD`)와 '오늘' 필터는 `localDateStr()`(로컬 시간대 기준)로 생성. `toISOString()`은 UTC라 KST 00~09시에 전날로 기록되므로 날짜 문자열 생성에 쓰지 말 것.
@@ -167,7 +168,7 @@ npm run test:ui             # Playwright UI 모드
 | `handleAnswer(selectedIndex)` | 답안 처리 — 정오 판정·점수 계산·`gameState.answers` push |
 | `calculateScore(...)` | 점수 산출 (정오·난이도·시간·힌트·콤보) |
 | `calcGrade(score, total)` | 40문제 환산 후 S/A/B/C/D 등급 반환 |
-| `registerScore()` | 결과 화면에서 호출 → `saveGameResult()` 진입점 |
+| `registerScore()` | 결과 화면 '등록' → 리더보드에만 추가 (이력·통계는 `initResult()`에서 자동 저장) |
 | `escHtml(str)` | XSS 방지용 HTML 이스케이프 — 동적 렌더링 시 반드시 사용 |
 
 ### CSS 규칙

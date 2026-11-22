@@ -1281,6 +1281,12 @@
       cursor: default;
     }
 
+    .register-note {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--color-text-sub);
+    }
+
     .register-done {
       display: none;
       align-items: center;
@@ -2099,6 +2105,7 @@
           등록
         </button>
       </div>
+      <p class="register-note">기록은 내 통계에 자동으로 저장돼요. 닉네임을 등록하면 순위에도 올라가요.</p>
       <div class="register-done" id="register-done">
         ✅ 등록되었습니다!
       </div>
@@ -4750,6 +4757,13 @@
       newInput.addEventListener('keydown', e => {
         if (e.key === 'Enter' && !btnRegister.disabled) registerScore();
       });
+
+      // ── 이력·통계 자동 저장 (닉네임 등록과 무관) — 같은 판은 한 번만 저장 ──
+      if (lastSavedGameStart !== gameState.gameStartTime) {
+        currentGameData = buildGameData();
+        saveGameResult(currentGameData, '');
+        lastSavedGameStart = gameState.gameStartTime;
+      }
     }
 
     function renderAnalysis(answers) {
@@ -4939,11 +4953,11 @@
       if (playerName) saveToLeaderboard(gameData, playerName);
     }
 
-    function registerScore() {
-      const nameInput = document.getElementById('name-input');
-      const name = nameInput.value.trim();
-      if (!name) return;
+    /* 결과 화면에 표시 중인 판의 저장 데이터 — initResult()에서 이력·통계에 자동 저장 */
+    let currentGameData    = null;
+    let lastSavedGameStart = null;
 
+    function buildGameData() {
       const { score, questions, answers, category, mode, maxCombo, gameStartTime } = gameState;
       const total    = questions.length;
       const correct  = answers.filter(a => a.correct).length;
@@ -4964,7 +4978,7 @@
         return acc;
       }, { base: 0, difficulty: 0, time: 0, hint: 0, combo: 0 });
 
-      const gameData = {
+      return {
         id:             now,
         date:           today,
         timestamp:      now,
@@ -4978,8 +4992,16 @@
         duration,
         scoreBreakdown,
       };
+    }
 
-      saveGameResult(gameData, name);
+    /* 순위 등록 — 이력·통계는 결과 화면 진입 시 이미 저장됐으므로 리더보드에만 추가 */
+    function registerScore() {
+      const nameInput = document.getElementById('name-input');
+      const name = nameInput.value.trim();
+      if (!name || !currentGameData) return;
+
+      saveToLeaderboard(currentGameData, name);
+      gameState.playerName = name;
 
       // UI 피드백
       document.getElementById('btn-register').disabled = true;
