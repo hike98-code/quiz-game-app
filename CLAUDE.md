@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 프로젝트 개요
 
-단일 파일(`index.html`, 약 5,400줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
+단일 파일(`index.html`, 약 5,600줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
 
 백업 파일 명명 규칙: `index.backup.YYYYMMDD.html` (예: `index.backup.20260704.html`)
 선생님 모드 출력 파일: `teacher-report-YYYYMMDD.html` (프로젝트 루트에 생성)
@@ -69,7 +69,7 @@ npm run test:ui             # Playwright UI 모드
 {
   currentScreen,  // 현재 화면 id
   profile,        // 'preschool' | 'elementary' | 'middle' | 'general' | null
-  category,       // 선택된 카테고리 id ('all' | 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | null)
+  category,       // 선택된 카테고리 id ('all' | 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | 'dinosaur' | null)
   questions,      // 현재 게임 문제 배열 (셔플된 풀의 부분집합)
   currentIndex,   // 현재 문제 인덱스
   score,          // 누적 점수 (calculateScore() 합산)
@@ -88,7 +88,7 @@ npm run test:ui             # Playwright UI 모드
 
 | 프로필 id | 대상 | 문제 풀 | 특이사항 |
 |---|---|---|---|
-| `preschool` | 미취학아동 (7세 이하) | PS-001~090 (90문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10 + 생물 PS-051~070·디저트 PS-071~090 각 easy 15·medium 5) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
+| `preschool` | 미취학아동 (7세 이하) | PS-001~110 (110문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10 + 생물 PS-051~070·디저트 PS-071~090·공룡 PS-091~110 각 easy 15·medium 5) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
 | `elementary` | 초등학생 (8~13세) | EL-001~040 (40문제, 태권도 포함) | — |
 | `middle` | 중학생 (13~15세) | MS-001~020 (20문제) | — |
 | `general` | 일반/성인 | WH/SC/GE/GN (44문제, profile 필드 없음) | — |
@@ -117,10 +117,10 @@ npm run test:ui             # Playwright UI 모드
 
 | 상수 | 설명 |
 |---|---|
-| `QUESTIONS` | 문제 배열 총 194개 (일반 44 + preschool 90 + elementary 40 + middle 20) |
+| `QUESTIONS` | 문제 배열 총 214개 (일반 44 + preschool 110 + elementary 40 + middle 20) |
 | `PREFIXES` | 선택지 접두어 배열 `['①','②','③','④']` |
 | `PROFILES` | 프로필 메타데이터 (4개) |
-| `CATEGORIES` | 카테고리 메타데이터 (8개: history·science·geo·general·taekwondo·totoro·living·dessert) |
+| `CATEGORIES` | 카테고리 메타데이터 (9개: history·science·geo·general·taekwondo·totoro·living·dessert·dinosaur) |
 | `MODES` | 게임 모드 메타데이터 (3개) |
 | `SCORE_CONFIG` | 점수 계산 파라미터 |
 | `GRADE_TABLE` | 등급 기준표 (40문제 환산 기준: S≥600, A≥400, B≥250, C≥100, D<100) |
@@ -205,7 +205,7 @@ npm run test:ui             # Playwright UI 모드
 {
   id: 'XX-NNN',          // 일반: WH/SC/GE/GN + 3자리 번호 / 프로필: PS/EL/MS + 3자리 번호
   profile: '...',        // 프로필 문제만 명시 ('preschool'|'elementary'|'middle'). 일반 문제는 생략.
-  category: '...',       // 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert'
+  category: '...',       // 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | 'dinosaur'
   difficulty: '...',     // 'easy' | 'medium' | 'hard'
   question: '...',
   options: ['...', '...', '...', '...'],  // 반드시 4개
@@ -220,11 +220,12 @@ npm run test:ui             # Playwright UI 모드
 - `'#rrggbb'` → 색 동그라미(색깔 보기), 숫자 문자열(`'5'`) → 점 개수 그림(최대 12), 그 외 → 이모지 (`'🐱🚌'`처럼 여러 개 가능)
 - 보기 글자 내용만 그림으로 옮기고, 문제의 정답 대상을 그리지 않음 (예: '강아지는 어떻게 짖을까요?'의 소리 보기는 동물 대신 모두 🔊)
 - 토토로 캐릭터는 저작물이라 일반 아이콘으로 대체: 사츠키 👧 · 메이 🧒 · 칸타 👦 · 토토로 🐾
+- 공룡은 🦖(두 발)/🦕(네 발) + 특징 이모지 조합으로 공룡마다 고정 (예: 트리케라톱스 🦕🛡️, 스테고사우루스 🦕🔱). 정답 공룡의 특징 이모지는 그 문제의 단서와 겹치지 않게 출제
 - Unicode 15 이모지(🩶 🩷 🪽 🪈 등)는 구형 기기에서 깨지므로 사용하지 않음
 
 권장 난이도 비율: easy 30% / medium 50% / hard 20%  
 권장 정답 번호 분포: 각 번호(1~4번) 40% 미만, 0% 없도록 유지  
-현재 달성 현황: elementary(태권도 포함)·middle 각 번호 정확히 25%, preschool(90문제) 26/26/24/24%
+현재 달성 현황: elementary(태권도 포함)·middle 각 번호 정확히 25%, preschool(110문제) 각 번호 25%
 
 ### 카테고리별 문제 현황
 
@@ -238,5 +239,6 @@ npm run test:ui             # Playwright UI 모드
 | 이웃집 토토로 | `totoro` | **preschool 전용** (PS-021~050) | 30문제 |
 | 생물 | `living` | **preschool 전용** (PS-051~070, 동물 10·곤충 5·식물 5) | 20문제 |
 | 디저트 | `dessert` | **preschool 전용** (PS-071~090, 서양 디저트 + 한국 간식, 상품명 미사용) | 20문제 |
+| 공룡 | `dinosaur` | **preschool 전용** (PS-091~110, 익룡 프테라노돈·해양 파충류 모사사우루스 각 1 포함 — 해설에 '공룡은 아니에요' 안내) | 20문제 |
 
 `CATEGORIES`에 없는 카테고리 카드는 `initCategory()`에서 자동 숨김 (`count === 0` 조건). 새 카테고리 추가 시 반드시 `CATEGORIES`에 등록해야 결과 분석 화면(`renderAnalysis`)에서 표시됨.
