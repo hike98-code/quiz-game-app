@@ -268,4 +268,43 @@ test.describe('순위 화면', () => {
     // expect: 11위 이하의 기록은 표시되지 않는다
     await expect(page.getByRole('cell', { name: '플레이어11' })).not.toBeVisible();
   });
+
+  test('TC-87: 모바일 화면 폭에서 리더보드 표가 화면 안에 표시됨', async ({ page }) => {
+    // 1. 긴 닉네임·모든 모드가 섞인 기록 4건을 넣고 순위 화면을 연다 (뷰포트 390px)
+    await page.evaluate(() => {
+      const t = Date.now();
+      const d = eval('localDateStr()');
+      localStorage.setItem('quiz_leaderboard', JSON.stringify([
+        { id: 1, name: '가나다라마바사아자차', score: 300, rate: 80, maxCombo: 12, mode: 'speed', category: 'all', date: d, timestamp: t },
+        { id: 2, name: '테스터', score: 120, rate: 100, maxCombo: 2, mode: 'category', category: 'living', date: d, timestamp: t },
+        { id: 3, name: '플레이어', score: 85, rate: 25, maxCombo: 4, mode: 'all', category: 'all', date: d, timestamp: t },
+      ]));
+    });
+    await page.getByRole('button', { name: '🏆 순위 기록 보기' }).click();
+    await expect(page.locator('.rank-table')).toBeVisible();
+
+    // expect: 표가 카드 폭을 넘지 않고, 페이지에 가로 스크롤이 생기지 않는다
+    const m = await page.evaluate(() => ({
+      table: document.querySelector('.rank-table')!.scrollWidth,
+      card: document.querySelector('.rank-table-card')!.clientWidth,
+      doc: document.documentElement.scrollWidth,
+      vw: window.innerWidth,
+    }));
+    expect(m.table).toBeLessThanOrEqual(m.card);
+    expect(m.doc).toBeLessThanOrEqual(m.vw);
+
+    // expect: 순위 번호(첫 열)와 날짜(마지막 열)가 화면 안에 보인다
+    const first = await page.locator('#rank-tbody tr').first().locator('td').first().boundingBox();
+    const last = await page.locator('#rank-tbody tr').first().locator('td').last().boundingBox();
+    expect(first!.x).toBeGreaterThanOrEqual(0);
+    expect(last!.x + last!.width).toBeLessThanOrEqual(m.vw);
+
+    // expect: 머리글 '정답률'이 한 줄로 표시된다 (글자 단위로 세로 줄바꿈되지 않음)
+    const lines = await page.getByRole('columnheader', { name: '정답률' }).evaluate(th => {
+      const range = document.createRange();
+      range.selectNodeContents(th);
+      return new Set(Array.from(range.getClientRects()).map(r => Math.round(r.top))).size;
+    });
+    expect(lines).toBe(1);
+  });
 });

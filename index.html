@@ -1386,7 +1386,7 @@
       max-width: 480px;
       margin-bottom: 14px;
       padding: 0;
-      overflow: hidden;
+      overflow-x: auto;
     }
 
     .rank-table {
@@ -1443,7 +1443,7 @@
       white-space: nowrap;
     }
 
-    .rank-score { font-weight: 700; color: var(--color-primary); }
+    .rank-score { font-weight: 700; color: var(--color-primary); white-space: nowrap; }
 
     .rank-rate {
       font-size: 0.8rem;
@@ -1824,8 +1824,16 @@
       .quiz-q-text     { font-size: 1.05rem; }
       .opt-btn         { padding: 12px 14px; font-size: 0.9rem; }
       .rank-table      { font-size: 0.8rem; }
-      .rank-table td   { padding: 11px 10px; }
-      .rank-name       { max-width: 60px; }
+      .rank-table thead th { padding: 10px 5px; letter-spacing: 0; white-space: nowrap; }
+      .rank-table thead th.rank-th-wrap { white-space: normal; }
+      .rank-table td   { padding: 11px 5px; }
+      .rank-table th:first-child, .rank-table td:first-child { padding-left: 10px; }
+      .rank-table th:last-child,  .rank-table td:last-child  { padding-right: 10px; }
+      .rank-num        { width: 28px; }
+      .rank-name       { max-width: 64px; }
+      .rank-rate       { white-space: nowrap; }
+      .rank-mode-badge { padding: 2px 6px; font-size: 0.68rem; }
+      .rank-year       { display: none; }   /* 날짜는 MM-DD만 */
     }
   </style>
 </head>
@@ -4874,9 +4882,10 @@
       stats.recentStreak     = gameData.rate >= 70 ? stats.recentStreak + 1 : 0;
       stats.lastPlayed       = gameData.date;
 
-      // 카테고리별 통계 (category 모드일 때만)
-      if (gameData.mode === 'category' && stats.categoryStats[gameData.category]) {
-        const cs = stats.categoryStats[gameData.category];
+      // 카테고리별 통계 (category 모드일 때만) — 기본값에 없는 카테고리는 처음 플레이할 때 생성
+      if (gameData.mode === 'category' && gameData.category) {
+        const cs = stats.categoryStats[gameData.category]
+          ??= { games: 0, correct: 0, total: 0, bestScore: 0 };
         cs.games    += 1;
         cs.correct  += gameData.correct;
         cs.total    += gameData.total;
@@ -5083,7 +5092,7 @@
             <th>이름</th>
             <th>점수</th>
             <th>정답률</th>
-            <th>최대콤보</th>
+            <th class="rank-th-wrap">최대<wbr>콤보</th>
             <th>모드</th>
             <th>날짜</th>
           </tr>
@@ -5108,7 +5117,7 @@
           <td class="rank-rate">${r.rate}%</td>
           <td class="rank-combo">${escHtml(comboText)}</td>
           <td><span class="rank-mode-badge">${escHtml(modeLabel)}</span></td>
-          <td class="rank-date">${escHtml(r.date)}</td>
+          <td class="rank-date"><span class="rank-year">${escHtml(String(r.date).slice(0, 5))}</span>${escHtml(String(r.date).slice(5))}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -5154,13 +5163,6 @@
     /* ─────────────────────────────────────
        대시보드 화면 (Phase G)
     ───────────────────────────────────── */
-    const DASH_CATS = [
-      { id: 'history', icon: '🏛️', label: '세계사' },
-      { id: 'science', icon: '🔬', label: '과학' },
-      { id: 'geo',     icon: '🌍', label: '지리' },
-      { id: 'general', icon: '💡', label: '일반상식' },
-    ];
-
     const DASH_MODES = [
       { id: 'all',      icon: '🌐', label: '전체도전' },
       { id: 'category', icon: '📚', label: '카테고리별' },
@@ -5233,11 +5235,11 @@
       `;
 
       /* ③ 카테고리별 바 차트 */
-      const catData = DASH_CATS.map(c => {
+      const catData = CATEGORIES.filter(c => stats.categoryStats[c.id]?.games > 0).map(c => {
         const cs   = stats.categoryStats[c.id];
         const rate = cs.total > 0 ? Math.round((cs.correct / cs.total) * 100) : 0;
-        return { ...c, ...cs, rate };
-      }).filter(c => c.games > 0);
+        return { id: c.id, icon: c.icon, label: c.label, ...cs, rate };
+      });
 
       let catInner = '';
       if (catData.length > 0) {

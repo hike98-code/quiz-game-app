@@ -305,4 +305,25 @@ test.describe('대시보드 화면 및 데이터 지속성 (Dashboard & Data Per
     expect(stats.avgScore).toBe(expectedAvgScore);
     expect(stats.avgRate).toBe(expectedAvgRate);
   });
+
+  test('TC-88: 프로필 전용 카테고리(생물 등) 기록도 카테고리별 정답률에 표시', async ({ page }) => {
+    // 1. 미취학 '생물' 카테고리와 초등 '태권도' 카테고리 게임 결과를 저장한 뒤 대시보드를 연다
+    await page.evaluate(() => {
+      const save = eval('saveGameResult');
+      const base = { date: eval('localDateStr()'), timestamp: Date.now(), mode: 'category', maxCombo: 1, duration: 60, scoreBreakdown: [] };
+      save({ ...base, id: 1, category: 'living', score: 120, correct: 12, total: 20, rate: 60 }, '');
+      save({ ...base, id: 2, category: 'taekwondo', score: 90, correct: 9, total: 20, rate: 45 }, '');
+    });
+    await page.getByRole('button', { name: '📊 내 통계 보기' }).click();
+
+    // expect: '카테고리 모드 기록이 없어요' 대신 생물·태권도 정답률이 표시된다
+    await expect(page.getByText('카테고리 모드 기록이 없어요')).not.toBeVisible();
+    await expect(page.locator('.dash-cat-item').filter({ hasText: '생물' }).locator('.dash-cat-stat')).toHaveText(/60%\s*\(12\/20문제\)/);
+    await expect(page.locator('.dash-cat-item').filter({ hasText: '태권도' }).locator('.dash-cat-stat')).toHaveText(/45%\s*\(9\/20문제\)/);
+
+    // expect: quiz_player_stats.categoryStats에 두 카테고리가 누적된다
+    const cs = await page.evaluate(() => JSON.parse(localStorage.getItem('quiz_player_stats')!).categoryStats);
+    expect(cs.living).toMatchObject({ games: 1, correct: 12, total: 20 });
+    expect(cs.taekwondo).toMatchObject({ games: 1, correct: 9, total: 20 });
+  });
 });
