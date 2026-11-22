@@ -37,7 +37,7 @@ npm run test:ui             # Playwright UI 모드
 - `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
 - 테스트 스위트 2벌 공존:
   - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
-  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 83 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 85 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
 - `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
 - `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
 - `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
@@ -88,7 +88,7 @@ npm run test:ui             # Playwright UI 모드
 
 | 프로필 id | 대상 | 문제 풀 | 특이사항 |
 |---|---|---|---|
-| `preschool` | 미취학아동 (7세 이하) | PS-001~050 (50문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10) | TTS 자동 재생, 보기 하이라이트 |
+| `preschool` | 미취학아동 (7세 이하) | PS-001~050 (50문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
 | `elementary` | 초등학생 (8~13세) | EL-001~040 (40문제, 태권도 포함) | — |
 | `middle` | 중학생 (13~15세) | MS-001~020 (20문제) | — |
 | `general` | 일반/성인 | WH/SC/GE/GN (44문제, profile 필드 없음) | — |
@@ -207,11 +207,18 @@ npm run test:ui             # Playwright UI 모드
   difficulty: '...',     // 'easy' | 'medium' | 'hard'
   question: '...',
   options: ['...', '...', '...', '...'],  // 반드시 4개
+  optionImages: ['...', '...', '...', '...'],  // preschool 문제만, 반드시 4개 (아래 '보기 이미지' 참고)
   answer: N,             // 0-based index (0~3)
   hint: '...',           // 정답을 직접 노출하지 않는 1~2문장
   explanation: '...',    // 정답 근거 + 오답 이유 포함 2~3문장
 }
 ```
+
+**보기 이미지 (preschool 전용)**: `optionImages[i]`가 `options[i]` 오른쪽에 표시됨 (`optionImageHtml()`, `aria-hidden`).
+- `'#rrggbb'` → 색 동그라미(색깔 보기), 숫자 문자열(`'5'`) → 점 개수 그림(최대 12), 그 외 → 이모지 (`'🐱🚌'`처럼 여러 개 가능)
+- 보기 글자 내용만 그림으로 옮기고, 문제의 정답 대상을 그리지 않음 (예: '강아지는 어떻게 짖을까요?'의 소리 보기는 동물 대신 모두 🔊)
+- 토토로 캐릭터는 저작물이라 일반 아이콘으로 대체: 사츠키 👧 · 메이 🧒 · 칸타 👦 · 토토로 🐾
+- Unicode 15 이모지(🩶 🩷 🪽 🪈 등)는 구형 기기에서 깨지므로 사용하지 않음
 
 권장 난이도 비율: easy 30% / medium 50% / hard 20%  
 권장 정답 번호 분포: 각 번호(1~4번) 40% 미만, 0% 없도록 유지  

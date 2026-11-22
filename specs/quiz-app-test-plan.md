@@ -446,6 +446,26 @@
     - expect: 이전 문제의 정답/오답 안내·해설을 읽지 않는다
     - expect: 다음 문제 읽기가 시작된다
 
+#### 6.10. TC-84: 미취학아동 퀴즈 - 보기 오른쪽에 보기 이미지 표시
+
+**File:** `specs/06-quiz-preschool.spec.ts`
+
+**Steps:**
+  1. 미취학아동 프로필로 전체 도전 모드를 시작한다
+    - expect: 4개 보기 버튼마다 이미지(.opt-img)가 1개씩 표시된다
+    - expect: 이미지는 보기 글자의 오른쪽에 있고 버튼 밖으로 넘치지 않는다
+    - expect: 이미지는 aria-hidden이라 버튼의 접근성 이름에 섞이지 않는다
+    - expect: 미취학 50문제 모두 4개의 보기 이미지(optionImages)를 가지고 있다
+
+#### 6.11. TC-85: 미취학아동 외 프로필은 보기 이미지 없음
+
+**File:** `specs/06-quiz-preschool.spec.ts`
+
+**Steps:**
+  1. 일반 프로필로 전체 도전 모드를 시작한다
+    - expect: 보기 버튼에 이미지가 표시되지 않는다
+    - expect: 미취학 외 문제에는 optionImages 필드가 없다
+
 ### 7. 결과 화면 (Result Screen)
 
 **Seed:** `tests/seed.spec.ts`

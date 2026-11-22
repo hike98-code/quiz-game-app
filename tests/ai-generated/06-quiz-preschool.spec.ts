@@ -60,6 +60,54 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     await expect(page.getByText('1 / 50')).toBeVisible();
   });
 
+  test('TC-84: 미취학아동 퀴즈 - 보기 오른쪽에 보기 이미지 표시', async ({ page }) => {
+    // 1. 미취학아동 프로필로 전체 도전 모드를 시작한다
+    await startPreschoolQuiz(page);
+
+    // expect: 4개 보기 버튼마다 이미지(.opt-img)가 1개씩 표시된다
+    const buttons = page.locator('#quiz-options .opt-btn');
+    await expect(buttons).toHaveCount(4);
+    for (let i = 0; i < 4; i++) {
+      await expect(buttons.nth(i).locator('.opt-img')).toHaveCount(1);
+      await expect(buttons.nth(i).locator('.opt-img')).toBeVisible();
+    }
+
+    // expect: 이미지는 보기 글자의 오른쪽에 있고 버튼 밖으로 넘치지 않는다
+    const box = await buttons.first().boundingBox();
+    const img = await buttons.first().locator('.opt-img').boundingBox();
+    expect(img!.x).toBeGreaterThan(box!.x + box!.width / 2);
+    expect(img!.x + img!.width).toBeLessThanOrEqual(box!.x + box!.width);
+
+    // expect: 이미지는 aria-hidden이라 버튼의 접근성 이름(보기 글자)에 섞이지 않는다
+    await expect(buttons.first().locator('.opt-img')).toHaveAttribute('aria-hidden', 'true');
+
+    // expect: 미취학 50문제 모두 보기 수와 같은 4개의 이미지를 가지고 있다
+    const counts: number[] = await page.evaluate(() =>
+      eval('QUESTIONS').filter((q: any) => q.profile === 'preschool')
+        .map((q: any) => (q.optionImages || []).filter((x: string) => x).length));
+    expect(counts).toHaveLength(50);
+    expect(counts.every(n => n === 4)).toBe(true);
+  });
+
+  test('TC-85: 미취학아동 외 프로필은 보기 이미지 없음', async ({ page }) => {
+    // 1. 일반 프로필로 전체 도전 모드를 시작한다
+    await page.goto('/');
+    await page.getByRole('button', { name: '✏️ 퀴즈 시작하기' }).click();
+    await page.locator(".profile-card:has-text('일반')").click();
+    await page.locator('#btn-profile-next').click();
+    await page.locator(".mode-card:has-text('전체 도전')").click();
+    await page.getByRole('button', { name: '▶ 시작하기' }).click();
+
+    // expect: 보기 버튼에 이미지가 표시되지 않는다
+    await expect(page.locator('#quiz-options .opt-btn')).toHaveCount(4);
+    await expect(page.locator('#quiz-options .opt-img')).toHaveCount(0);
+
+    // expect: 미취학 외 문제에는 optionImages 필드가 없다
+    const withImages: number = await page.evaluate(() =>
+      eval('QUESTIONS').filter((q: any) => q.profile !== 'preschool' && q.optionImages).length);
+    expect(withImages).toBe(0);
+  });
+
   test.describe('TTS 음성 안내 (speechSynthesis 모킹)', () => {
     // speak된 발화 텍스트를 기록하고, onend는 테스트가 직접 발생시킨다
     test.beforeEach(async ({ page }) => {
