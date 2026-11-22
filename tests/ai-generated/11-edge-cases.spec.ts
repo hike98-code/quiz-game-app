@@ -292,7 +292,7 @@ test.describe('엣지 케이스 및 유효성 검사 (Edge Cases & Validation)',
     await page.getByRole('button', { name: '✏️ 퀴즈 시작하기' }).click();
     await page.locator('.profile-card:first-child').click();
     await page.locator('#btn-profile-next').click();
-    await page.getByText('🌟 전체 도전 130문제 전부').click();
+    await page.getByText('🌟 전체 도전 170문제 전부').click();
     await page.getByRole('button', { name: '▶ 시작하기' }).click();
 
     // 1. 문제 읽기 시작 대기 → 문제 읽기 종료 → 보기 ① 읽기 시작

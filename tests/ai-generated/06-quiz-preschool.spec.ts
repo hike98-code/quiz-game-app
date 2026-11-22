@@ -9,7 +9,7 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     await page.getByRole('button', { name: '✏️ 퀴즈 시작하기' }).click();
     await page.locator('.profile-card:first-child').click();
     await page.locator('#btn-profile-next').click();
-    await page.getByText('🌟 전체 도전 130문제 전부').click();
+    await page.getByText('🌟 전체 도전 170문제 전부').click();
     await page.getByRole('button', { name: '▶ 시작하기' }).click();
   }
 
@@ -56,8 +56,8 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     // 1. 미취학아동 프로필로 전체 도전 모드를 시작한다
     await startPreschoolQuiz(page);
 
-    // expect: 진행 표시가 '1 / 130'으로 시작된다 (미취학아동 문제 풀은 기본 20 + 이웃집 토토로 30 + 생물 20 + 디저트 20 + 공룡 20 + 탈것 20)
-    await expect(page.getByText('1 / 130')).toBeVisible();
+    // expect: 진행 표시가 '1 / 170'으로 시작된다 (미취학아동 문제 풀은 기본 20 + 이웃집 토토로 30 + 생물 20 + 디저트 20 + 공룡 20 + 탈것 20 + 우리 몸 20 + 안전 20)
+    await expect(page.getByText('1 / 170')).toBeVisible();
   });
 
   test('TC-84: 미취학아동 퀴즈 - 보기 오른쪽에 보기 이미지 표시', async ({ page }) => {
@@ -81,11 +81,11 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     // expect: 이미지는 aria-hidden이라 버튼의 접근성 이름(보기 글자)에 섞이지 않는다
     await expect(buttons.first().locator('.opt-img')).toHaveAttribute('aria-hidden', 'true');
 
-    // expect: 미취학 130문제 모두 보기 수와 같은 4개의 이미지를 가지고 있다
+    // expect: 미취학 170문제 모두 보기 수와 같은 4개의 이미지를 가지고 있다
     const counts: number[] = await page.evaluate(() =>
       eval('QUESTIONS').filter((q: any) => q.profile === 'preschool')
         .map((q: any) => (q.optionImages || []).filter((x: string) => x).length));
-    expect(counts).toHaveLength(130);
+    expect(counts).toHaveLength(170);
     expect(counts.every(n => n === 4)).toBe(true);
   });
 
@@ -243,7 +243,7 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
         (document.querySelector('#quiz-screen .opt-btn') as HTMLElement).click();
         (document.getElementById('btn-next') as HTMLElement).click();
       });
-      await expect(page.getByText('2 / 130')).toBeVisible();
+      await expect(page.getByText('2 / 170')).toBeVisible();
       const q2 = await currentQuestion(page);
 
       // expect: 다음 문제 읽기가 시작된다

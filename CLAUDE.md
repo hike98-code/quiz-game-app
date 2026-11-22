@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 프로젝트 개요
 
-단일 파일(`index.html`, 약 5,840줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
+단일 파일(`index.html`, 약 6,200줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
 
 백업 파일 명명 규칙: `index.backup.YYYYMMDD.html` (예: `index.backup.20260704.html`)
 선생님 모드 출력 파일: `teacher-report-YYYYMMDD.html` (프로젝트 루트에 생성)
@@ -69,7 +69,7 @@ npm run test:ui             # Playwright UI 모드
 {
   currentScreen,  // 현재 화면 id
   profile,        // 'preschool' | 'elementary' | 'middle' | 'general' | null
-  category,       // 선택된 카테고리 id ('all' | 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | 'dinosaur' | 'vehicle' | null)
+  category,       // 선택된 카테고리 id ('all' | 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | 'dinosaur' | 'vehicle' | 'body' | 'safety' | null)
   questions,      // 현재 게임 문제 배열 (셔플된 풀의 부분집합)
   currentIndex,   // 현재 문제 인덱스
   score,          // 누적 점수 (calculateScore() 합산)
@@ -88,7 +88,7 @@ npm run test:ui             # Playwright UI 모드
 
 | 프로필 id | 대상 | 문제 풀 | 특이사항 |
 |---|---|---|---|
-| `preschool` | 미취학아동 (7세 이하) | PS-001~130 (130문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10 + 생물 PS-051~070·디저트 PS-071~090·공룡 PS-091~110·탈것 PS-111~130 각 easy 15·medium 5) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
+| `preschool` | 미취학아동 (7세 이하) | PS-001~170 (170문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10 + 생물 PS-051~070·디저트 PS-071~090·공룡 PS-091~110·탈것 PS-111~130·우리 몸 PS-131~150·안전 PS-151~170 각 easy 15·medium 5) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
 | `elementary` | 초등학생 (8~13세) | EL-001~040 (40문제, 태권도 포함) | — |
 | `middle` | 중학생 (13~15세) | MS-001~020 (20문제) | — |
 | `general` | 일반/성인 | WH/SC/GE/GN (44문제, profile 필드 없음) | — |
@@ -117,10 +117,10 @@ npm run test:ui             # Playwright UI 모드
 
 | 상수 | 설명 |
 |---|---|
-| `QUESTIONS` | 문제 배열 총 234개 (일반 44 + preschool 130 + elementary 40 + middle 20) |
+| `QUESTIONS` | 문제 배열 총 274개 (일반 44 + preschool 170 + elementary 40 + middle 20) |
 | `PREFIXES` | 선택지 접두어 배열 `['①','②','③','④']` |
 | `PROFILES` | 프로필 메타데이터 (4개) |
-| `CATEGORIES` | 카테고리 메타데이터 (10개: history·science·geo·general·taekwondo·totoro·living·dessert·dinosaur·vehicle) |
+| `CATEGORIES` | 카테고리 메타데이터 (12개: history·science·geo·general·taekwondo·totoro·living·dessert·dinosaur·vehicle·body·safety) |
 | `MODES` | 게임 모드 메타데이터 (3개) |
 | `SCORE_CONFIG` | 점수 계산 파라미터 |
 | `GRADE_TABLE` | 등급 기준표 (40문제 환산 기준: S≥600, A≥400, B≥250, C≥100, D<100) |
@@ -205,7 +205,7 @@ npm run test:ui             # Playwright UI 모드
 {
   id: 'XX-NNN',          // 일반: WH/SC/GE/GN + 3자리 번호 / 프로필: PS/EL/MS + 3자리 번호
   profile: '...',        // 프로필 문제만 명시 ('preschool'|'elementary'|'middle'). 일반 문제는 생략.
-  category: '...',       // 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | 'dinosaur' | 'vehicle'
+  category: '...',       // 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | 'dinosaur' | 'vehicle' | 'body' | 'safety'
   difficulty: '...',     // 'easy' | 'medium' | 'hard'
   question: '...',
   options: ['...', '...', '...', '...'],  // 반드시 4개
@@ -221,11 +221,13 @@ npm run test:ui             # Playwright UI 모드
 - 보기 글자 내용만 그림으로 옮기고, 문제의 정답 대상을 그리지 않음 (예: '강아지는 어떻게 짖을까요?'의 소리 보기는 동물 대신 모두 🔊)
 - 토토로 캐릭터는 저작물이라 일반 아이콘으로 대체: 사츠키 👧 · 메이 🧒 · 칸타 👦 · 토토로 🐾
 - 공룡 카테고리는 이모지 대신 직접 그린 SVG 그림 15종(`OPTION_SVGS`: trex·triceratops·stegosaurus·brachiosaurus·ankylosaurus·velociraptor·pteranodon·mosasaurus·spinosaurus·parasaurolophus·pachycephalosaurus·compsognathus·maiasaura·iguanodon·diplodocus)을 `'svg:trex'` 형식으로 사용. 새 공룡을 보기에 넣으려면 `OPTION_SVGS`에 같은 스타일(viewBox 0 0 120 80, 오른쪽을 보는 옆모습, 외곽선 #3b3b3b 2px)로 그림을 먼저 추가
+- 전화번호 보기(119 등)는 숫자 문자열이 점 그림으로 그려지므로 키캡 이모지(`'1️⃣1️⃣9️⃣'`)로 적음
+- 행동을 고르는 문제(안전)는 정답 보기만 길어 보이지 않게 보기 글자 길이를 비슷하게 맞춤
 - Unicode 15 이모지(🩶 🩷 🪽 🪈 등)는 구형 기기에서 깨지므로 사용하지 않음
 
 권장 난이도 비율: easy 30% / medium 50% / hard 20%  
 권장 정답 번호 분포: 각 번호(1~4번) 40% 미만, 0% 없도록 유지  
-현재 달성 현황: elementary(태권도 포함)·middle 각 번호 정확히 25%, preschool(130문제) 각 번호 25%
+현재 달성 현황: elementary(태권도 포함)·middle 각 번호 정확히 25%, preschool(170문제) 각 번호 25%
 
 ### 카테고리별 문제 현황
 
@@ -241,5 +243,7 @@ npm run test:ui             # Playwright UI 모드
 | 디저트 | `dessert` | **preschool 전용** (PS-071~090, 서양 디저트 + 한국 간식, 상품명 미사용) | 20문제 |
 | 공룡 | `dinosaur` | **preschool 전용** (PS-091~110, 익룡 프테라노돈·해양 파충류 모사사우루스 각 1 포함 — 해설에 '공룡은 아니에요' 안내) | 20문제 |
 | 탈것 | `vehicle` | **preschool 전용** (PS-111~130, 일하는 차·기차·하늘·물·바퀴 두 개 탈것) | 20문제 |
+| 우리 몸 | `body` | **preschool 전용** (PS-131~150, 감각·몸의 부분·눈물·땀·피 / medium: 심장·폐·뼈·뇌·근육) | 20문제 |
+| 안전 | `safety` | **preschool 전용** (PS-151~170, 상황 → 올바른 행동 고르기: 교통·119/112·화재·지진·낯선 사람·물놀이·전기·약) | 20문제 |
 
 `CATEGORIES`에 없는 카테고리 카드는 `initCategory()`에서 자동 숨김 (`count === 0` 조건). 새 카테고리 추가 시 반드시 `CATEGORIES`에 등록해야 결과 분석 화면(`renderAnalysis`)에서 표시됨.
