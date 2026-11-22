@@ -134,12 +134,12 @@ test.describe('모드 및 카테고리 선택 화면 (Mode & Category Selection 
     await expect(page.locator('#cat-section').getByText('태권도')).not.toBeVisible();
   });
 
-  test('TC-16: 미취학아동 프로필 전체 도전 모드 (110문제 표시)', async ({ page }) => {
+  test('TC-16: 미취학아동 프로필 전체 도전 모드 (130문제 표시)', async ({ page }) => {
     // 1. 미취학아동 프로필로 모드 선택 화면에서 '전체 도전' 카드를 확인한다
     await navigateToModeScreen(page, 'preschool');
 
-    // expect: 전체 도전 카드에 '110문제 전부' 텍스트가 표시된다 (기본 20 + 이웃집 토토로 30 + 생물 20 + 디저트 20 + 공룡 20)
-    await expect(page.getByText('110문제 전부')).toBeVisible();
+    // expect: 전체 도전 카드에 '130문제 전부' 텍스트가 표시된다 (기본 20 + 이웃집 토토로 30 + 생물 20 + 디저트 20 + 공룡 20 + 탈것 20)
+    await expect(page.getByText('130문제 전부')).toBeVisible();
   });
 
   test('TC-17: 카테고리별 모드에서 카테고리 미선택 시 시작 불가', async ({ page }) => {
@@ -157,8 +157,8 @@ test.describe('모드 및 카테고리 선택 화면 (Mode & Category Selection 
     // 1. 미취학아동 프로필로 모드 선택 화면에서 '카테고리별'을 선택한다
     await page.getByText('🗂️ 카테고리별 분야 선택').click();
 
-    // expect: 과학(8), 지리(2), 일반상식(10), 이웃집 토토로(30), 생물(20), 디저트(20), 공룡(20) 총 7개 카테고리가 표시된다
-    await expect(page.locator('#cat-section .cat-card')).toHaveCount(7);
+    // expect: 과학(8), 지리(2), 일반상식(10), 이웃집 토토로(30), 생물(20), 디저트(20), 공룡(20), 탈것(20) 총 8개 카테고리가 표시된다
+    await expect(page.locator('#cat-section .cat-card')).toHaveCount(8);
     await expect(page.getByText('🔬 과학 8문제')).toBeVisible();
     await expect(page.getByText('🌍 지리 2문제')).toBeVisible();
     await expect(page.getByText('💡 일반상식 10문제')).toBeVisible();
@@ -166,6 +166,7 @@ test.describe('모드 및 카테고리 선택 화면 (Mode & Category Selection 
     await expect(page.getByText('🐞 생물 20문제')).toBeVisible();
     await expect(page.getByText('🍰 디저트 20문제')).toBeVisible();
     await expect(page.getByText('🦖 공룡 20문제')).toBeVisible();
+    await expect(page.getByText('🚗 탈것 20문제')).toBeVisible();
 
     // 2. '이웃집 토토로'를 선택하고 시작한다
     await page.locator('.cat-card[data-id="totoro"]').click();
@@ -178,8 +179,8 @@ test.describe('모드 및 카테고리 선택 화면 (Mode & Category Selection 
     expect(ids.every(id => /^PS-0(2[1-9]|[34]\d|50)$/.test(id))).toBe(true);
   });
 
-  test('TC-86: 미취학아동 카테고리별 모드 - 생물·디저트·공룡 카테고리', async ({ page }) => {
-    for (const [cat, range] of [['living', [51, 70]], ['dessert', [71, 90]], ['dinosaur', [91, 110]]] as const) {
+  test('TC-86: 미취학아동 카테고리별 모드 - 생물·디저트·공룡·탈것 카테고리', async ({ page }) => {
+    for (const [cat, range] of [['living', [51, 70]], ['dessert', [71, 90]], ['dinosaur', [91, 110]], ['vehicle', [111, 130]]] as const) {
       await page.goto('/');
       await navigateToModeScreen(page, 'preschool');
 
