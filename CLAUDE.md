@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 프로젝트 개요
 
-단일 파일(`index.html`, 약 5,000줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
+단일 파일(`index.html`, 약 5,400줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
 
 백업 파일 명명 규칙: `index.backup.YYYYMMDD.html` (예: `index.backup.20260704.html`)
 선생님 모드 출력 파일: `teacher-report-YYYYMMDD.html` (프로젝트 루트에 생성)
@@ -37,7 +37,7 @@ npm run test:ui             # Playwright UI 모드
 - `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
 - 테스트 스위트 2벌 공존:
   - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
-  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 85 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 86 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
 - `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
 - `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
 - `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
@@ -69,7 +69,7 @@ npm run test:ui             # Playwright UI 모드
 {
   currentScreen,  // 현재 화면 id
   profile,        // 'preschool' | 'elementary' | 'middle' | 'general' | null
-  category,       // 선택된 카테고리 id ('all' | 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | null)
+  category,       // 선택된 카테고리 id ('all' | 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert' | null)
   questions,      // 현재 게임 문제 배열 (셔플된 풀의 부분집합)
   currentIndex,   // 현재 문제 인덱스
   score,          // 누적 점수 (calculateScore() 합산)
@@ -88,7 +88,7 @@ npm run test:ui             # Playwright UI 모드
 
 | 프로필 id | 대상 | 문제 풀 | 특이사항 |
 |---|---|---|---|
-| `preschool` | 미취학아동 (7세 이하) | PS-001~050 (50문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
+| `preschool` | 미취학아동 (7세 이하) | PS-001~090 (90문제: 일반 상식 PS-001~020 all easy + 이웃집 토토로 PS-021~050 easy 20·medium 10 + 생물 PS-051~070·디저트 PS-071~090 각 easy 15·medium 5) | TTS 자동 재생, 보기 하이라이트, 보기 이미지 |
 | `elementary` | 초등학생 (8~13세) | EL-001~040 (40문제, 태권도 포함) | — |
 | `middle` | 중학생 (13~15세) | MS-001~020 (20문제) | — |
 | `general` | 일반/성인 | WH/SC/GE/GN (44문제, profile 필드 없음) | — |
@@ -117,10 +117,10 @@ npm run test:ui             # Playwright UI 모드
 
 | 상수 | 설명 |
 |---|---|
-| `QUESTIONS` | 문제 배열 총 154개 (일반 44 + preschool 50 + elementary 40 + middle 20) |
+| `QUESTIONS` | 문제 배열 총 194개 (일반 44 + preschool 90 + elementary 40 + middle 20) |
 | `PREFIXES` | 선택지 접두어 배열 `['①','②','③','④']` |
 | `PROFILES` | 프로필 메타데이터 (4개) |
-| `CATEGORIES` | 카테고리 메타데이터 (6개: history·science·geo·general·taekwondo·totoro) |
+| `CATEGORIES` | 카테고리 메타데이터 (8개: history·science·geo·general·taekwondo·totoro·living·dessert) |
 | `MODES` | 게임 모드 메타데이터 (3개) |
 | `SCORE_CONFIG` | 점수 계산 파라미터 |
 | `GRADE_TABLE` | 등급 기준표 (40문제 환산 기준: S≥600, A≥400, B≥250, C≥100, D<100) |
@@ -203,7 +203,7 @@ npm run test:ui             # Playwright UI 모드
 {
   id: 'XX-NNN',          // 일반: WH/SC/GE/GN + 3자리 번호 / 프로필: PS/EL/MS + 3자리 번호
   profile: '...',        // 프로필 문제만 명시 ('preschool'|'elementary'|'middle'). 일반 문제는 생략.
-  category: '...',       // 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro'
+  category: '...',       // 'history' | 'science' | 'geo' | 'general' | 'taekwondo' | 'totoro' | 'living' | 'dessert'
   difficulty: '...',     // 'easy' | 'medium' | 'hard'
   question: '...',
   options: ['...', '...', '...', '...'],  // 반드시 4개
@@ -222,7 +222,7 @@ npm run test:ui             # Playwright UI 모드
 
 권장 난이도 비율: easy 30% / medium 50% / hard 20%  
 권장 정답 번호 분포: 각 번호(1~4번) 40% 미만, 0% 없도록 유지  
-현재 달성 현황: elementary(태권도 포함)·middle 각 번호 정확히 25%, preschool(토토로 포함 50문제) 26/26/24/24%
+현재 달성 현황: elementary(태권도 포함)·middle 각 번호 정확히 25%, preschool(90문제) 26/26/24/24%
 
 ### 카테고리별 문제 현황
 
@@ -234,5 +234,7 @@ npm run test:ui             # Playwright UI 모드
 | 일반상식 | `general` | general + elementary + middle | — |
 | 태권도 | `taekwondo` | **elementary 전용** (EL-021~040) | 20문제 |
 | 이웃집 토토로 | `totoro` | **preschool 전용** (PS-021~050) | 30문제 |
+| 생물 | `living` | **preschool 전용** (PS-051~070, 동물 10·곤충 5·식물 5) | 20문제 |
+| 디저트 | `dessert` | **preschool 전용** (PS-071~090, 서양 디저트 + 한국 간식, 상품명 미사용) | 20문제 |
 
 `CATEGORIES`에 없는 카테고리 카드는 `initCategory()`에서 자동 숨김 (`count === 0` 조건). 새 카테고리 추가 시 반드시 `CATEGORIES`에 등록해야 결과 분석 화면(`renderAnalysis`)에서 표시됨.
