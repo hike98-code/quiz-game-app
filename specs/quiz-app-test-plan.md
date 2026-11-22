@@ -478,6 +478,15 @@
     - expect: 보기 버튼에 이미지가 표시되지 않는다
     - expect: 미취학 외 문제에는 optionImages 필드가 없다
 
+#### 6.12. TC-90: 공룡 카테고리 보기에 공룡 그림(SVG) 표시
+
+**File:** `specs/06-quiz-preschool.spec.ts`
+
+**Steps:**
+  1. 미취학아동 프로필 → 카테고리별 → '🦖 공룡'으로 시작한다
+    - expect: 4개 보기 모두 이모지 대신 SVG 그림(.opt-svg)이 표시된다
+    - expect: 공룡 20문제의 보기 이미지가 모두 등록된 그림(OPTION_SVGS의 'svg:키')을 가리킨다
+
 ### 7. 결과 화면 (Result Screen)
 
 **Seed:** `tests/seed.spec.ts`

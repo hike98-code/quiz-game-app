@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 프로젝트 개요
 
-단일 파일(`index.html`, 약 5,600줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
+단일 파일(`index.html`, 약 5,650줄) 상식 퀴즈 게임 웹앱. 외부 라이브러리 없이 Vanilla HTML/CSS/JS만 사용.
 
 백업 파일 명명 규칙: `index.backup.YYYYMMDD.html` (예: `index.backup.20260704.html`)
 선생님 모드 출력 파일: `teacher-report-YYYYMMDD.html` (프로젝트 루트에 생성)
@@ -37,7 +37,7 @@ npm run test:ui             # Playwright UI 모드
 - `playwright.config.ts`: `webServer`가 `python -m http.server 8765`를 자동 기동(`reuseExistingServer: true`) — 별도 서버 실행 불필요. `baseURL`은 `http://localhost:8765`, 뷰포트는 모바일 크기(390×844) 고정.
 - 테스트 스위트 2벌 공존:
   - `tests/quiz.spec.ts` — 초기 작성된 단일 파일 스위트(10 TC)
-  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 89 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
+  - `tests/ai-generated/`(`01-home-screen.spec.ts` ~ `11-edge-cases.spec.ts`, 총 90 TC) — `specs/quiz-app-test-plan.md` 테스트 계획서를 기반으로 화면별로 분리 생성된 스위트. 신규 테스트는 이쪽에 추가. 계획서 10번 섹션(데이터 지속성)은 별도 파일 없이 `09-dashboard-and-storage.spec.ts`에 합쳐져 있어 `10-*` 파일이 없음. 테스트 이름은 `TC-NN: ...` 형식.
 - `tests/seed.spec.ts`: 테스트 계획서의 각 섹션이 `**Seed:**`로 참조하는 시드 테스트(홈 화면 로드 + localStorage 3종 키 삭제). 다른 spec 실행 전에 자동 실행되는 것이 아니므로, 격리는 각 spec의 `test.beforeEach`에서 `localStorage.removeItem('quiz_game_history' | 'quiz_player_stats' | 'quiz_leaderboard')` 3종을 반복해 확보함 — 새 spec도 동일 패턴 적용. `testDir: './tests'`라 전체 실행 시 seed도 1개 테스트로 함께 실행됨.
 - `.mcp.json`이 `playwright-test` MCP 서버(`npx playwright run-test-mcp-server`)를 등록 — `.claude/agents/`에 정의된 `playwright-test-planner`/`playwright-test-generator`/`playwright-test-healer` 에이전트가 이 서버를 통해 계획 수립·테스트 생성·실패 테스트 수정을 수행.
 - `playwright-report/`, `test-results/`, `test-report-*.html`, `teacher-report-*.html`, `index.backup.*.html`은 생성물로 `.gitignore` 대상.
@@ -217,10 +217,10 @@ npm run test:ui             # Playwright UI 모드
 ```
 
 **보기 이미지 (preschool 전용)**: `optionImages[i]`가 `options[i]` 오른쪽에 표시됨 (`optionImageHtml()`, `aria-hidden`).
-- `'#rrggbb'` → 색 동그라미(색깔 보기), 숫자 문자열(`'5'`) → 점 개수 그림(최대 12), 그 외 → 이모지 (`'🐱🚌'`처럼 여러 개 가능)
+- `'#rrggbb'` → 색 동그라미(색깔 보기), 숫자 문자열(`'5'`) → 점 개수 그림(최대 12), `'svg:키'` → `OPTION_SVGS`의 SVG 그림, 그 외 → 이모지 (`'🐱🚌'`처럼 여러 개 가능)
 - 보기 글자 내용만 그림으로 옮기고, 문제의 정답 대상을 그리지 않음 (예: '강아지는 어떻게 짖을까요?'의 소리 보기는 동물 대신 모두 🔊)
 - 토토로 캐릭터는 저작물이라 일반 아이콘으로 대체: 사츠키 👧 · 메이 🧒 · 칸타 👦 · 토토로 🐾
-- 공룡은 🦖(두 발)/🦕(네 발) + 특징 이모지 조합으로 공룡마다 고정 (예: 트리케라톱스 🦕🛡️, 스테고사우루스 🦕🔱). 정답 공룡의 특징 이모지는 그 문제의 단서와 겹치지 않게 출제
+- 공룡 카테고리는 이모지 대신 직접 그린 SVG 그림 15종(`OPTION_SVGS`: trex·triceratops·stegosaurus·brachiosaurus·ankylosaurus·velociraptor·pteranodon·mosasaurus·spinosaurus·parasaurolophus·pachycephalosaurus·compsognathus·maiasaura·iguanodon·diplodocus)을 `'svg:trex'` 형식으로 사용. 새 공룡을 보기에 넣으려면 `OPTION_SVGS`에 같은 스타일(viewBox 0 0 120 80, 오른쪽을 보는 옆모습, 외곽선 #3b3b3b 2px)로 그림을 먼저 추가
 - Unicode 15 이모지(🩶 🩷 🪽 🪈 등)는 구형 기기에서 깨지므로 사용하지 않음
 
 권장 난이도 비율: easy 30% / medium 50% / hard 20%  

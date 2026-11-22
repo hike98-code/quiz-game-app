@@ -89,6 +89,33 @@ test.describe('미취학아동 프로필 퀴즈 (Preschool Profile Quiz)', () =>
     expect(counts.every(n => n === 4)).toBe(true);
   });
 
+  test('TC-90: 공룡 카테고리 보기에 공룡 그림(SVG) 표시', async ({ page }) => {
+    // 1. 미취학아동 프로필 → 카테고리별 → 🦖 공룡으로 시작한다
+    await page.goto('/');
+    await page.getByRole('button', { name: '✏️ 퀴즈 시작하기' }).click();
+    await page.locator('.profile-card:first-child').click();
+    await page.locator('#btn-profile-next').click();
+    await page.getByText('🗂️ 카테고리별 분야 선택').click();
+    await page.locator('.cat-card[data-id="dinosaur"]').click();
+    await page.getByRole('button', { name: '▶ 시작하기' }).click();
+
+    // expect: 4개 보기 모두 이모지 대신 SVG 그림이 표시된다
+    const imgs = page.locator('#quiz-options .opt-btn .opt-img');
+    await expect(imgs).toHaveCount(4);
+    for (let i = 0; i < 4; i++) {
+      await expect(imgs.nth(i)).toHaveClass(/opt-svg/);
+      await expect(imgs.nth(i).locator('svg')).toBeVisible();
+    }
+
+    // expect: 공룡 20문제의 보기 이미지 80개가 모두 등록된 그림(OPTION_SVGS)을 가리킨다
+    const missing: string[] = await page.evaluate(() => {
+      const svgs = eval('OPTION_SVGS');
+      return eval('QUESTIONS').filter((q: any) => q.category === 'dinosaur')
+        .flatMap((q: any) => q.optionImages.filter((x: string) => !x.startsWith('svg:') || !svgs[x.slice(4)]).map((x: string) => q.id + ' ' + x));
+    });
+    expect(missing).toEqual([]);
+  });
+
   test('TC-85: 미취학아동 외 프로필은 보기 이미지 없음', async ({ page }) => {
     // 1. 일반 프로필로 전체 도전 모드를 시작한다
     await page.goto('/');

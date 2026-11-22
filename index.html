@@ -657,6 +657,15 @@
       justify-content: end;
     }
 
+    .opt-svg {
+      display: flex;
+    }
+
+    .opt-svg svg {
+      width: 66px;
+      height: 44px;
+    }
+
     .opt-dots i {
       width: 10px;
       height: 10px;
@@ -3462,7 +3471,7 @@
         id: 'PS-091', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '아주 커다란 입에 날카로운 이빨이 가득하고, 몸에 비해 앞다리가 아주 짧은 육식 공룡은 누구일까요?',
         options: ['트리케라톱스', '브라키오사우루스', '티라노사우루스', '스테고사우루스'],
-        optionImages: ['🦕🛡️', '🦕🌳', '🦖', '🦕🔱'],
+        optionImages: ['svg:triceratops', 'svg:brachiosaurus', 'svg:trex', 'svg:stegosaurus'],
         answer: 2,
         hint: '두 발로 쿵쿵 걸어 다니는 공룡의 왕이에요.',
         explanation: '티라노사우루스는 바나나만 한 크고 날카로운 이빨로 먹이를 잡아먹었어요. 몸은 아주 컸지만 앞다리는 짧아서 입까지 닿지 않았어요.',
@@ -3471,7 +3480,7 @@
         id: 'PS-092', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '두 발로 걷는 커다란 사냥꾼이고, 무는 힘이 엄청 세서 뼈까지 와작 부술 수 있었던 공룡은 누구일까요?',
         options: ['안킬로사우루스', '티라노사우루스', '파라사우롤로푸스', '브라키오사우루스'],
-        optionImages: ['🦕🔨', '🦖', '🦕🎺', '🦕🌳'],
+        optionImages: ['svg:ankylosaurus', 'svg:trex', 'svg:parasaurolophus', 'svg:brachiosaurus'],
         answer: 1,
         hint: '이름에 \'폭군 도마뱀\'이라는 뜻이 들어 있어요.',
         explanation: '티라노사우루스는 무는 힘이 아주 셌어요. 그래서 다른 공룡의 뼈까지 부숴 먹을 수 있었어요.',
@@ -3480,7 +3489,7 @@
         id: 'PS-093', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '머리가 아주 크고, 냄새를 아주 잘 맡아서 멀리 있는 먹이도 찾아냈던 커다란 육식 공룡은 누구일까요?',
         options: ['트리케라톱스', '스테고사우루스', '티라노사우루스', '마이아사우라'],
-        optionImages: ['🦕🛡️', '🦕🔱', '🦖', '🦕🥚'],
+        optionImages: ['svg:triceratops', 'svg:stegosaurus', 'svg:trex', 'svg:maiasaura'],
         answer: 2,
         hint: '앞다리가 아주 짧고 이빨이 커다래요.',
         explanation: '티라노사우루스는 냄새를 맡는 뇌 부분이 아주 컸어요. 그래서 먹이 냄새를 멀리서도 잘 맡았어요.',
@@ -3489,7 +3498,7 @@
         id: 'PS-094', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '얼굴에 뿔이 세 개 있고, 네 발로 걸으며 풀을 먹는 공룡은 누구일까요?',
         options: ['티라노사우루스', '트리케라톱스', '스테고사우루스', '벨로키랍토르'],
-        optionImages: ['🦖', '🦕🛡️', '🦕🔱', '🦖🪶'],
+        optionImages: ['svg:trex', 'svg:triceratops', 'svg:stegosaurus', 'svg:velociraptor'],
         answer: 1,
         hint: '코뿔소처럼 생긴 얼굴을 떠올려 보세요.',
         explanation: '트리케라톱스는 \'뿔이 세 개 달린 얼굴\'이라는 뜻이에요. 눈 위에 긴 뿔 두 개, 코 위에 짧은 뿔 하나가 있었어요.',
@@ -3498,7 +3507,7 @@
         id: 'PS-095', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '앵무새처럼 생긴 단단한 부리로 풀을 뜯어 먹고, 뿔을 무기로 티라노사우루스에게 맞섰던 공룡은 누구일까요?',
         options: ['브라키오사우루스', '스테고사우루스', '콤프소그나투스', '트리케라톱스'],
-        optionImages: ['🦕🌳', '🦕🔱', '🦖💨', '🦕🛡️'],
+        optionImages: ['svg:brachiosaurus', 'svg:stegosaurus', 'svg:compsognathus', 'svg:triceratops'],
         answer: 3,
         hint: '목 뒤에 커다란 방패 같은 뼈가 있어요.',
         explanation: '트리케라톱스는 티라노사우루스와 같은 시대에 살았어요. 뿔과 목 뒤의 커다란 뼈 방패로 몸을 지켰어요.',
@@ -3507,7 +3516,7 @@
         id: 'PS-096', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '등에 커다란 판이 두 줄로 쭉 솟아 있고, 네 발로 걸으며 풀을 먹는 공룡은 누구일까요?',
         options: ['스테고사우루스', '안킬로사우루스', '브라키오사우루스', '티라노사우루스'],
-        optionImages: ['🦕🔱', '🦕🔨', '🦕🌳', '🦖'],
+        optionImages: ['svg:stegosaurus', 'svg:ankylosaurus', 'svg:brachiosaurus', 'svg:trex'],
         answer: 0,
         hint: '꼬리 끝에 뾰족한 무기가 있어요.',
         explanation: '스테고사우루스는 등에 커다란 판이 두 줄로 솟아 있었어요. 꼬리 끝의 뾰족한 가시 4개로 적을 막았어요.',
@@ -3516,7 +3525,7 @@
         id: 'PS-097', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '몸에 비해 머리가 아주 작고, 등에 커다란 판이 줄지어 솟아 있는 공룡은 누구일까요?',
         options: ['스테고사우루스', '트리케라톱스', '티라노사우루스', '파키케팔로사우루스'],
-        optionImages: ['🦕🔱', '🦕🛡️', '🦖', '🦖🍃'],
+        optionImages: ['svg:stegosaurus', 'svg:triceratops', 'svg:trex', 'svg:pachycephalosaurus'],
         answer: 0,
         hint: '꼬리를 휘둘러 적을 쫓아냈어요.',
         explanation: '스테고사우루스는 몸이 버스만큼 길었지만 머리는 아주 작았어요. 꼬리 끝에는 뾰족한 가시가 있었어요.',
@@ -3525,7 +3534,7 @@
         id: 'PS-098', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '목이 아주아주 길고, 앞다리가 뒷다리보다 길어서 기린처럼 고개를 높이 든 공룡은 누구일까요?',
         options: ['브라키오사우루스', '티라노사우루스', '트리케라톱스', '안킬로사우루스'],
-        optionImages: ['🦕🌳', '🦖', '🦕🛡️', '🦕🔨'],
+        optionImages: ['svg:brachiosaurus', 'svg:trex', 'svg:triceratops', 'svg:ankylosaurus'],
         answer: 0,
         hint: '4층 건물만큼 키가 컸어요.',
         explanation: '브라키오사우루스는 \'팔 도마뱀\'이라는 뜻이에요. 앞다리가 길고 목이 높이 솟아서 높은 나무의 잎을 먹을 수 있었어요.',
@@ -3534,7 +3543,7 @@
         id: 'PS-099', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '목을 쭉 뻗으면 4층 건물 높이까지 닿고, 콧구멍이 머리 위쪽에 볼록 솟아 있는 커다란 공룡은 누구일까요?',
         options: ['스테고사우루스', '브라키오사우루스', '벨로키랍토르', '파키케팔로사우루스'],
-        optionImages: ['🦕🔱', '🦕🌳', '🦖🪶', '🦖🍃'],
+        optionImages: ['svg:stegosaurus', 'svg:brachiosaurus', 'svg:velociraptor', 'svg:pachycephalosaurus'],
         answer: 1,
         hint: '기린처럼 목이 아주 길어요.',
         explanation: '브라키오사우루스는 머리 위쪽에 콧구멍이 있었어요. 목이 아주 길어서 다른 공룡이 닿지 않는 높은 곳의 잎을 먹었어요.',
@@ -3543,7 +3552,7 @@
         id: 'PS-100', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '온몸이 단단한 갑옷 같은 뼈판과 가시로 덮여 있고, 몸이 낮고 넓적해서 탱크처럼 생긴 공룡은 누구일까요?',
         options: ['안킬로사우루스', '브라키오사우루스', '벨로키랍토르', '파라사우롤로푸스'],
-        optionImages: ['🦕🔨', '🦕🌳', '🦖🪶', '🦕🎺'],
+        optionImages: ['svg:ankylosaurus', 'svg:brachiosaurus', 'svg:velociraptor', 'svg:parasaurolophus'],
         answer: 0,
         hint: '몸 끝에 커다란 뼈 뭉치가 달려 있어요.',
         explanation: '안킬로사우루스는 등이 뼈로 된 갑옷으로 덮여 있었어요. 꼬리 끝의 망치 같은 뼈 뭉치를 휘둘러 적을 쿵 쳤어요.',
@@ -3552,7 +3561,7 @@
         id: 'PS-101', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '머리 꼭대기 뼈가 둥글고 아주 두꺼워서, 단단한 헬멧을 쓴 것처럼 보이는 공룡은 누구일까요?',
         options: ['파키케팔로사우루스', '트리케라톱스', '브라키오사우루스', '스테고사우루스'],
-        optionImages: ['🦖🍃', '🦕🛡️', '🦕🌳', '🦕🔱'],
+        optionImages: ['svg:pachycephalosaurus', 'svg:triceratops', 'svg:brachiosaurus', 'svg:stegosaurus'],
         answer: 0,
         hint: '이름에 \'두꺼운 머리\'라는 뜻이 들어 있어요.',
         explanation: '파키케팔로사우루스는 \'두꺼운 머리 도마뱀\'이라는 뜻이에요. 머리뼈가 아주 두꺼워서 친구끼리 머리를 부딪쳤을 거라고 생각하는 과학자도 있어요.',
@@ -3561,7 +3570,7 @@
         id: 'PS-102', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '닭만큼 아주 작은 공룡이고, 두 발로 다니며 작은 도마뱀을 잡아먹었던 공룡은 누구일까요?',
         options: ['브라키오사우루스', '티라노사우루스', '콤프소그나투스', '안킬로사우루스'],
-        optionImages: ['🦕🌳', '🦖', '🦖💨', '🦕🔨'],
+        optionImages: ['svg:brachiosaurus', 'svg:trex', 'svg:compsognathus', 'svg:ankylosaurus'],
         answer: 2,
         hint: '이름은 아주 길지만 몸은 아주 작아요.',
         explanation: '콤프소그나투스는 몸집이 닭만 한 작은 공룡이에요. 배 속에서 도마뱀 뼈가 나온 화석도 발견됐어요.',
@@ -3570,7 +3579,7 @@
         id: 'PS-103', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '이름이 \'착한 엄마 도마뱀\'이라는 뜻이고, 아기 공룡들을 정성껏 돌봤던 공룡은 누구일까요?',
         options: ['티라노사우루스', '마이아사우라', '벨로키랍토르', '스피노사우루스'],
-        optionImages: ['🦖', '🦕🥚', '🦖🪶', '🦖🐟'],
+        optionImages: ['svg:trex', 'svg:maiasaura', 'svg:velociraptor', 'svg:spinosaurus'],
         answer: 1,
         hint: '이름 첫 글자가 \'마\'로 시작해요.',
         explanation: '마이아사우라는 둥지에 알을 낳고, 아기가 태어난 뒤에도 먹이를 주며 돌봤을 거라고 해요. 그래서 \'착한 엄마 도마뱀\'이라는 이름이 붙었어요.',
@@ -3579,7 +3588,7 @@
         id: 'PS-104', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '등에 배의 돛처럼 커다란 지느러미가 솟아 있고, 티라노사우루스보다 몸길이가 더 길었던 육식 공룡은 누구일까요?',
         options: ['스테고사우루스', '트리케라톱스', '스피노사우루스', '안킬로사우루스'],
-        optionImages: ['🦕🔱', '🦕🛡️', '🦖🐟', '🦕🔨'],
+        optionImages: ['svg:stegosaurus', 'svg:triceratops', 'svg:spinosaurus', 'svg:ankylosaurus'],
         answer: 2,
         hint: '물가에 살면서 악어처럼 길쭉한 주둥이로 사냥했어요.',
         explanation: '스피노사우루스는 등에 돛 같은 커다란 지느러미가 있었어요. 물가에 살면서 물고기를 즐겨 잡아먹었어요.',
@@ -3588,7 +3597,7 @@
         id: 'PS-105', profile: 'preschool', category: 'dinosaur', difficulty: 'easy',
         question: '몸집이 칠면조만 하고, 뒷발에 낫처럼 휘어진 커다란 발톱이 있는 작은 사냥꾼 공룡은 누구일까요?',
         options: ['티라노사우루스', '브라키오사우루스', '트리케라톱스', '벨로키랍토르'],
-        optionImages: ['🦖', '🦕🌳', '🦕🛡️', '🦖🪶'],
+        optionImages: ['svg:trex', 'svg:brachiosaurus', 'svg:triceratops', 'svg:velociraptor'],
         answer: 3,
         hint: '이름에 \'날쌘 도둑\'이라는 뜻이 들어 있어요.',
         explanation: '벨로키랍토르는 영화에서보다 훨씬 작아서 칠면조만 했어요. 몸에는 새처럼 깃털이 있었어요.',
@@ -3597,7 +3606,7 @@
         id: 'PS-106', profile: 'preschool', category: 'dinosaur', difficulty: 'medium',
         question: '머리 뒤로 길쭉한 볏이 뻗어 있고, 이빨이 없는 긴 부리로 바다의 물고기를 잡아먹은 동물은 누구일까요?',
         options: ['스테고사우루스', '트리케라톱스', '안킬로사우루스', '프테라노돈'],
-        optionImages: ['🦕🔱', '🦕🛡️', '🦕🔨', '🦅'],
+        optionImages: ['svg:stegosaurus', 'svg:triceratops', 'svg:ankylosaurus', 'svg:pteranodon'],
         answer: 3,
         hint: '아주 커다란 날개를 펼칠 수 있었어요.',
         explanation: '프테라노돈은 날개를 펴고 하늘을 날던 익룡이에요. 공룡과 같은 시대에 살았지만 공룡은 아니에요.',
@@ -3606,7 +3615,7 @@
         id: 'PS-107', profile: 'preschool', category: 'dinosaur', difficulty: 'medium',
         question: '바다에 살았고, 팔다리가 지느러미처럼 생겼으며, 커다란 입으로 물고기와 거북까지 잡아먹은 동물은 누구일까요?',
         options: ['브라키오사우루스', '스테고사우루스', '트리케라톱스', '모사사우루스'],
-        optionImages: ['🦕🌳', '🦕🔱', '🦕🛡️', '🐊'],
+        optionImages: ['svg:brachiosaurus', 'svg:stegosaurus', 'svg:triceratops', 'svg:mosasaurus'],
         answer: 3,
         hint: '긴 꼬리를 흔들며 물속을 헤엄쳤어요.',
         explanation: '모사사우루스는 바다에 살던 커다란 파충류예요. 공룡과 같은 시대에 살았지만 공룡은 아니고, 오늘날 도마뱀과 가까운 친척이에요.',
@@ -3615,7 +3624,7 @@
         id: 'PS-108', profile: 'preschool', category: 'dinosaur', difficulty: 'medium',
         question: '머리 뒤로 길쭉한 관 모양 볏이 뻗어 있고, 오리처럼 넓적한 주둥이를 가진 초식 공룡은 누구일까요?',
         options: ['티라노사우루스', '안킬로사우루스', '스테고사우루스', '파라사우롤로푸스'],
-        optionImages: ['🦖', '🦕🔨', '🦕🔱', '🦕🎺'],
+        optionImages: ['svg:trex', 'svg:ankylosaurus', 'svg:stegosaurus', 'svg:parasaurolophus'],
         answer: 3,
         hint: '볏 속이 비어 있어서 나팔처럼 뿌우 하고 울렸을 거라고 해요.',
         explanation: '파라사우롤로푸스는 오리주둥이 공룡이에요. 속이 빈 볏으로 나팔처럼 소리를 내서 친구를 불렀을 거라고 과학자들은 생각해요.',
@@ -3624,7 +3633,7 @@
         id: 'PS-109', profile: 'preschool', category: 'dinosaur', difficulty: 'medium',
         question: '엄지손가락이 뾰족한 송곳처럼 생겼고, 아주 오래전 사람들이 가장 먼저 발견한 공룡 중 하나는 누구일까요?',
         options: ['티라노사우루스', '브라키오사우루스', '이구아노돈', '벨로키랍토르'],
-        optionImages: ['🦖', '🦕🌳', '🦕🌿', '🦖🪶'],
+        optionImages: ['svg:trex', 'svg:brachiosaurus', 'svg:iguanodon', 'svg:velociraptor'],
         answer: 2,
         hint: '이름이 \'이구아나의 이빨\'이라는 뜻이에요.',
         explanation: '이구아노돈은 엄지손가락에 뾰족한 가시가 있었어요. 처음에는 이 가시가 코 위에 난 뿔인 줄 알았대요.',
@@ -3633,7 +3642,7 @@
         id: 'PS-110', profile: 'preschool', category: 'dinosaur', difficulty: 'medium',
         question: '목과 꼬리가 아주 길어서 몸길이가 버스 두 대보다 길었고, 연필처럼 가느다란 이빨로 나뭇잎을 훑어 먹은 공룡은 누구일까요?',
         options: ['티라노사우루스', '디플로도쿠스', '트리케라톱스', '스테고사우루스'],
-        optionImages: ['🦖', '🦕〰️', '🦕🛡️', '🦕🔱'],
+        optionImages: ['svg:trex', 'svg:diplodocus', 'svg:triceratops', 'svg:stegosaurus'],
         answer: 1,
         hint: '긴 꼬리를 휙휙 휘둘렀을 거라고 해요.',
         explanation: '디플로도쿠스는 목과 꼬리가 아주 길어서 몸길이가 25미터가 넘었어요. 긴 꼬리를 채찍처럼 휘둘렀을 거라고 생각해요.',
@@ -4543,9 +4552,31 @@
       speechSynthesis.speak(qUtt);
     }
 
+    /* 보기 이미지용 SVG 그림 (optionImages의 'svg:키') — 공룡 카테고리 15종, viewBox 0 0 120 80 옆모습 */
+    const OPTION_SVGS = {
+      trex              : `<path d="M4 36 Q28 30 48 32 Q62 30 72 38 L74 46 Q70 56 56 57 Q40 58 30 50 Q16 42 4 36 Z" fill="#7cb342" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M60 58 L62 73 L72 73 L70 54 Z" fill="#558b2f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="56" cy="50" rx="11" ry="9" fill="#7cb342" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M50 56 L46 73 L56 73 L58 57 Z" fill="#7cb342" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M64 40 Q66 25 77 18 Q86 13 102 15 Q110 16 110 24 L110 31 Q101 33 91 32 L91 35 Q98 36 100 40 Q89 44 79 42 Q70 47 64 40 Z" fill="#7cb342" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M92 32 l2.2 3.2 l2.2 -3.2 l2.2 3.2 l2.2 -3.2 l2.2 3.2 l2.2 -3.2 l2.2 3.2" fill="#fff" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.2"/><path d="M76 44 L82 49 L80 52" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="3"/><circle cx="97" cy="22" r="2.2" fill="#222"/><circle cx="97.7" cy="21.3" r="0.77" fill="#fff"/>`,  // 티라노사우루스
+      triceratops       : `<path d="M26 44 Q12 46 3 54 Q14 52 28 53 Z" fill="#f0a04b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="31" y="54" width="10" height="19" rx="3" fill="#d9822b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="64" y="56" width="10" height="17" rx="3" fill="#d9822b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="52" cy="46" rx="30" ry="16" fill="#f0a04b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="41" y="56" width="10" height="17" rx="3" fill="#f0a04b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="74" y="54" width="10" height="19" rx="3" fill="#f0a04b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M76 28 Q83 13 97 18 Q103 32 95 46 Q86 52 78 46 Z" fill="#d9822b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M83 37 Q96 31 111 40 Q113 47 105 51 Q93 53 84 49 Z" fill="#f0a04b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M93 35 L113 21 L97 39 Z" fill="#fff3d6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><path d="M104 40 L110 31 L108 42 Z" fill="#fff3d6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><circle cx="95" cy="40" r="2.2" fill="#222"/><circle cx="95.7" cy="39.3" r="0.77" fill="#fff"/>`,  // 트리케라톱스
+      stegosaurus       : `<path d="M28 42 L31 30 L37 40 Z" fill="#f4a261" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M36 37 L42 20 L48 34 Z" fill="#f4a261" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M47 31 L54 12 L60 29 Z" fill="#f4a261" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M59 29 L66 13 L71 31 Z" fill="#f4a261" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M70 33 L77 21 L81 37 Z" fill="#f4a261" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M10 50 L2 41 L13 47 Z M10 52 L1 54 L12 55 Z" fill="#fff3d6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><rect x="33" y="54" width="10" height="19" rx="3" fill="#6e9a3e" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="68" y="56" width="9" height="17" rx="3" fill="#6e9a3e" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M10 51 Q28 44 40 34 Q56 24 72 31 Q87 39 92 50 Q80 59 60 59 Q34 60 10 51 Z" fill="#8fbf5a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="44" y="56" width="10" height="17" rx="3" fill="#8fbf5a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="77" y="55" width="9" height="18" rx="3" fill="#8fbf5a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M88 48 Q97 47 105 52 Q105 58 97 59 Q90 59 86 55 Z" fill="#8fbf5a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="100" cy="53" r="1.7" fill="#222"/><circle cx="100.7" cy="52.3" r="0.595" fill="#fff"/>`,  // 스테고사우루스
+      brachiosaurus     : `<path d="M24 50 Q10 53 3 62 Q14 59 27 57 Z" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="30" y="56" width="10" height="17" rx="3" fill="#5b8fb3" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="62" y="50" width="10" height="23" rx="3" fill="#5b8fb3" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M18 54 Q28 40 50 40 Q68 38 76 47 Q78 59 60 61 Q38 63 18 54 Z" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="41" y="58" width="10" height="15" rx="3" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="71" y="50" width="10" height="23" rx="3" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M64 46 Q73 26 82 11 L91 13 Q84 30 77 51 Z" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M80 12 Q83 3 93 4 Q104 6 106 11 Q100 15 90 15 Z" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M86 5 Q90 0 95 4" fill="#7fb3d5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="96" cy="9" r="1.8" fill="#222"/><circle cx="96.7" cy="8.3" r="0.63" fill="#fff"/>`,  // 브라키오사우루스
+      ankylosaurus      : `<path d="M22 50 Q12 50 9 49" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="5"/><path d="M22 50 Q12 50 9 49" fill="none" stroke="#a1887f" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="7" cy="49" rx="6.5" ry="5.5" fill="#7d665e" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="30" y="55" width="10" height="16" rx="3" fill="#7d665e" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="68" y="56" width="9" height="15" rx="3" fill="#7d665e" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M18 53 Q24 35 52 33 Q80 33 89 50 Q80 59 52 59 Q28 59 18 53 Z" fill="#a1887f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="41" y="57" width="10" height="14" rx="3" fill="#a1887f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="77" y="55" width="9" height="16" rx="3" fill="#a1887f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="30" cy="43" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="41" cy="38" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="53" cy="36" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="65" cy="37" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="76" cy="42" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="36" cy="50" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="48" cy="47" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="60" cy="47" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><circle cx="72" cy="50" r="3.4" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><path d="M24 46 L18 42 L25 50 Z M84 44 L90 39 L87 47 Z" fill="#d7ccc8" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.3"/><path d="M86 46 Q97 42 105 48 Q105 55 97 57 Q89 57 86 53 Z" fill="#a1887f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="98" cy="49" r="1.8" fill="#222"/><circle cx="98.7" cy="48.3" r="0.63" fill="#fff"/>`,  // 안킬로사우루스
+      velociraptor      : `<path d="M38 40 Q20 37 3 35 Q20 43 38 47 Z" fill="#d9a066" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M10 37 L5 33 M16 38 L11 33 M22 39 L18 34" fill="none" stroke="#8d5a2b" stroke-width="1.5" stroke-linecap="round"/><path d="M57 49 L54 61 L56 71 L68 71 L68 68 L60 67 L60 61 L63 51 Z" fill="#b9763f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M48 49 L43 61 L45 71 L57 71 L57 68 L49 67 L49 61 L55 52 Z" fill="#d9a066" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M45 69 Q39 65 43 59" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.2"/><ellipse cx="50" cy="42" rx="17" ry="9" transform="rotate(-10 50 42)" fill="#d9a066" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="53" cy="48" rx="7" ry="7" fill="#d9a066" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M60 37 Q66 27 75 25 Q87 24 94 29 Q88 33 77 33 Q71 37 65 43 Z" fill="#d9a066" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M60 33 L57 27 M64 30 L62 24 M68 27 L67 21" fill="none" stroke="#8d5a2b" stroke-width="1.5" stroke-linecap="round"/><path d="M60 43 Q69 46 72 54 Q62 54 56 47 Z" fill="#8d5a2b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><circle cx="81" cy="28" r="1.8" fill="#222"/><circle cx="81.7" cy="27.3" r="0.63" fill="#fff"/>`,  // 벨로키랍토르
+      pteranodon        : `<path d="M58 42 Q38 20 4 26 Q28 34 40 50 Z" fill="#9575cd" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M62 42 Q74 24 104 22 Q86 34 78 50 Z" fill="#9575cd" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="60" cy="46" rx="10" ry="7" fill="#b39ddb" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M66 41 L54 27 L62 30 L71 39 Z" fill="#b39ddb" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M66 40 Q73 34 80 36 L116 42 L80 44 Q73 46 67 46 Z" fill="#ffcc80" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M66 40 Q73 34 80 36 L80 44 Q73 46 67 46 Z" fill="#b39ddb" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 52 L52 60 M64 52 L66 60" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="75" cy="39" r="1.8" fill="#222"/><circle cx="75.7" cy="38.3" r="0.63" fill="#fff"/>`,  // 프테라노돈
+      mosasaurus        : `<path d="M5 74 q7 -4 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0" fill="none" stroke="#64b5f6" stroke-width="2" stroke-linecap="round"/><path d="M15 40 Q6 28 1 24 Q8 40 1 56 Q8 51 15 43 Z" fill="#3b7b82" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M38 46 Q33 57 23 60 Q34 59 44 49 Z" fill="#3b7b82" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M10 41 Q30 30 62 31 Q92 33 112 42 Q92 49 62 50 Q30 51 10 41 Z" fill="#4f9da6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M30 46 Q60 50 104 44" fill="none" stroke="#cdeff2" stroke-width="2" stroke-linecap="round"/><path d="M68 47 Q64 60 53 64 Q65 62 75 49 Z" fill="#3b7b82" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M90 42 L111 42" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><path d="M93 42 l1.8 2.5 l1.8 -2.5 l1.8 2.5 l1.8 -2.5 l1.8 2.5 l1.8 -2.5 l1.8 2.5 l1.8 -2.5" fill="#fff" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1"/><circle cx="94" cy="37" r="1.8" fill="#222"/><circle cx="94.7" cy="36.3" r="0.63" fill="#fff"/>`,  // 모사사우루스
+      spinosaurus       : `<path d="M28 40 Q32 15 50 11 Q64 13 68 38 Z" fill="#e76f51" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M36 38 L40 20 M44 38 L47 14 M52 38 L54 13 M60 38 L61 19" fill="none" stroke="#b4523a" stroke-width="1.5" stroke-linecap="round"/><path d="M60 57 L62 73 L72 73 L70 54 Z" fill="#6b7a40" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M3 40 Q28 35 50 38 Q64 36 73 43 Q71 55 55 57 Q37 57 27 49 Q14 44 3 40 Z" fill="#8a9a5b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="56" cy="51" rx="10" ry="8" fill="#8a9a5b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M51 56 L48 73 L57 73 L59 57 Z" fill="#8a9a5b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M67 41 Q72 31 81 30 L114 34 Q115 39 108 39 L83 41 Q77 45 71 47 Z" fill="#8a9a5b" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M85 39 l1.8 2.6 l1.8 -2.6 l1.8 2.6 l1.8 -2.6 l1.8 2.6 l1.8 -2.6 l1.8 2.6" fill="#fff" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1"/><path d="M73 46 L79 51 L77 54" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="3"/><circle cx="84" cy="33" r="1.8" fill="#222"/><circle cx="84.7" cy="32.3" r="0.63" fill="#fff"/>`,  // 스피노사우루스
+      parasaurolophus   : `<path d="M28 42 Q12 39 2 35 Q14 46 30 51 Z" fill="#64b5a6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M54 55 L56 73 L65 73 L63 53 Z" fill="#43897c" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="50" cy="45" rx="25" ry="13" fill="#64b5a6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M40 54 L37 73 L47 73 L50 55 Z" fill="#64b5a6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M85 27 Q73 15 56 11 L55 15 Q71 21 82 32 Z" fill="#e57373" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M69 38 Q75 28 84 26 Q95 26 103 32 Q99 37 87 36 Q81 40 77 47 Z" fill="#64b5a6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M97 30 Q104 30 106 33 Q102 36 98 35" fill="#ffe082" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><path d="M71 48 L73 58 L78 58" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="3"/><circle cx="89" cy="30" r="1.8" fill="#222"/><circle cx="89.7" cy="29.3" r="0.63" fill="#fff"/>`,  // 파라사우롤로푸스
+      pachycephalosaurus: `<path d="M35 40 Q18 37 3 33 Q18 44 35 48 Z" fill="#e6b85c" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M56 50 L59 72 L68 72 L64 49 Z" fill="#c4953a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="50" cy="42" rx="18" ry="11" fill="#e6b85c" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M46 50 L43 72 L52 72 L55 51 Z" fill="#e6b85c" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M63 38 Q69 30 76 29 L84 29 Q89 32 89 38 Q84 42 77 41 Q70 43 66 47 Z" fill="#e6b85c" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M71 31 Q72 15 83 14 Q94 15 91 33 Q83 30 71 31 Z" fill="#b07a2a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="72" cy="30" r="1.6" fill="#c4953a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1"/><circle cx="76" cy="33" r="1.6" fill="#c4953a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1"/><circle cx="90" cy="32" r="1.6" fill="#c4953a" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1"/><path d="M66 46 L71 51 L70 54" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="3"/><circle cx="83" cy="35" r="1.8" fill="#222"/><circle cx="83.7" cy="34.3" r="0.63" fill="#fff"/>`,  // 파키케팔로사우루스
+      compsognathus     : `<g transform="translate(18 22) scale(0.72)"><path d="M38 40 Q20 38 3 34 Q20 43 38 47 Z" fill="#4db6ac" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.6"/><path d="M55 47 L53 60 L55 71 L67 71 L67 68 L59 67 L59 60 L61 49 Z" fill="#2e8b80" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.6"/><path d="M47 47 L43 60 L45 71 L56 71 L56 68 L49 67 L49 60 L53 50 Z" fill="#4db6ac" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.6"/><ellipse cx="50" cy="42" rx="15" ry="8" transform="rotate(-10 50 42)" fill="#4db6ac" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.6"/><path d="M60 37 Q66 29 74 28 Q85 28 90 32 Q84 35 75 35 Q70 38 64 43 Z" fill="#4db6ac" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.6"/><path d="M62 44 L67 50" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="3"/><circle cx="79" cy="31" r="2.2" fill="#222"/><circle cx="79.7" cy="30.3" r="0.77" fill="#fff"/></g><path d="M80 73 Q84 56 96 50 Q94 62 86 73 Z" fill="#a5d6a7" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><path d="M90 73 Q96 60 108 58 Q104 68 96 73 Z" fill="#81c784" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/>`,  // 콤프소그나투스
+      maiasaura         : `<path d="M26 40 Q10 36 2 30 Q12 44 28 49 Z" fill="#f48fb1" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M46 52 L48 70 L57 70 L55 50 Z" fill="#d36b91" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="42" cy="42" rx="21" ry="12" fill="#f48fb1" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M33 51 L30 70 L40 70 L43 52 Z" fill="#f48fb1" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M58 36 Q65 27 73 26 Q83 26 90 31 Q86 36 76 35 Q70 39 66 45 Z" fill="#f48fb1" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M71 26 Q74 22 78 26" fill="#d36b91" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><circle cx="77" cy="29" r="1.7" fill="#222"/><circle cx="77.7" cy="28.3" r="0.595" fill="#fff"/><path d="M76 70 Q76 58 96 58 Q116 58 116 70 Z" fill="#a1887f" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="89" cy="60" rx="5" ry="6.5" fill="#fff8e1" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><ellipse cx="101" cy="60" rx="5" ry="6.5" fill="#fff8e1" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><path d="M80 64 L112 64" fill="none" stroke="#7d665e" stroke-width="1.5"/>`,  // 마이아사우라
+      iguanodon         : `<path d="M26 44 Q12 45 2 52 Q14 52 28 53 Z" fill="#9ccc65" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M56 56 L58 73 L67 73 L65 53 Z" fill="#7cb342" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="50" cy="46" rx="26" ry="14" fill="#9ccc65" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M38 56 L36 73 L46 73 L48 57 Z" fill="#9ccc65" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M70 40 Q76 29 85 27 Q97 27 104 33 Q101 40 89 40 Q81 44 77 49 Z" fill="#9ccc65" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M72 48 L76 60 L82 60" fill="none" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="3.5"/><path d="M76 54 L84 48 L79 57 Z" fill="#fff3d6" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5"/><circle cx="91" cy="31" r="1.8" fill="#222"/><circle cx="91.7" cy="30.3" r="0.63" fill="#fff"/>`,  // 이구아노돈
+      diplodocus        : `<path d="M36 42 Q20 44 2 58 Q20 49 36 50 Z" fill="#b0bec5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="38" y="52" width="9" height="21" rx="3" fill="#8a9ba3" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="60" y="52" width="9" height="21" rx="3" fill="#8a9ba3" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="52" cy="46" rx="19" ry="11" fill="#b0bec5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="46" y="54" width="9" height="19" rx="3" fill="#b0bec5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="66" y="52" width="9" height="21" rx="3" fill="#b0bec5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M66 41 Q84 30 100 28 L102 33 Q86 37 69 50 Z" fill="#b0bec5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="105" cy="31" rx="7" ry="4.5" fill="#b0bec5" stroke="#3b3b3b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="106" cy="29.5" r="1.6" fill="#222"/><circle cx="106.7" cy="28.8" r="0.5599999999999999" fill="#fff"/>`,  // 디플로도쿠스
+    };
+
     /* 보기 오른쪽 이미지 (미취학 문제의 optionImages)
-       '#rrggbb' → 색 동그라미, 숫자 문자열 → 점 개수 그림, 그 외 → 이모지 */
+       '#rrggbb' → 색 동그라미, 숫자 문자열 → 점 개수 그림, 'svg:키' → OPTION_SVGS 그림, 그 외 → 이모지 */
     function optionImageHtml(img) {
+      if (img.startsWith('svg:') && OPTION_SVGS[img.slice(4)]) {
+        return `<span class="opt-img opt-svg" aria-hidden="true"><svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">${OPTION_SVGS[img.slice(4)]}</svg></span>`;
+      }
       if (img.startsWith('#')) {
         return `<span class="opt-img opt-swatch" style="background:${img}" aria-hidden="true"></span>`;
       }
